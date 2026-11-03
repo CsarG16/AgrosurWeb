@@ -4,12 +4,12 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, HRFlowable
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.enums import TA_CENTER, TA_RIGHT, TA_LEFT
+from reportlab.lib.enums import TA_CENTER, TA_RIGHT
 
 
 def generate_quotation_pdf(quote):
     """
-    Genera un documento PDF profesional y corporativo de la cotización B2B de Agrosur.
+    Genera un documento PDF profesional y corporativo de la cotización B2B de Agro Sur Latino S.A.C.
     """
     buffer = io.BytesIO()
     doc = SimpleDocTemplate(
@@ -24,16 +24,14 @@ def generate_quotation_pdf(quote):
     story = []
     styles = getSampleStyleSheet()
 
-    # Colores corporativos suaves de Agrosur
-    c_primary = colors.HexColor('#223120')      # Dark olive slate
-    c_accent = colors.HexColor('#587c52')       # Natural leaf green
-    c_subtle = colors.HexColor('#759b6e')       # Eucalyptus
-    c_bg_light = colors.HexColor('#f6f8f5')     # Soft sage background
-    c_border = colors.HexColor('#d7e4d3')       # Border tone
-    c_dark = colors.HexColor('#1f2937')         # Text dark
-    c_muted = colors.HexColor('#6b7280')        # Text muted
+    # Colores corporativos de Agro Sur Latino S.A.C.
+    c_primary = colors.HexColor('#223120')
+    c_accent = colors.HexColor('#a63a2b')       # Terracota / Andino Xpodeka accent
+    c_bg_light = colors.HexColor('#faf8f5')
+    c_border = colors.HexColor('#e5dec9')
+    c_dark = colors.HexColor('#1f2937')
+    c_muted = colors.HexColor('#6b7280')
 
-    # Estilos de texto
     title_style = ParagraphStyle(
         'DocTitle',
         parent=styles['Normal'],
@@ -87,25 +85,25 @@ def generate_quotation_pdf(quote):
         textColor=c_primary,
     )
 
-    # 1. Cabecera Corporativa
+    # 1. Cabecera Corporativa Real de Agro Sur Latino S.A.C.
     code = f"COT-{quote.id:04d}"
     date_str = quote.created_at.strftime('%d/%m/%Y %H:%M') if hasattr(quote, 'created_at') and quote.created_at else datetime.now().strftime('%d/%m/%Y')
 
     header_left = [
-        Paragraph("<b>AGROSUR S.A.C.</b>", title_style),
-        Paragraph("RUC 20608945123 • SUNAT Perú", subtitle_style),
-        Paragraph("Agroexportación de Frutos Frescos & Superfoods de Origen", subtitle_style),
-        Paragraph("Valles de Producción: Ica • Piura • Olmos | Lima - Perú", subtitle_style),
+        Paragraph("<b>AGRO SUR LATINO S.A.C.</b>", title_style),
+        Paragraph("RUC 20517805662 • Lima, Perú", subtitle_style),
+        Paragraph("Granos Andinos, Semillas y Menestras (Orgánicos y Convencionales)", subtitle_style),
+        Paragraph("Jr. Antonio José de Sucre Mz. I Lte. 11, Huertos de Huachipa – Lima | david@agrosurlatino.com", subtitle_style),
     ]
 
     header_right = [
-        Paragraph(f"<b>PROFORMA DE EXPORTACIÓN</b>", right_bold),
+        Paragraph("<b>PROFORMA DE EXPORTACIÓN</b>", right_bold),
         Paragraph(f"<b>N° Documento:</b> {code}", right_style),
         Paragraph(f"<b>Fecha:</b> {date_str}", right_style),
         Paragraph(f"<b>Incoterm Solicitado:</b> {quote.incoterm}", right_style),
     ]
 
-    header_table = Table([[header_left, header_right]], colWidths=[310, 222])
+    header_table = Table([[header_left, header_right]], colWidths=[320, 212])
     header_table.setStyle(TableStyle([
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
         ('LEFTPADDING', (0, 0), (-1, -1), 0),
@@ -144,7 +142,7 @@ def generate_quotation_pdf(quote):
         [
             Paragraph("<b>Persona de Contacto:</b>", body_style),
             Paragraph(quote.contact_name, body_style),
-            Paragraph("<b>Puerto / Aeropuerto:</b>", body_style),
+            Paragraph("<b>Puerto / Destino:</b>", body_style),
             Paragraph(quote.destination_port or "Callao / Por confirmar", body_style),
         ],
         [
@@ -169,21 +167,21 @@ def generate_quotation_pdf(quote):
     story.append(client_table)
     story.append(Spacer(1, 16))
 
-    # 3. Frutos y Volúmenes Cotizados
-    story.append(Paragraph("DETALLE DE FRUTOS Y VOLÚMENES ESTIMADOS", heading_style))
+    # 3. Granos, Semillas y Volúmenes Cotizados
+    story.append(Paragraph("DETALLE DE PRODUCTOS Y VOLÚMENES ESTIMADOS", heading_style))
     story.append(Spacer(1, 6))
 
     unit_labels = {
-        'CONTENEDOR_40': 'Contenedor 40ft (~21 TM)',
+        'CONTENEDOR_40': 'Contenedor FCL (~20-21 TM)',
         'PALLET': 'Pallets Exportación',
         'TONELADAS': 'Toneladas Métricas (TM)',
-        'CAJAS': 'Cajas Master',
+        'CAJAS': 'Sacos Multipliego (25 kg)',
     }
 
     items_data = [
         [
-            Paragraph("<b>Ítem / Fruto</b>", body_bold),
-            Paragraph("<b>Variedad / Origen</b>", body_bold),
+            Paragraph("<b>Producto / Grano</b>", body_bold),
+            Paragraph("<b>Modalidad & Origen</b>", body_bold),
             Paragraph("<b>Cantidad & Unidad</b>", body_bold),
             Paragraph("<b>Ref. FOB Unit.</b>", right_bold),
             Paragraph("<b>Subtotal Estimado</b>", right_bold),
@@ -203,7 +201,7 @@ def generate_quotation_pdf(quote):
             subtotal_str = f"${subtotal_val:,.2f} USD" if subtotal_val else "Por cotizar"
 
             items_data.append([
-                Paragraph(p.name if p else "Fruto fresco", body_bold),
+                Paragraph(p.name if p else "Grano Andino", body_bold),
                 Paragraph(f"{p.variety} • {p.origin}" if p else "-", body_style),
                 Paragraph(f"{qty:g} {unit_name}", body_style),
                 Paragraph(unit_price, right_style),
@@ -218,7 +216,6 @@ def generate_quotation_pdf(quote):
             Paragraph("$0.00 USD", right_style),
         ])
 
-    # Fila de Totales
     items_data.append([
         Paragraph("<b>TOTAL ESTIMADO DE REFERENCIA (FOB USD):</b>", body_bold),
         "",
@@ -237,7 +234,7 @@ def generate_quotation_pdf(quote):
         ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
         ('LEFTPADDING', (0, 0), (-1, -1), 6),
         ('RIGHTPADDING', (0, 0), (-1, -1), 6),
-        ('SPAN', (0, -1), (3, -1)),  # Fusionar celda de total
+        ('SPAN', (0, -1), (3, -1)),
         ('BACKGROUND', (0, -1), (-1, -1), c_bg_light),
         ('LINEABOVE', (0, -1), (-1, -1), 1, c_accent),
     ]))
@@ -258,14 +255,14 @@ def generate_quotation_pdf(quote):
         story.append(notes_table)
         story.append(Spacer(1, 14))
 
-    # 5. Términos y Garantías de Exportación
-    story.append(Paragraph("CONDICIONES COMERCIALES & ESTÁNDARES FITOSANITARIOS", heading_style))
+    # 5. Condiciones Comerciales
+    story.append(Paragraph("CONDICIONES COMERCIALES & CERTIFICACIONES DE CALIDAD", heading_style))
     story.append(Spacer(1, 4))
     terms_text = (
-        "1. <b>Validez de la oferta:</b> 7 días hábiles a partir de la fecha de emisión, sujeta a confirmación de calibres y disponibilidad de espacio naviero reefer.<br/>"
-        "2. <b>Cadena de frío continua:</b> Cámaras frigoríficas con monitoreo térmico satelital continuo desde packing hasta puerto de destino.<br/>"
-        "3. <b>Certificaciones incluidas:</b> GlobalG.A.P., HACCP, BRCGS Food Safety e inspección fitosanitaria oficial SENASA Perú.<br/>"
-        "4. <b>Mesa comercial:</b> exportaciones@agrosur.pe • +51 (1) 748-2900 • Lima, Perú."
+        "1. <b>Disponibilidad y Stock:</b> Abastecimiento permanente todo el año desde nuestros almacenes en Huachipa (Lima) y centros de acopio en Ayacucho.<br/>"
+        "2. <b>Presentaciones:</b> Disponible en modalidades Orgánica Certificada y Convencional según requerimiento del cliente.<br/>"
+        "3. <b>Certificaciones:</b> HACCP, BRC, USDA Organic, EU Organic, JAS, FDA y Certificado Fitosanitario SENASA Perú.<br/>"
+        "4. <b>Contacto Comercial:</b> david@agrosurlatino.com • Jr. Antonio José de Sucre Mz. I Lte. 11, Huertos de Huachipa – Lima, Perú."
     )
     terms_p = Paragraph(terms_text, subtitle_style)
     terms_table = Table([[terms_p]], colWidths=[532])
@@ -277,7 +274,7 @@ def generate_quotation_pdf(quote):
     story.append(terms_table)
 
     story.append(Spacer(1, 20))
-    story.append(Paragraph("<i>Agrosur S.A.C. — Agroexportación de Excelencia desde el Perú para el Mundo.</i>", ParagraphStyle(
+    story.append(Paragraph("<i>Agro Sur Latino S.A.C. — De los productores hacia el mundo.</i>", ParagraphStyle(
         'FooterNote',
         parent=styles['Normal'],
         fontName='Helvetica-Oblique',

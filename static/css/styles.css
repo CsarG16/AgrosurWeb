@@ -1,12 +1,13 @@
-/* Custom styling for Agrosur - Natural Pastel & Minimalist Aesthetic */
+/* Agro Sur Latino S.A.C. — Visual-First Aesthetic Inspired by Xpodeka */
 
 :root {
-  --primary-dark: #111810;
-  --primary: #223120;
-  --primary-muted: #3f573b;
-  --accent-sage: #759b6e;
-  --accent-pastel: #bed3b8;
-  --accent-cream: #f6f8f5;
+  --bg-cream: #fbfaf6;
+  --bg-sand: #f4f1ea;
+  --primary-dark: #1c241b;
+  --accent-red: #b8292f;
+  --accent-red-hover: #991f24;
+  --accent-agro: #3f573b;
+  --accent-gold: #c8a97e;
 }
 
 html {
@@ -16,22 +17,34 @@ html {
 body {
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
-  background-color: #fafaf8;
-  color: #2b332a;
+  background-color: #fbfaf6;
+  color: #262320;
 }
 
-/* Subtle Ken-Burns zoom effect for hero slider */
-@keyframes kenBurns {
-  0% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(1.05);
-  }
+/* Subtle curved wave lines background matching Xpodeka hero background */
+.xpodeka-wave-bg {
+  background-color: #fbfaf6;
+  background-image: url("data:image/svg+xml,%3Csvg width='800' height='800' viewBox='0 0 800 800' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23e7e1d3' stroke-width='1.2' opacity='0.65'%3E%3Cpath d='M-100 100 C 200 250, 400 -50, 900 150'/%3E%3Cpath d='M-100 140 C 200 290, 400 -10, 900 190'/%3E%3Cpath d='M-100 180 C 200 330, 400 30, 900 230'/%3E%3Cpath d='M-100 220 C 200 370, 400 70, 900 270'/%3E%3Cpath d='M-100 450 C 300 300, 500 650, 900 480'/%3E%3Cpath d='M-100 490 C 300 340, 500 690, 900 520'/%3E%3Cpath d='M-100 530 C 300 380, 500 730, 900 560'/%3E%3Cpath d='M-100 570 C 300 420, 500 770, 900 600'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 700px 700px;
 }
 
-.hero-slide-active img {
-  animation: kenBurns 12s ease-out forwards;
+/* Giant subtle watermark text in hero background */
+.watermark-script {
+  font-family: 'Playfair Display', Georgia, serif;
+  color: rgba(214, 205, 188, 0.35);
+  line-height: 0.92;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Vertical panel hover & transition */
+.xpodeka-panel {
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease;
+}
+
+.xpodeka-panel:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 48px -12px rgba(38, 35, 32, 0.18);
 }
 
 /* Infinite marquee ticker */
@@ -47,54 +60,39 @@ body {
 .marquee-track {
   display: flex;
   width: 200%;
-  animation: marquee 32s linear infinite;
+  animation: marquee 34s linear infinite;
 }
 
 .marquee-track:hover {
   animation-play-state: paused;
 }
 
-/* Clean glassmorphism utility (subtle, no neon glow) */
+/* Clean glassmorphism utility */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(220, 226, 218, 0.7);
+  border: 1px solid rgba(226, 220, 208, 0.8);
 }
 
 .glass-dark {
-  background: rgba(17, 24, 16, 0.82);
+  background: rgba(24, 24, 22, 0.78);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.14);
 }
 
-/* Bulletproof Navbar Logo Switching */
-#navbar #nav-logo-dark {
-  display: none !important;
-}
-#navbar #nav-logo-light {
-  display: block !important;
-}
-
-#navbar.navbar-scrolled #nav-logo-dark {
-  display: block !important;
-}
-#navbar.navbar-scrolled #nav-logo-light {
-  display: none !important;
-}
-
-/* Clean Minimal Card hover effect (natural elevation, no neon glow) */
+/* Card hover elevation */
 .card-hover-effect {
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
 }
 
 .card-hover-effect:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 28px -6px rgba(17, 24, 16, 0.12);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 38px -10px rgba(28, 36, 27, 0.16);
 }
 
-/* Lenis Smooth Scroll Luxury Engine */
+/* Lenis Smooth Scroll */
 html.lenis, html.lenis body {
   height: auto;
 }
@@ -111,21 +109,17 @@ html.lenis, html.lenis body {
   overflow: hidden;
 }
 
-.lenis.lenis-scrolling iframe {
-  pointer-events: none;
-}
-
-/* Custom scrollbar - soft pastel tones */
+/* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 7px;
+  width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #f6f8f5;
+  background: #fbfaf6;
 }
 ::-webkit-scrollbar-thumb {
-  background: #bed3b8;
+  background: #d5cbb8;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #9bb895;
+  background: #b8aa93;
 }

@@ -1,161 +1,67 @@
 {% extends 'landing/base.html' %}
 {% load static %}
 
-{% block title %}Garantía Sanitaria & Certificaciones Globales | Agrosur Perú{% endblock %}
+{% block title %}Garantía Sanitaria & Certificaciones Globales | Agro Sur Latino S.A.C.{% endblock %}
 
 {% block content %}
-<!-- Page Header Banner -->
-<section class="pt-32 pb-16 bg-agro-950 text-white relative overflow-hidden">
-  <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
-    <div class="max-w-3xl space-y-4">
-      <div class="flex items-center gap-2 text-xs text-agro-300 font-medium">
-        <a href="{% url 'landing:index' %}" class="hover:text-white transition-colors">Inicio</a>
-        <span>/</span>
-        <span class="text-white">Certificaciones</span>
-      </div>
-      <h1 class="font-display font-semibold text-4xl sm:text-5xl text-white tracking-tight" data-i18n="cert_title">
+<!-- Visual Header -->
+<section class="py-14 xpodeka-wave-bg border-b border-xpo-border/80">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+    <div>
+      <span class="text-xs uppercase tracking-[0.2em] text-xpo-red font-bold block mb-2" data-i18n="cert_tag">ESTÁNDARES INTERNACIONALES</span>
+      <h1 class="font-serif font-semibold text-4xl sm:text-5xl text-stone-900 tracking-tight" data-i18n="cert_title">
         Garantía Sanitaria & Certificaciones
       </h1>
-      <p class="text-stone-300 text-sm sm:text-base font-light leading-relaxed max-w-2xl" data-i18n="cert_desc">
-        Nuestros campos e instalaciones cuentan con auditorías continuas que acreditan inocuidad alimentaria, comercio ético y sostenibilidad ambiental para los supermercados más exigentes.
-      </p>
     </div>
+    <a href="{% url 'landing:cotizador' %}" class="px-7 py-3 rounded-full bg-xpo-red hover:bg-xpo-redDark text-white font-semibold text-xs uppercase tracking-widest transition-colors">
+      Solicitar Cotización
+    </a>
   </div>
 </section>
 
-<!-- Certifications Overview Section -->
-<section class="py-20 bg-white">
-  <div class="max-w-7xl mx-auto px-6 lg:px-12">
+<!-- Infinite Carousel of Certification Logos -->
+<div class="py-6 bg-[#fbfaf6] border-b border-stone-200 overflow-hidden">
+  <div class="marquee-track flex items-center gap-10">
+    {% for cert in certifications %}
+    <div class="flex items-center gap-3 px-5 py-2.5 rounded-xl bg-white border border-stone-200/80 shadow-2xs shrink-0">
+      <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="h-10 w-auto object-contain">
+      <span class="text-xs font-bold text-stone-800 uppercase tracking-wider">{{ cert.name }}</span>
+    </div>
+    {% endfor %}
+    {% for cert in certifications %}
+    <div class="flex items-center gap-3 px-5 py-2.5 rounded-xl bg-white border border-stone-200/80 shadow-2xs shrink-0">
+      <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="h-10 w-auto object-contain">
+      <span class="text-xs font-bold text-stone-800 uppercase tracking-wider">{{ cert.name }}</span>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Visual Certifications Grid from SQLite3 (With Official Logos from agrosurlatino.com/certificaciones/) -->
+<section class="py-16 bg-white">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
     
-    <!-- Hero Box Homologaciones -->
-    <div class="bg-agro-50/70 rounded-3xl p-8 sm:p-14 border border-agro-200/80 shadow-sm flex flex-col lg:flex-row items-center justify-between gap-12 mb-20">
-      <div class="space-y-4 max-w-xl">
-        <span class="text-xs uppercase tracking-widest text-agro-700 font-semibold" data-i18n="cert_tag">Estándar Internacional</span>
-        <h2 class="font-display font-semibold text-3xl sm:text-4xl text-stone-900 tracking-tight">
-          Homologados para Supermercados de Alta Gama
-        </h2>
-        <p class="text-stone-600 text-sm leading-relaxed font-light">
-          Cumplimos rigurosamente con los protocolos exigidos por las cadenas de retail líderes en la Unión Europea, Norteamérica y Asia (Tesco, Walmart, Carrefour, Edeka, Costco, Sainsbury's, Albert Heijn).
-        </p>
-        <div class="pt-2 flex flex-wrap gap-2.5">
-          {% for cert in certifications %}
-          <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white border border-agro-200 text-agro-900 text-xs font-medium shadow-2xs">
-            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-agro-700"></i>
-            <span>{{ cert.name }}</span>
-          </div>
-          {% endfor %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-7">
+      {% for cert in certifications %}
+      <div class="card-hover-effect p-7 rounded-2xl bg-[#fbfaf6] border border-xpo-border flex flex-col items-center text-center justify-between space-y-5">
+        
+        <div class="w-full h-36 bg-white rounded-xl border border-stone-200/80 p-5 flex items-center justify-center shadow-2xs">
+          <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="max-h-24 max-w-full object-contain transition-transform duration-300 hover:scale-105">
+        </div>
+
+        <div class="space-y-1.5">
+          <h3 class="font-serif font-semibold text-xl text-stone-900">{{ cert.name }}</h3>
+          <p class="text-stone-600 text-xs font-medium bilingual-name" data-es="{{ cert.code }}" data-en="{{ cert.code_en|default:cert.code }}">
+            {{ cert.code }}
+          </p>
+        </div>
+
+        <div class="w-full pt-3 border-t border-stone-200/80 flex items-center justify-center gap-1.5 text-[10px] text-agro-700 font-bold uppercase tracking-widest">
+          <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-agro-600"></i>
+          <span>Certificación Oficial</span>
         </div>
       </div>
-
-      <!-- Sello de Origen Card with Official Agrosur Logo -->
-      <div class="relative w-full lg:w-96 aspect-square rounded-2xl bg-agro-950 p-8 flex flex-col justify-between text-white overflow-hidden border border-agro-900 shadow-md">
-        <div class="relative z-10 flex items-center justify-between">
-          <span class="text-[11px] uppercase tracking-widest text-agro-300 font-mono">SELLO DE ORIGEN</span>
-          <img src="{% static 'images/agrosurlogo-light.png' %}" alt="Agrosur" class="h-6 w-auto object-contain opacity-90">
-        </div>
-        <div class="relative z-10 space-y-2">
-          <div class="text-3xl font-display font-medium tracking-tight">100% PERÚ</div>
-          <p class="text-xs text-stone-300 font-light leading-relaxed">Trazabilidad desde la semilla hasta el puerto de arribo internacional con certificación fitosanitaria SENASA.</p>
-        </div>
-        <div class="relative z-10 pt-4 border-t border-agro-900 flex items-center justify-between text-xs text-agro-300">
-          <span>Inocuidad Grado A</span>
-          <span>B2B Direct</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Certification Pillars Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      
-      <div class="p-8 rounded-2xl bg-stone-50 border border-stone-200/80 space-y-4">
-        <div class="w-11 h-11 rounded-xl bg-agro-100 text-agro-800 flex items-center justify-center">
-          <i data-lucide="award" class="w-5 h-5"></i>
-        </div>
-        <h3 class="font-display font-semibold text-xl text-stone-900">GlobalG.A.P. & GRASP</h3>
-        <p class="text-xs text-stone-600 leading-relaxed font-light">
-          Acreditación en Buenas Prácticas Agrícolas y Módulo Social (GRASP). Garantiza trazabilidad de agroquímicos, salud de los trabajadores y protección medioambiental en todos nuestros huertos.
-        </p>
-        <span class="inline-block text-[11px] font-mono font-medium text-agro-700 bg-agro-100/80 px-2.5 py-1 rounded-md">
-          GGN: 4059883719024
-        </span>
-      </div>
-
-      <div class="p-8 rounded-2xl bg-stone-50 border border-stone-200/80 space-y-4">
-        <div class="w-11 h-11 rounded-xl bg-agro-100 text-agro-800 flex items-center justify-center">
-          <i data-lucide="shield-check" class="w-5 h-5"></i>
-        </div>
-        <h3 class="font-display font-semibold text-xl text-stone-900">BRCGS Food Safety Grado A</h3>
-        <p class="text-xs text-stone-600 leading-relaxed font-light">
-          Estándar global británico para plantas de empaque de exportación. Control exhaustivo de cuerpos extraños, inocuidad de líneas de calibrado y validación de puntos críticos de control (HACCP).
-        </p>
-        <span class="inline-block text-[11px] font-mono font-medium text-agro-700 bg-agro-100/80 px-2.5 py-1 rounded-md">
-          BRC Site Code: 1827409
-        </span>
-      </div>
-
-      <div class="p-8 rounded-2xl bg-stone-50 border border-stone-200/80 space-y-4">
-        <div class="w-11 h-11 rounded-xl bg-agro-100 text-agro-800 flex items-center justify-center">
-          <i data-lucide="check-circle-2" class="w-5 h-5"></i>
-        </div>
-        <h3 class="font-display font-semibold text-xl text-stone-900">SMETA / Sedex Pillar 4</h3>
-        <p class="text-xs text-stone-600 leading-relaxed font-light">
-          Auditoría de comercio ético más respetada a nivel mundial: derechos laborales formales, salud ocupacional, seguridad en packing y gestión ambiental responsable del recurso hídrico.
-        </p>
-        <span class="inline-block text-[11px] font-mono font-medium text-agro-700 bg-agro-100/80 px-2.5 py-1 rounded-md">
-          Sedex Company ID: ZC419082
-        </span>
-      </div>
-
-      <div class="p-8 rounded-2xl bg-stone-50 border border-stone-200/80 space-y-4">
-        <div class="w-11 h-11 rounded-xl bg-agro-100 text-agro-800 flex items-center justify-center">
-          <i data-lucide="leaf" class="w-5 h-5"></i>
-        </div>
-        <h3 class="font-display font-semibold text-xl text-stone-900">Control de LMR Multirresidual</h3>
-        <p class="text-xs text-stone-600 leading-relaxed font-light">
-          Monitoreo analítico cromatográfico (GC-MS/MS & LC-MS/MS) con laboratorios acreditados ISO 17025 antes de cada cosecha, garantizando LMR inferior al 30% del límite europeo.
-        </p>
-        <span class="inline-block text-[11px] font-mono font-medium text-agro-700 bg-agro-100/80 px-2.5 py-1 rounded-md">
-          Normativa EU 396/2005 & FDA
-        </span>
-      </div>
-
-      <div class="p-8 rounded-2xl bg-stone-50 border border-stone-200/80 space-y-4">
-        <div class="w-11 h-11 rounded-xl bg-agro-100 text-agro-800 flex items-center justify-center">
-          <i data-lucide="file-check" class="w-5 h-5"></i>
-        </div>
-        <h3 class="font-display font-semibold text-xl text-stone-900">Inspección Fitosanitaria SENASA</h3>
-        <p class="text-xs text-stone-600 leading-relaxed font-light">
-          Inspecciones sanitarias en planta con emisión directa de Certificado Fitosanitario Oficial de Exportación conforme a los requisitos del país de destino (EU, EE.UU., China, Japón).
-        </p>
-        <span class="inline-block text-[11px] font-mono font-medium text-agro-700 bg-agro-100/80 px-2.5 py-1 rounded-md">
-          Certificación Oficial Perú
-        </span>
-      </div>
-
-      <div class="p-8 rounded-2xl bg-stone-50 border border-stone-200/80 space-y-4">
-        <div class="w-11 h-11 rounded-xl bg-agro-100 text-agro-800 flex items-center justify-center">
-          <i data-lucide="thermometer" class="w-5 h-5"></i>
-        </div>
-        <h3 class="font-display font-semibold text-xl text-stone-900">Monitoreo Térmico Satelital</h3>
-        <p class="text-xs text-stone-600 leading-relaxed font-light">
-          Todos los contenedores reefer marítimos y palés aéreos cuentan con data loggers satelitales en tiempo real que transmiten temperatura, humedad y ubicación GPS durante toda la travesía.
-        </p>
-        <span class="inline-block text-[11px] font-mono font-medium text-agro-700 bg-agro-100/80 px-2.5 py-1 rounded-md">
-          Cold Chain Assurance 24/7
-        </span>
-      </div>
-
-    </div>
-
-    <!-- Call to action bar -->
-    <div class="mt-20 p-8 rounded-2xl bg-stone-900 text-white flex flex-col sm:flex-row items-center justify-between gap-6">
-      <div>
-        <h4 class="font-display font-semibold text-lg text-white">¿Requieres auditoría específica o dossier de homologación?</h4>
-        <p class="text-xs text-stone-400 mt-1">Nuestro departamento de Aseguramiento de la Calidad entrega carpetas técnicas en 24 horas.</p>
-      </div>
-      <a href="{% url 'landing:cotizador' %}" class="px-6 py-3 rounded-full bg-agro-600 hover:bg-agro-500 text-white font-medium text-xs tracking-wide transition-colors shrink-0">
-        Solicitar en Cotizador B2B
-      </a>
+      {% endfor %}
     </div>
 
   </div>

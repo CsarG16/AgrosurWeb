@@ -22,19 +22,21 @@ def validate_peruvian_document(client_type, doc_num):
 class HeroSlide(models.Model):
     title = models.CharField(max_length=150, verbose_name="Título Principal (ES)")
     title_en = models.CharField(max_length=150, blank=True, verbose_name="Título Principal (EN)")
-    tagline = models.CharField(max_length=200, verbose_name="Subtítulo o Lema (ES)")
-    tagline_en = models.CharField(max_length=200, blank=True, verbose_name="Subtítulo o Lema (EN)")
-    badge = models.CharField(max_length=50, default="Perú al Mundo", verbose_name="Insignia / Etiqueta (ES)")
-    badge_en = models.CharField(max_length=50, default="Peru to the World", verbose_name="Insignia / Etiqueta (EN)")
-    image = models.ImageField(upload_to="hero/", blank=True, null=True, verbose_name="Imagen de Fondo")
-    image_url = models.URLField(blank=True, null=True, help_text="URL externa si no se sube imagen local", verbose_name="URL de Imagen de Respaldo")
+    tagline = models.CharField(max_length=200, blank=True, verbose_name="Marca de Agua / Lema Corto (ES)")
+    tagline_en = models.CharField(max_length=200, blank=True, verbose_name="Marca de Agua / Lema Corto (EN)")
+    badge = models.CharField(max_length=50, default="Granos Andinos", verbose_name="Insignia / Categoría (ES)")
+    badge_en = models.CharField(max_length=50, default="Andean Grains", verbose_name="Insignia / Categoría (EN)")
+    image = models.ImageField(upload_to="hero/", blank=True, null=True, verbose_name="Imagen Principal (Panel Vertical)")
+    image_url = models.URLField(blank=True, null=True, help_text="URL externa si no se sube imagen local", verbose_name="URL de Imagen Principal")
+    secondary_image = models.ImageField(upload_to="hero/", blank=True, null=True, verbose_name="Imagen Secundaria Lateral")
+    secondary_image_url = models.URLField(blank=True, null=True, help_text="URL externa para el segundo panel vertical estilo Xpodeka", verbose_name="URL Imagen Secundaria Lateral")
     order = models.PositiveIntegerField(default=0, verbose_name="Orden")
     is_active = models.BooleanField(default=True, verbose_name="Activo")
 
     class Meta:
         ordering = ['order', 'id']
-        verbose_name = "Slide Hero"
-        verbose_name_plural = "Slides Hero"
+        verbose_name = "Panel Impacto Inicial (Hero)"
+        verbose_name_plural = "Paneles de Impacto Inicial (Hero)"
 
     def __str__(self):
         return self.title
@@ -43,36 +45,89 @@ class HeroSlide(models.Model):
     def get_image(self):
         if self.image:
             return self.image.url
-        return self.image_url or "https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&w=1920&q=80"
+        return self.image_url or "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=1200&q=85"
+
+    @property
+    def get_secondary_image(self):
+        if self.secondary_image:
+            return self.secondary_image.url
+        return self.secondary_image_url or "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=1000&q=85"
+
+
+class ProductCategory(models.Model):
+    name = models.CharField(max_length=120, verbose_name="Nombre de Categoría (ES)")
+    name_en = models.CharField(max_length=120, blank=True, verbose_name="Nombre de Categoría (EN)")
+    slug = models.SlugField(max_length=80, unique=True, verbose_name="Identificador (Slug)")
+    watermark_text = models.CharField(max_length=80, blank=True, default="Granos Andinos", verbose_name="Texto Marca de Agua (ES)")
+    watermark_text_en = models.CharField(max_length=80, blank=True, default="Andean Grains", verbose_name="Texto Marca de Agua (EN)")
+    image = models.ImageField(upload_to="categories/", blank=True, null=True, verbose_name="Fotografía Vertical de Categoría")
+    image_url = models.URLField(blank=True, null=True, verbose_name="URL de Fotografía de Respaldo")
+    order = models.PositiveIntegerField(default=0, verbose_name="Orden de Visualización")
+    is_active = models.BooleanField(default=True, verbose_name="Categoría Activa")
+
+    class Meta:
+        ordering = ['order', 'id']
+        verbose_name = "Categoría de Producto"
+        verbose_name_plural = "Categorías de Productos"
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def get_image(self):
+        if self.image:
+            return self.image.url
+        return self.image_url or "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=1000&q=85"
 
 
 class Product(models.Model):
+    MODALITY_CHOICES = [
+        ('ORGANICO_CONVENCIONAL', 'Orgánico y Convencional'),
+        ('ORGANICO', '100% Orgánico Certificado'),
+        ('CONVENCIONAL', 'Convencional Selecto'),
+    ]
+
+    category = models.ForeignKey(
+        ProductCategory,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="products",
+        verbose_name="Categoría"
+    )
     name = models.CharField(max_length=120, verbose_name="Nombre del Producto (ES)")
     name_en = models.CharField(max_length=120, blank=True, verbose_name="Nombre del Producto (EN)")
     scientific_name = models.CharField(max_length=120, blank=True, verbose_name="Nombre Científico")
-    variety = models.CharField(max_length=100, default="Hass", verbose_name="Variedad")
-    origin = models.CharField(max_length=120, default="Ica / Piura - Perú", verbose_name="Origen / Valle (ES)")
-    origin_en = models.CharField(max_length=120, default="Ica / Piura - Peru", verbose_name="Origen / Valle (EN)")
-    season = models.CharField(max_length=100, default="Todo el año", verbose_name="Temporada de Cosecha (ES)")
-    season_en = models.CharField(max_length=100, default="All year round", verbose_name="Temporada de Cosecha (EN)")
-    packing_specs = models.CharField(max_length=160, default="Cajas de 4kg / 10kg en atmósfera controlada", verbose_name="Presentación / Empaque (ES)")
-    packing_specs_en = models.CharField(max_length=160, default="4kg / 10kg cartons in controlled atmosphere", verbose_name="Presentación / Empaque (EN)")
-    
-    # Precios y cotizador
-    ref_price_fob_usd = models.DecimalField(max_digits=10, decimal_places=2, default=3.50, verbose_name="Precio Ref. FOB USD")
-    price_unit = models.CharField(max_length=50, default="Kg", verbose_name="Unidad de Cotización (Kg / Caja / TM)")
-    min_order = models.CharField(max_length=80, default="1 Contenedor Reefer 40ft", verbose_name="Pedido Mínimo")
-    min_order_en = models.CharField(max_length=80, default="1 Reefer Container 40ft", verbose_name="Pedido Mínimo (EN)")
+    modality = models.CharField(
+        max_length=30,
+        choices=MODALITY_CHOICES,
+        default='ORGANICO_CONVENCIONAL',
+        verbose_name="Modalidad (Orgánico / Convencional)"
+    )
+    variety = models.CharField(max_length=100, default="Grano Selecto de Exportación", verbose_name="Presentación / Variedad")
+    origin = models.CharField(max_length=120, default="Ayacucho / Andes del Perú", verbose_name="Origen / Región (ES)")
+    origin_en = models.CharField(max_length=120, default="Ayacucho / Peruvian Andes", verbose_name="Origen / Región (EN)")
+    season = models.CharField(max_length=100, default="Todo el año (Stock en Almacén)", verbose_name="Disponibilidad (ES)")
+    season_en = models.CharField(max_length=100, default="All year round (Permanent Stock)", verbose_name="Disponibilidad (EN)")
+    packing_specs = models.CharField(max_length=160, default="Sacos de papel multipliego / polipropileno de 25 kg y 50 lb", verbose_name="Presentación / Empaque (ES)")
+    packing_specs_en = models.CharField(max_length=160, default="25 kg & 50 lb multi-wall paper / polypropylene bags", verbose_name="Presentación / Empaque (EN)")
 
-    image = models.ImageField(upload_to="products/", blank=True, null=True, verbose_name="Foto Principal")
+    # Precios y cotizador
+    ref_price_fob_usd = models.DecimalField(max_digits=10, decimal_places=2, default=2.80, verbose_name="Precio Ref. FOB USD")
+    price_unit = models.CharField(max_length=50, default="Kg", verbose_name="Unidad de Cotización (Kg / TM / Saco)")
+    min_order = models.CharField(max_length=80, default="1 Contenedor FCL (20 TM)", verbose_name="Pedido Mínimo")
+    min_order_en = models.CharField(max_length=80, default="1 FCL Container (20 MT)", verbose_name="Pedido Mínimo (EN)")
+
+    image = models.ImageField(upload_to="products/", blank=True, null=True, verbose_name="Foto Principal (Subir Archivo)")
     image_url = models.URLField(blank=True, null=True, verbose_name="URL Imagen Respaldo")
     is_featured = models.BooleanField(default=True, verbose_name="Destacado en Portada")
+    is_active = models.BooleanField(default=True, verbose_name="Producto Activo")
     order = models.PositiveIntegerField(default=0, verbose_name="Orden de Visualización")
 
     class Meta:
         ordering = ['order', 'name']
-        verbose_name = "Producto de Exportación"
-        verbose_name_plural = "Productos de Exportación"
+        verbose_name = "Producto (Grano / Semilla / Menestra)"
+        verbose_name_plural = "Productos (Catálogo SQLite3)"
 
     def __str__(self):
         return f"{self.name} ({self.variety})"
@@ -81,11 +136,25 @@ class Product(models.Model):
     def get_image(self):
         if self.image:
             return self.image.url
-        return self.image_url or "https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&fit=crop&w=1200&q=80"
+        return self.image_url or "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=1000&q=85"
+
+    @property
+    def modality_label_es(self):
+        labels = dict(self.MODALITY_CHOICES)
+        return labels.get(self.modality, "Orgánico y Convencional")
+
+    @property
+    def modality_label_en(self):
+        en_map = {
+            'ORGANICO_CONVENCIONAL': 'Organic & Conventional',
+            'ORGANICO': '100% Certified Organic',
+            'CONVENCIONAL': 'Selected Conventional',
+        }
+        return en_map.get(self.modality, 'Organic & Conventional')
 
 
 class CompanyStat(models.Model):
-    value = models.CharField(max_length=30, verbose_name="Valor (Ej: +25k)")
+    value = models.CharField(max_length=30, verbose_name="Valor (Ej: +15 Años)")
     label = models.CharField(max_length=100, verbose_name="Etiqueta (ES)")
     label_en = models.CharField(max_length=100, blank=True, verbose_name="Etiqueta (EN)")
     order = models.PositiveIntegerField(default=0, verbose_name="Orden")
@@ -101,9 +170,10 @@ class CompanyStat(models.Model):
 
 class Certification(models.Model):
     name = models.CharField(max_length=100, verbose_name="Nombre Certificación")
-    code = models.CharField(max_length=100, blank=True, verbose_name="Alcance / Código (ES)")
-    code_en = models.CharField(max_length=100, blank=True, verbose_name="Alcance / Código (EN)")
-    image_url = models.URLField(blank=True, null=True, verbose_name="Logo URL")
+    code = models.CharField(max_length=100, blank=True, verbose_name="Alcance / Estándar (ES)")
+    code_en = models.CharField(max_length=100, blank=True, verbose_name="Alcance / Estándar (EN)")
+    image = models.ImageField(upload_to="certifications/", blank=True, null=True, verbose_name="Logo (Subir Archivo)")
+    image_url = models.CharField(max_length=255, blank=True, null=True, verbose_name="Ruta o URL del Logo")
     order = models.PositiveIntegerField(default=0, verbose_name="Orden")
 
     class Meta:
@@ -113,6 +183,12 @@ class Certification(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def get_image(self):
+        if self.image:
+            return self.image.url
+        return self.image_url or "/static/images/certifications/usda-organic.png"
 
 
 class QuoteRequest(models.Model):
@@ -124,10 +200,10 @@ class QuoteRequest(models.Model):
     ]
 
     INCOTERM_CHOICES = [
-        ('FOB', 'FOB (Free On Board - Puerto Callao / Pisco)'),
+        ('FOB', 'FOB (Free On Board - Puerto del Callao)'),
         ('CIF', 'CIF (Cost, Insurance & Freight)'),
         ('CFR', 'CFR (Cost & Freight)'),
-        ('EXW', 'EXW (Ex Works - Planta Empaque)'),
+        ('EXW', 'EXW (Ex Works - Planta Huachipa, Lima)'),
     ]
 
     client_type = models.CharField(max_length=20, choices=CLIENT_TYPE_CHOICES, default='JURIDICA_RUC', verbose_name="Tipo de Cliente")
@@ -139,15 +215,15 @@ class QuoteRequest(models.Model):
     phone = models.CharField(max_length=50, verbose_name="Teléfono / WhatsApp")
     incoterm = models.CharField(max_length=10, choices=INCOTERM_CHOICES, default='FOB', verbose_name="Incoterm Solicitado")
     destination_port = models.CharField(max_length=120, blank=True, verbose_name="Puerto / Ciudad de Destino")
-    notes = models.TextField(blank=True, verbose_name="Notas / Calibres / Requerimientos Específicos")
-    
+    notes = models.TextField(blank=True, verbose_name="Notas / Presentación Orgánica o Convencional / Requerimientos")
+
     status = models.CharField(max_length=20, choices=[
         ('NUEVO', 'Nuevo'),
         ('COTIZADO', 'Cotizado'),
         ('EN_NEGOCIACION', 'En Negociación'),
         ('ATENDIDO', 'Atendido'),
     ], default='NUEVO', verbose_name="Estado")
-    
+
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de Cotización")
 
     class Meta:
@@ -164,9 +240,9 @@ class QuoteRequest(models.Model):
 
 class QuoteItem(models.Model):
     UNIT_CHOICES = [
-        ('CONTENEDOR_40', 'Contenedor 40ft High Cube Reefer (~20-22 TM)'),
-        ('PALLET', 'Pallets de Exportación'),
-        ('CAJAS', 'Cajas Master'),
+        ('CONTENEDOR_40', 'Contenedor FCL (~20-21 TM en Sacos)'),
+        ('PALLET', 'Pallets de Exportación (1 TM)'),
+        ('CAJAS', 'Sacos Multipliego (25 kg / 50 lb)'),
         ('TONELADAS', 'Toneladas Métricas (TM)'),
     ]
 

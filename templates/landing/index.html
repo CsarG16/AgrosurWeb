@@ -2,305 +2,403 @@
 {% load static %}
 
 {% block content %}
-<!-- ======================================================== -->
-<!-- 1. HERO SLIDER SECTION (Clean, Atmospheric, Minimal)      -->
-<!-- ======================================================== -->
-<section id="inicio" class="relative w-full h-screen min-h-[680px] bg-agro-950 overflow-hidden flex items-center">
+<!-- ======================================================================= -->
+<!-- 1. PRIMER IMPACTO ("AL ABRIR") — DISEÑO VISUAL ESTILO XPODEKA           -->
+<!-- ======================================================================= -->
+<section id="inicio" class="relative w-full min-h-[calc(100vh-73px)] xpodeka-wave-bg overflow-hidden flex items-center py-10 lg:py-14 border-b border-xpo-border/70">
 
-  <!-- Slides Container -->
-  <div id="hero-slider" class="absolute inset-0 w-full h-full">
+  <!-- Giant Subtle Watermark Text in Center Background (like Xpodeka "Granos Andinos") -->
+  <div class="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden z-0">
+    <span id="hero-watermark" class="watermark-script text-[72px] sm:text-[130px] lg:text-[175px] font-serif font-semibold tracking-tight text-center leading-none select-none">
+      Granos<br>Andinos
+    </span>
+  </div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 w-full">
     {% for slide in hero_slides %}
-    <div class="hero-slide absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out {% if forloop.first %}opacity-100 z-10 hero-slide-active{% else %}opacity-0 z-0 pointer-events-none{% endif %}">
-      <!-- Background Image with Overlay -->
-      <img src="{{ slide.get_image }}" alt="{{ slide.title }}" class="w-full h-full object-cover object-center transform scale-100 transition-transform duration-[12000ms]">
-      <div class="absolute inset-0 bg-gradient-to-t from-agro-950 via-agro-950/70 to-agro-950/40"></div>
-    </div>
-    {% endfor %}
-  </div>
-
-  <!-- Hero Content Overlay -->
-  <div class="relative z-20 max-w-7xl mx-auto px-6 lg:px-12 w-full pt-16">
-    <div class="max-w-3xl space-y-6">
-
-      <!-- Main Headline -->
-      <h1 class="font-display font-semibold text-4xl sm:text-6xl lg:text-7xl text-white tracking-tight leading-[1.08]" data-i18n="hero_title">
-        La Excelencia de los Frutos del Perú al Mundo.
-      </h1>
-
-      <!-- Minimal Subtext -->
-      <p class="text-stone-300 text-base sm:text-lg font-light leading-relaxed max-w-2xl" data-i18n="hero_subtitle">
-        Cultivamos, cosechamos y exportamos los mejores superfoods y frutas frescas del país con trazabilidad garantizada y certificación internacional.
-      </p>
-
-      <!-- Action Buttons (Simple, Minimalist, No Glow) -->
-      <div class="flex flex-wrap items-center gap-4 pt-3">
-        <a href="{% url 'landing:cotizador' %}" class="px-7 py-3.5 rounded-full bg-agro-600 hover:bg-agro-500 text-white font-medium text-sm tracking-wide transition-colors flex items-center gap-2 border border-agro-500/30">
-          <i data-lucide="calculator" class="w-4 h-4 text-agro-200"></i>
-          <span data-i18n="hero_btn_quote">Cotizador RUC & Internacional</span>
-        </a>
-        <a href="{% url 'landing:productos' %}" class="px-7 py-3.5 rounded-full bg-white/10 hover:bg-white/15 text-white font-medium text-sm tracking-wide transition-colors border border-white/15 flex items-center gap-2">
-          <span data-i18n="hero_btn_explore">Ver Frutos de Exportación</span>
-          <i data-lucide="arrow-right" class="w-4 h-4 text-stone-300"></i>
-        </a>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Slider Controls & Indicators -->
-  <div class="absolute bottom-8 left-6 right-6 lg:left-12 lg:right-12 z-20 flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      {% for slide in hero_slides %}
-      <button class="hero-indicator group flex flex-col gap-1 text-left focus:outline-none transition-opacity {% if forloop.first %}opacity-100{% else %}opacity-40{% endif %}" data-index="{{ forloop.counter0 }}">
-        <div class="w-16 sm:w-24 h-1 bg-white/20 rounded-full overflow-hidden">
-          <div class="indicator-bar h-full bg-agro-300 transition-all duration-500 {% if forloop.first %}w-full{% else %}w-0{% endif %}"></div>
-        </div>
-        <span class="text-[10px] text-white/70 font-medium tracking-wider uppercase hidden sm:block">0{{ forloop.counter }} {{ slide.badge }}</span>
-      </button>
-      {% endfor %}
-    </div>
-
-    <div class="flex items-center gap-2">
-      <button id="hero-prev" class="w-10 h-10 rounded-full glass-dark hover:bg-white/20 text-white flex items-center justify-center transition-colors focus:outline-none border border-white/10" aria-label="Anterior">
-        <i data-lucide="chevron-left" class="w-4 h-4"></i>
-      </button>
-      <button id="hero-next" class="w-10 h-10 rounded-full glass-dark hover:bg-white/20 text-white flex items-center justify-center transition-colors focus:outline-none border border-white/10" aria-label="Siguiente">
-        <i data-lucide="chevron-right" class="w-4 h-4"></i>
-      </button>
-    </div>
-  </div>
-
-</section>
-
-
-<!-- ======================================================== -->
-<!-- 2. INFINITE TICKER / CERTIFICATIONS                      -->
-<!-- ======================================================== -->
-<div class="bg-agro-900 py-4 border-y border-agro-800/60 overflow-hidden relative">
-  <div class="marquee-track flex items-center gap-8">
-    {% for cert in certifications %}
-    <div class="flex items-center gap-2.5 shrink-0 px-3.5 py-1.5 rounded-lg bg-agro-950/50 border border-agro-800/50">
-      <i data-lucide="award" class="w-4 h-4 text-agro-300"></i>
-      <div class="flex flex-col">
-        <span class="text-white/90 text-xs font-medium tracking-wider uppercase">{{ cert.name }}</span>
-        <span class="text-agro-300/80 text-[10px]">{{ cert.code }}</span>
-      </div>
-    </div>
-    {% endfor %}
-
-    {% for cert in certifications %}
-    <div class="flex items-center gap-2.5 shrink-0 px-3.5 py-1.5 rounded-lg bg-agro-950/50 border border-agro-800/50">
-      <i data-lucide="award" class="w-4 h-4 text-agro-300"></i>
-      <div class="flex flex-col">
-        <span class="text-white/90 text-xs font-medium tracking-wider uppercase">{{ cert.name }}</span>
-        <span class="text-agro-300/80 text-[10px]">{{ cert.code }}</span>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
-</div>
-
-
-<!-- ======================================================== -->
-<!-- 3. LIVE STATS / METRICS                                  -->
-<!-- ======================================================== -->
-<section id="stats-section" class="py-20 bg-stone-50 border-b border-stone-200/80">
-  <div class="max-w-7xl mx-auto px-6 lg:px-12">
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
-      {% for stat in stats %}
-      <div class="bg-white p-7 rounded-2xl border border-stone-200/80 shadow-sm transition-shadow">
-        <div class="w-11 h-11 rounded-xl bg-agro-100 text-agro-800 flex items-center justify-center mb-5">
-          <i data-lucide="trending-up" class="w-5 h-5"></i>
-        </div>
-        <div class="stat-counter font-display font-semibold text-3xl sm:text-4xl text-agro-950 tracking-tight" data-target="{{ stat.value }}">
-          {{ stat.value }}
-        </div>
-        <p class="text-stone-500 text-xs sm:text-sm mt-1.5 font-normal leading-relaxed bilingual-name" data-es="{{ stat.label }}" data-en="{{ stat.label_en }}">
-          {{ stat.label }}
-        </p>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-</section>
-
-
-<!-- ======================================================== -->
-<!-- 4. FEATURED PRODUCTS PREVIEW (Direct access to catalog)  -->
-<!-- ======================================================== -->
-<section class="py-24 bg-white relative">
-  <div class="max-w-7xl mx-auto px-6 lg:px-12">
-    
-    <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
-      <div>
-        <span class="text-xs uppercase tracking-widest text-agro-700 font-semibold mb-2 block" data-i18n="catalog_tag">Catálogo de Cosecha</span>
-        <h2 class="font-display font-semibold text-3xl sm:text-4xl text-stone-900 tracking-tight" data-i18n="catalog_title">
-          Nuestros Frutos de Exportación
-        </h2>
-      </div>
-      <a href="{% url 'landing:productos' %}" class="inline-flex items-center gap-2 text-sm font-semibold text-agro-700 hover:text-agro-800 transition-colors">
-        <span>Ver Catálogo Completo</span>
-        <i data-lucide="arrow-right" class="w-4 h-4"></i>
-      </a>
-    </div>
-
-    <!-- 3 Featured Fruit Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      {% for product in featured_products %}
-      <div class="card-hover-effect group relative rounded-2xl overflow-hidden bg-stone-900 shadow-sm flex flex-col justify-end aspect-[4/5]">
-        <img src="{{ product.get_image }}" alt="{{ product.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105">
-        <div class="absolute inset-0 bg-gradient-to-t from-agro-950/95 via-agro-950/40 to-transparent"></div>
-
-        <div class="absolute top-5 left-5 right-5 flex items-center justify-between z-10">
-          <span class="px-3 py-1 rounded-full glass-dark text-agro-200 text-xs font-medium backdrop-blur-md">
-            {{ product.origin }}
+    <div class="hero-slide transition-all duration-700 ease-out {% if forloop.first %}opacity-100 relative z-10 hero-slide-active{% else %}opacity-0 absolute inset-0 pointer-events-none z-0 hidden{% endif %}"
+         data-watermark-es="{{ slide.tagline|default:'Granos Andinos' }}"
+         data-watermark-en="{{ slide.tagline_en|default:'Andean Grains' }}">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+        
+        <!-- Left Column: Short Bold Title + Red Pill Button (Zero "Blabla") -->
+        <div class="lg:col-span-4 space-y-7 text-left">
+          <span class="inline-block px-3.5 py-1 rounded-full bg-stone-900/5 border border-stone-300/80 text-stone-700 text-[11px] font-semibold uppercase tracking-[0.16em] bilingual-name"
+                data-es="{{ slide.badge }}" data-en="{{ slide.badge_en }}">
+            {{ slide.badge }}
           </span>
-          <span class="text-xs px-2.5 py-0.5 rounded-full bg-agro-950/70 text-agro-200 border border-agro-700/50 font-mono font-medium">
-            FOB ${{ product.ref_price_fob_usd }}/{{ product.price_unit }}
-          </span>
-        </div>
 
-        <div class="relative z-10 p-6 space-y-2">
-          <span class="text-agro-300 text-xs font-medium uppercase tracking-wider">{{ product.variety }}</span>
-          <h3 class="font-display font-medium text-2xl text-white group-hover:text-agro-200 transition-colors">
-            {{ product.name }}
-          </h3>
-          <p class="text-stone-300 text-xs flex items-center gap-1.5">
-            <i data-lucide="calendar" class="w-3.5 h-3.5 text-agro-300 shrink-0"></i>
-            <span>{{ product.season }}</span>
-          </p>
+          <h1 class="font-serif font-semibold text-4xl sm:text-5xl lg:text-[54px] text-stone-900 tracking-tight leading-[1.08] bilingual-hero-title"
+              data-es="{{ slide.title }}" data-en="{{ slide.title_en|default:slide.title }}">
+            {{ slide.title }}
+          </h1>
 
-          <div class="pt-3 border-t border-white/10 flex items-center justify-between text-xs">
-            <a href="{% url 'landing:productos' %}" class="text-stone-300 hover:text-white font-medium flex items-center gap-1">
-              <span>Especificación técnica</span>
-              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          <div class="pt-2 flex flex-wrap items-center gap-4">
+            <a href="#catalogo-visual" class="px-8 py-3.5 rounded-full bg-xpo-red hover:bg-xpo-redDark text-white font-semibold text-xs uppercase tracking-[0.18em] transition-all shadow-sm hover:shadow-md" data-i18n="hero_btn_explore">
+              PRODUCTOS
             </a>
-            <a href="{% url 'landing:cotizador' %}" class="px-3 py-1 rounded-lg bg-agro-600 hover:bg-agro-500 text-white font-medium">
-              Cotizar
+            <a href="{% url 'landing:cotizador' %}" class="px-6 py-3.5 rounded-full bg-white hover:bg-stone-100 text-stone-900 border border-stone-300 font-semibold text-xs uppercase tracking-[0.14em] transition-colors" data-i18n="hero_btn_quote">
+              COTIZAR
             </a>
           </div>
         </div>
+
+        <!-- Center & Right Columns: Tall Vertical Photography Panels (Like Xpodeka Screenshot) -->
+        <div class="lg:col-span-8 grid grid-cols-1 sm:grid-cols-12 gap-6 lg:gap-8 items-center">
+          
+          <!-- Main Tall Panel (Quinoa / Grains in Wooden Bowls) -->
+          <a href="#catalogo-visual" class="sm:col-span-7 xpodeka-panel block relative h-[380px] sm:h-[490px] lg:h-[540px] rounded-sm overflow-hidden shadow-xl bg-stone-900 group">
+            <img src="{{ slide.get_image }}" alt="{{ slide.title }}" class="w-full h-full object-cover object-center transition-transform duration-1000 ease-out group-hover:scale-105">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+            <div class="absolute bottom-5 left-5 right-5 flex items-center justify-between text-white">
+              <span class="font-serif text-lg sm:text-xl font-medium tracking-wide bilingual-hero-title" data-es="{{ slide.title }}" data-en="{{ slide.title_en|default:slide.title }}">{{ slide.title }}</span>
+              <span class="w-9 h-9 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center group-hover:bg-xpo-red transition-colors">
+                <i data-lucide="arrow-down-right" class="w-4 h-4"></i>
+              </span>
+            </div>
+          </a>
+
+          <!-- Secondary Tall Panel (Pulses / Beans / Menestras) -->
+          <a href="{% url 'landing:productos' %}" class="sm:col-span-5 xpodeka-panel block relative h-[340px] sm:h-[490px] lg:h-[540px] rounded-sm overflow-hidden shadow-xl bg-stone-900 group">
+            <img src="{{ slide.get_secondary_image }}" alt="Variedades de Exportación" class="w-full h-full object-cover object-center transition-transform duration-1000 ease-out group-hover:scale-105">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
+            <div class="absolute bottom-5 left-5 right-5 flex items-center justify-between text-white">
+              <span class="font-serif text-base sm:text-lg font-medium tracking-wide" data-i18n="panel_secondary_label">Variedades Selectas</span>
+              <span class="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center group-hover:bg-xpo-red transition-colors">
+                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+              </span>
+            </div>
+          </a>
+
+        </div>
+
+      </div>
+    </div>
+    {% endfor %}
+
+    <!-- Minimal Slider Controls Bottom Bar -->
+    <div class="mt-8 pt-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        {% for slide in hero_slides %}
+        <button type="button" class="hero-indicator group flex items-center gap-2 focus:outline-none transition-opacity {% if forloop.first %}opacity-100{% else %}opacity-40{% endif %}" data-index="{{ forloop.counter0 }}">
+          <div class="w-12 sm:w-16 h-1 bg-stone-300 rounded-full overflow-hidden">
+            <div class="indicator-bar h-full bg-xpo-red transition-all duration-500 {% if forloop.first %}w-full{% else %}w-0{% endif %}"></div>
+          </div>
+          <span class="text-[11px] text-stone-700 font-bold">0{{ forloop.counter }}</span>
+        </button>
+        {% endfor %}
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="hero-prev" type="button" class="w-10 h-10 rounded-full bg-white hover:bg-stone-900 text-stone-800 hover:text-white flex items-center justify-center transition-colors border border-stone-300 shadow-2xs" aria-label="Anterior">
+          <i data-lucide="chevron-left" class="w-4 h-4"></i>
+        </button>
+        <button id="hero-next" type="button" class="w-10 h-10 rounded-full bg-white hover:bg-stone-900 text-stone-800 hover:text-white flex items-center justify-center transition-colors border border-stone-300 shadow-2xs" aria-label="Siguiente">
+          <i data-lucide="chevron-right" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ======================================================================= -->
+<!-- 2. "MÁS ABAJO PRODUCTOS" — MOSAICO VISUAL DIRECTO DESDE SQLITE3          -->
+<!-- ======================================================================= -->
+<section id="catalogo-visual" class="py-16 sm:py-20 bg-white">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+
+    <!-- Minimal Visual Header + Category Filter Pills from SQLite3 -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 pb-6 border-b border-stone-200">
+      <div>
+        <span class="text-[11px] uppercase tracking-[0.2em] text-xpo-red font-bold block mb-1" data-i18n="catalog_tag">ORGÁNICO & CONVENCIONAL</span>
+        <h2 class="font-serif font-semibold text-3xl sm:text-4xl text-stone-900 tracking-tight" data-i18n="catalog_title">
+          Nuestros Productos
+        </h2>
+      </div>
+
+      <!-- Category Filter Pills (Loaded from ProductCategory in SQLite3) -->
+      <div class="flex flex-wrap items-center gap-2" id="home-category-pills">
+        <button type="button" onclick="filterVisualCatalog('all', this)" class="cat-filter-btn px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-xpo-red text-white transition-all">
+          <span data-i18n="filter_all">Todos</span> ({{ products.count }})
+        </button>
+        {% for cat in categories %}
+        <button type="button" onclick="filterVisualCatalog('{{ cat.slug }}', this)" class="cat-filter-btn px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-stone-100 hover:bg-stone-200 text-stone-700 transition-all bilingual-name"
+                data-es="{{ cat.name }}" data-en="{{ cat.name_en|default:cat.name }}">
+          {{ cat.name }}
+        </button>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Pure Visual Grid of Grains, Seeds & Pulses (Zero Clutter, Large Images) -->
+    <div id="visual-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {% for product in products %}
+      <div class="visual-product-card card-hover-effect group relative rounded-xl overflow-hidden bg-stone-900 cursor-pointer aspect-[3/4] flex flex-col justify-end shadow-md"
+           data-category="{{ product.category.slug|default:'granos-andinos' }}"
+           onclick="openProductModal(this)"
+           data-product='{"id": {{ product.id }}, "name": "{{ product.name|escapejs }}", "name_en": "{{ product.name_en|default:product.name|escapejs }}", "scientific_name": "{{ product.scientific_name|escapejs }}", "modality": "{{ product.modality_label_es|escapejs }}", "modality_en": "{{ product.modality_label_en|escapejs }}", "variety": "{{ product.variety|escapejs }}", "origin": "{{ product.origin|escapejs }}", "origin_en": "{{ product.origin_en|escapejs }}", "season": "{{ product.season|escapejs }}", "season_en": "{{ product.season_en|escapejs }}", "packing_specs": "{{ product.packing_specs|escapejs }}", "packing_specs_en": "{{ product.packing_specs_en|escapejs }}", "image": "{{ product.get_image|escapejs }}", "price_fob": {{ product.ref_price_fob_usd }}}'>
+        
+        <!-- Full-Bleed High-Impact Photo -->
+        <img src="{{ product.get_image }}" alt="{{ product.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent"></div>
+
+        <!-- Top Visual Badges -->
+        <div class="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
+          <span class="px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-[10px] font-semibold uppercase tracking-wider border border-white/15 bilingual-name"
+                data-es="{{ product.modality_label_es }}" data-en="{{ product.modality_label_en }}">
+            {{ product.modality_label_es }}
+          </span>
+          <span class="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+          </span>
+        </div>
+
+        <!-- Bottom Minimal Label (Only Name + Quick Action) -->
+        <div class="relative z-10 p-5">
+          <span class="text-stone-300 text-[10px] uppercase tracking-widest block mb-1 bilingual-origin"
+                data-es="{{ product.origin }}" data-en="{{ product.origin_en }}">
+            {{ product.origin }}
+          </span>
+          <div class="flex items-end justify-between gap-2">
+            <h3 class="font-serif font-semibold text-xl text-white leading-snug group-hover:text-amber-200 transition-colors bilingual-name"
+                data-es="{{ product.name }}" data-en="{{ product.name_en|default:product.name }}">
+              {{ product.name }}
+            </h3>
+            <span class="shrink-0 w-8 h-8 rounded-full bg-xpo-red text-white flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+              <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+            </span>
+          </div>
+        </div>
+
       </div>
       {% endfor %}
     </div>
 
-    <div class="mt-12 text-center">
-      <a href="{% url 'landing:productos' %}" class="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-stone-900 hover:bg-stone-800 text-white text-sm font-medium transition-colors">
-        <span>Explorar todos los frutos disponibles ({{ products.count }})</span>
-        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+  </div>
+</section>
+
+
+<!-- ======================================================================= -->
+<!-- 3. CATEGORÍAS EN GRAN FORMATO VISUAL (ESTILO XPODEKA)                   -->
+<!-- ======================================================================= -->
+<section class="py-16 xpodeka-wave-bg border-y border-xpo-border/70">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {% for cat in categories %}
+      <a href="{% url 'landing:productos' %}?cat={{ cat.slug }}" class="xpodeka-panel group relative h-[360px] rounded-xl overflow-hidden shadow-lg bg-stone-900 flex flex-col justify-end p-7">
+        <img src="{{ cat.get_image }}" alt="{{ cat.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent"></div>
+        <div class="relative z-10 flex items-end justify-between">
+          <div>
+            <span class="text-[10px] uppercase tracking-[0.2em] text-amber-300 font-bold block mb-1">LÍNEA DE EXPORTACIÓN</span>
+            <h3 class="font-serif text-2xl text-white font-semibold bilingual-name" data-es="{{ cat.name }}" data-en="{{ cat.name_en|default:cat.name }}">
+              {{ cat.name }}
+            </h3>
+          </div>
+          <span class="px-4 py-2 rounded-full bg-xpo-red text-white text-[11px] font-semibold uppercase tracking-wider">
+            Ver
+          </span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+
+<!-- ======================================================================= -->
+<!-- 4. CARRUSEL INFINITO DE CERTIFICACIONES OFICIALES (DESDE SQLITE3)       -->
+<!-- ======================================================================= -->
+<section class="py-12 bg-white border-b border-stone-200 overflow-hidden">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 mb-6 flex items-center justify-between">
+    <span class="text-[11px] uppercase tracking-[0.2em] text-stone-500 font-bold" data-i18n="cert_tag">ESTÁNDARES INTERNACIONALES</span>
+    <a href="{% url 'landing:calidad' %}" class="text-xs font-semibold text-xpo-red hover:underline uppercase tracking-wider">Ver todas &rarr;</a>
+  </div>
+
+  <!-- Infinite Marquee Carousel with Official Certification Logos -->
+  <div class="relative w-full overflow-hidden py-2">
+    <div class="marquee-track flex items-center gap-6 sm:gap-10">
+      {% for cert in certifications %}
+      <a href="{% url 'landing:calidad' %}" class="group flex items-center gap-4 px-6 py-4 rounded-2xl bg-[#fbfaf6] border border-stone-200/90 hover:border-xpo-red shadow-2xs transition-all shrink-0">
+        <div class="w-16 h-14 bg-white rounded-xl border border-stone-200/70 p-2 flex items-center justify-center shrink-0">
+          <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform">
+        </div>
+        <div class="pr-2">
+          <span class="block text-xs font-bold text-stone-900 tracking-wider uppercase">{{ cert.name }}</span>
+          <span class="block text-[11px] text-stone-500 bilingual-name" data-es="{{ cert.code }}" data-en="{{ cert.code_en|default:cert.code }}">{{ cert.code }}</span>
+        </div>
+      </a>
+      {% endfor %}
+
+      <!-- Duplicate set for seamless infinite loop -->
+      {% for cert in certifications %}
+      <a href="{% url 'landing:calidad' %}" class="group flex items-center gap-4 px-6 py-4 rounded-2xl bg-[#fbfaf6] border border-stone-200/90 hover:border-xpo-red shadow-2xs transition-all shrink-0">
+        <div class="w-16 h-14 bg-white rounded-xl border border-stone-200/70 p-2 flex items-center justify-center shrink-0">
+          <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform">
+        </div>
+        <div class="pr-2">
+          <span class="block text-xs font-bold text-stone-900 tracking-wider uppercase">{{ cert.name }}</span>
+          <span class="block text-[11px] text-stone-500 bilingual-name" data-es="{{ cert.code }}" data-en="{{ cert.code_en|default:cert.code }}">{{ cert.code }}</span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+
+<!-- ======================================================================= -->
+<!-- 5. CONTACTO VISUAL DIRECTO (SIN EXCESO DE TEXTO)                        -->
+<!-- ======================================================================= -->
+<section id="contacto" class="py-16 sm:py-20 xpodeka-wave-bg">
+  <div class="max-w-6xl mx-auto px-6 lg:px-10">
+    <div class="bg-white rounded-2xl border border-stone-200/90 shadow-lg overflow-hidden grid grid-cols-1 lg:grid-cols-12">
+      
+      <!-- Visual Contact Info Card -->
+      <div class="lg:col-span-5 bg-stone-900 text-white p-8 sm:p-10 flex flex-col justify-between relative overflow-hidden">
+        <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=900&q=80" alt="Granos del Perú" class="absolute inset-0 w-full h-full object-cover opacity-25">
+        <div class="relative z-10 space-y-6">
+          <img src="{% static 'images/agrosurlogo-light.png' %}" alt="Agro Sur Latino" class="h-10 w-auto object-contain">
+          <h3 class="font-serif text-3xl text-white font-semibold leading-tight" data-i18n="contact_box_title">
+            ¿Deseas un trato directo?
+          </h3>
+          <div class="space-y-4 pt-2 text-xs text-stone-200">
+            <div class="flex items-start gap-3">
+              <i data-lucide="map-pin" class="w-4 h-4 text-xpo-red shrink-0 mt-0.5"></i>
+              <span>Jr. Antonio José de Sucre Mz. I Lte. 11, Asoc. Viv. Huertos de Huachipa – Lurigancho, Lima - Perú</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <i data-lucide="mail" class="w-4 h-4 text-xpo-red shrink-0"></i>
+              <a href="mailto:david@agrosurlatino.com" class="hover:underline font-medium">david@agrosurlatino.com</a>
+            </div>
+            <div class="flex items-center gap-3">
+              <i data-lucide="clock" class="w-4 h-4 text-xpo-red shrink-0"></i>
+              <span>Lun – Vie: 8:00 am – 6:00 pm | Sáb: 8:00 am – 1:00 pm</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative z-10 pt-8">
+          <a href="{% url 'landing:cotizador' %}" class="w-full py-3.5 px-5 rounded-full bg-xpo-red hover:bg-xpo-redDark text-white text-xs font-semibold uppercase tracking-widest flex items-center justify-center gap-2 transition-colors">
+            <i data-lucide="file-text" class="w-4 h-4"></i>
+            <span data-i18n="btn_open_quoter">Abrir Cotizador Proforma PDF</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Clean Direct Contact Form -->
+      <div class="lg:col-span-7 p-8 sm:p-10">
+        <form id="direct-contact-form" class="space-y-4">
+          {% csrf_token %}
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-[11px] font-bold uppercase tracking-wider text-stone-600 mb-1" data-i18n="c_lbl_name">Nombre *</label>
+              <input type="text" name="full_name" required placeholder="Tu nombre" class="w-full px-4 py-3 rounded-xl border border-stone-300 text-sm focus:border-xpo-red outline-none">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold uppercase tracking-wider text-stone-600 mb-1" data-i18n="c_lbl_company">Empresa *</label>
+              <input type="text" name="company" required placeholder="Empresa / Importadora" class="w-full px-4 py-3 rounded-xl border border-stone-300 text-sm focus:border-xpo-red outline-none">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-[11px] font-bold uppercase tracking-wider text-stone-600 mb-1" data-i18n="c_lbl_email">Correo *</label>
+              <input type="email" name="email" required placeholder="correo@empresa.com" class="w-full px-4 py-3 rounded-xl border border-stone-300 text-sm focus:border-xpo-red outline-none">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold uppercase tracking-wider text-stone-600 mb-1" data-i18n="c_lbl_country">País / Teléfono</label>
+              <input type="text" name="country" placeholder="País • +51 999..." class="w-full px-4 py-3 rounded-xl border border-stone-300 text-sm focus:border-xpo-red outline-none">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-stone-600 mb-1" data-i18n="c_lbl_product">Producto de Interés</label>
+            <select name="product_interest" class="w-full px-4 py-3 rounded-xl border border-stone-300 text-sm bg-white focus:border-xpo-red outline-none">
+              {% for p in products %}
+              <option value="{{ p.name }}">{{ p.name }} ({{ p.modality_label_es }})</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-stone-600 mb-1" data-i18n="c_lbl_msg">Mensaje / Volumen requerido</label>
+            <textarea name="message" rows="2" placeholder="Ej: 1 contenedor de Quinua Blanca Orgánica..." class="w-full px-4 py-3 rounded-xl border border-stone-300 text-sm focus:border-xpo-red outline-none"></textarea>
+          </div>
+
+          <button type="submit" class="px-8 py-3.5 rounded-full bg-stone-900 hover:bg-xpo-red text-white font-semibold text-xs uppercase tracking-widest transition-colors" data-i18n="c_btn_send">
+            Enviar Solicitud
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Modal Visual de Producto -->
+<div id="product-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+  <div class="modal-card bg-white rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col md:flex-row relative">
+    <button id="modal-close" type="button" class="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-black/70 hover:bg-xpo-red text-white flex items-center justify-center transition-colors">
+      <i data-lucide="x" class="w-4 h-4"></i>
+    </button>
+
+    <div class="md:w-1/2 h-72 md:h-auto relative bg-stone-900">
+      <img id="modal-image" src="" alt="Producto" class="w-full h-full object-cover">
+    </div>
+
+    <div class="p-7 md:w-1/2 space-y-4 flex flex-col justify-between">
+      <div>
+        <span id="modal-scientific" class="text-[11px] text-xpo-red font-bold uppercase tracking-widest block mb-1"></span>
+        <h3 id="modal-title" class="font-serif font-semibold text-2xl text-stone-900"></h3>
+        
+        <div class="mt-4 space-y-2.5 text-xs">
+          <div class="p-2.5 rounded-xl bg-stone-50 border border-stone-200">
+            <span class="text-stone-400 block">Presentación / Calidad:</span>
+            <span id="modal-variety" class="text-stone-800 font-semibold"></span>
+          </div>
+          <div class="p-2.5 rounded-xl bg-stone-50 border border-stone-200">
+            <span class="text-stone-400 block">Origen:</span>
+            <span id="modal-origin" class="text-stone-800 font-semibold"></span>
+          </div>
+          <div class="p-2.5 rounded-xl bg-stone-50 border border-stone-200">
+            <span class="text-stone-400 block">Disponibilidad:</span>
+            <span id="modal-season" class="text-stone-800 font-semibold"></span>
+          </div>
+          <div class="p-2.5 rounded-xl bg-[#fbfaf6] border border-xpo-border">
+            <span class="text-stone-500 block">Empaque Exportación:</span>
+            <span id="modal-specs" class="text-stone-900 font-semibold"></span>
+          </div>
+        </div>
+      </div>
+
+      <a href="{% url 'landing:cotizador' %}" class="w-full py-3 rounded-full bg-xpo-red hover:bg-xpo-redDark text-white font-semibold text-xs tracking-widest uppercase text-center block transition-colors mt-3" data-i18n="modal_quote_btn">
+        Cotizar este producto
       </a>
     </div>
-
   </div>
-</section>
+</div>
 
+<script>
+  function filterVisualCatalog(catSlug, btn) {
+    document.querySelectorAll('#home-category-pills .cat-filter-btn').forEach(b => {
+      b.classList.remove('bg-xpo-red', 'text-white');
+      b.classList.add('bg-stone-100', 'text-stone-700');
+    });
+    btn.classList.remove('bg-stone-100', 'text-stone-700');
+    btn.classList.add('bg-xpo-red', 'text-white');
 
-<!-- ======================================================== -->
-<!-- 5. DEL CAMPO AL MUNDO OVERVIEW                           -->
-<!-- ======================================================== -->
-<section class="py-24 bg-agro-950 text-white relative overflow-hidden">
-  <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
-    
-    <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
-      <span class="text-xs uppercase tracking-widest text-agro-300 font-medium" data-i18n="trace_tag">Trazabilidad Integral</span>
-      <h2 class="font-display font-semibold text-3xl sm:text-4xl tracking-tight text-white" data-i18n="trace_title">
-        El Estándar Agrosur
-      </h2>
-      <p class="text-stone-300 text-sm font-light leading-relaxed" data-i18n="trace_desc">
-        De los fértiles valles de Ica, Piura y Olmos hasta las mesas de Europa, Asia y América.
-      </p>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      
-      <div class="relative rounded-2xl overflow-hidden bg-agro-900/60 border border-agro-800/60 p-7 space-y-5 flex flex-col justify-between">
-        <div class="h-44 rounded-xl overflow-hidden relative">
-          <img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=800&q=80" alt="Campos propios" class="w-full h-full object-cover">
-          <div class="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-agro-700 text-white font-medium text-xs">Paso 01</div>
-        </div>
-        <div>
-          <h3 class="font-display font-medium text-lg text-white mb-2">Campos Propios & Riego Tecnificado</h3>
-          <p class="text-stone-300 text-xs sm:text-sm leading-relaxed font-light">
-            Gestión hídrica de precisión en valles desérticos con microclimas privilegiados que otorgan dulzura y firmeza.
-          </p>
-        </div>
-        <div class="pt-2 border-t border-agro-800/60 text-xs text-agro-300 font-medium">
-          <a href="{% url 'landing:nosotros' %}" class="inline-flex items-center gap-1 hover:underline">
-            <span>Conocer nuestros campos</span>
-            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-          </a>
-        </div>
-      </div>
-
-      <div class="relative rounded-2xl overflow-hidden bg-agro-900/60 border border-agro-800/60 p-7 space-y-5 flex flex-col justify-between">
-        <div class="h-44 rounded-xl overflow-hidden relative">
-          <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80" alt="Packing automatizado" class="w-full h-full object-cover">
-          <div class="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-agro-700 text-white font-medium text-xs">Paso 02</div>
-        </div>
-        <div>
-          <h3 class="font-display font-medium text-lg text-white mb-2">Planta de Empaque & Cadena de Frío</h3>
-          <p class="text-stone-300 text-xs sm:text-sm leading-relaxed font-light">
-            Líneas ópticas de selección por color, calibrado por peso y cámaras frigoríficas automáticas.
-          </p>
-        </div>
-        <div class="pt-2 border-t border-agro-800/60 text-xs text-agro-300 font-medium">
-          <a href="{% url 'landing:nosotros' %}" class="inline-flex items-center gap-1 hover:underline">
-            <span>Ver infraestructura packing</span>
-            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-          </a>
-        </div>
-      </div>
-
-      <div class="relative rounded-2xl overflow-hidden bg-agro-900/60 border border-agro-800/60 p-7 space-y-5 flex flex-col justify-between">
-        <div class="h-44 rounded-xl overflow-hidden relative">
-          <img src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=800&q=80" alt="Logística de exportación" class="w-full h-full object-cover">
-          <div class="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-agro-700 text-white font-medium text-xs">Paso 03</div>
-        </div>
-        <div>
-          <h3 class="font-display font-medium text-lg text-white mb-2">Logística Global Directa</h3>
-          <p class="text-stone-300 text-xs sm:text-sm leading-relaxed font-light">
-            Despachos multimodales vía contenedores reefer marítimos y carga aérea express con monitoreo satelital.
-          </p>
-        </div>
-        <div class="pt-2 border-t border-agro-800/60 text-xs text-agro-300 font-medium">
-          <a href="{% url 'landing:nosotros' %}" class="inline-flex items-center gap-1 hover:underline">
-            <span>Rutas internacionales</span>
-            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-          </a>
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-</section>
-
-
-<!-- ======================================================== -->
-<!-- 6. B2B COTIZADOR CALL TO ACTION                          -->
-<!-- ======================================================== -->
-<section class="py-20 bg-agro-50/70 border-t border-agro-200/60">
-  <div class="max-w-7xl mx-auto px-6 lg:px-12">
-    <div class="bg-white rounded-3xl p-8 sm:p-14 border border-agro-200/80 shadow-sm flex flex-col lg:flex-row items-center justify-between gap-8">
-      <div class="space-y-3 max-w-2xl">
-        <span class="text-xs uppercase tracking-widest text-agro-700 font-semibold block">Mesa de Cotizaciones B2B</span>
-        <h2 class="font-display font-semibold text-3xl sm:text-4xl text-stone-900 tracking-tight">
-          Cotiza tu próximo despacho de exportación en línea
-        </h2>
-        <p class="text-stone-600 text-sm font-light leading-relaxed">
-          Configuración por contenedor reefer de 40ft, pallets o toneladas, validación fiscal SUNAT / Tax ID internacional y descarga inmediata de proforma en PDF.
-        </p>
-      </div>
-      <div class="flex flex-col sm:flex-row items-center gap-4 shrink-0 w-full sm:w-auto">
-        <a href="{% url 'landing:cotizador' %}" class="w-full sm:w-auto px-8 py-4 rounded-full bg-agro-600 hover:bg-agro-500 text-white font-medium text-sm tracking-wide transition-colors text-center shadow-sm">
-          Ir al Cotizador Online
-        </a>
-        <a href="{% url 'landing:calidad' %}" class="w-full sm:w-auto px-8 py-4 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-800 font-medium text-sm transition-colors text-center">
-          Ver Certificaciones
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
-
+    document.querySelectorAll('.visual-product-card').forEach(card => {
+      const cardCat = card.getAttribute('data-category') || '';
+      if (catSlug === 'all' || cardCat === catSlug) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+</script>
 {% endblock %}

@@ -1,54 +1,69 @@
 from django.test import TestCase, Client
 from django.urls import reverse
-from .models import Product, HeroSlide, QuoteRequest, QuoteItem
+from .models import ProductCategory, Product, HeroSlide, QuoteRequest, QuoteItem, ContactMessage
 
 
 class QuotationAndDecoupledPagesTests(TestCase):
     def setUp(self):
         self.client = Client()
         self.hero = HeroSlide.objects.create(
-            title="Frutos del Perú",
-            title_en="Fruits of Peru",
-            tagline="Exportación global",
-            tagline_en="Global export",
+            title="Granos y semillas andinas",
+            title_en="Andean grains and seeds",
+            tagline="Granos Andinos",
+            tagline_en="Andean Grains",
+            order=1,
+            is_active=True
+        )
+        self.category = ProductCategory.objects.create(
+            name="Granos y Semillas Andinas",
+            name_en="Andean Grains & Seeds",
+            slug="granos-andinos",
             order=1,
             is_active=True
         )
         self.product = Product.objects.create(
-            name="Palta Hass",
-            name_en="Hass Avocado",
-            variety="Hass",
-            origin="Ica",
-            origin_en="Ica Valley",
-            season="Marzo a Septiembre",
-            season_en="March to September",
-            ref_price_fob_usd=3.20,
-            order=1
+            category=self.category,
+            name="Quinua Blanca en Grano",
+            name_en="White Quinoa Grain",
+            modality="ORGANICO_CONVENCIONAL",
+            variety="Pureza 99.95%",
+            origin="Ayacucho / Puno",
+            origin_en="Ayacucho / Puno",
+            season="Todo el año",
+            season_en="All year round",
+            ref_price_fob_usd=2.85,
+            order=1,
+            is_active=True,
+            is_featured=True
         )
 
-    def test_landing_page_bilingual(self):
+    def test_landing_page_bilingual_and_visual_catalog(self):
         response_es = self.client.get(reverse('landing:index') + '?lang=es')
         self.assertEqual(response_es.status_code, 200)
-        self.assertContains(response_es, "AGROSUR")
+        self.assertContains(response_es, "AGRO SUR LATINO")
+        self.assertContains(response_es, "Quinua Blanca en Grano")
+        self.assertContains(response_es, "Granos y semillas andinas")
 
         response_en = self.client.get(reverse('landing:index') + '?lang=en')
         self.assertEqual(response_en.status_code, 200)
 
     def test_decoupled_pages_accessible(self):
-        # 1. Página de Productos
+        # 1. Página Visual de Productos desde SQLite3
         res_prod = self.client.get(reverse('landing:productos'))
         self.assertEqual(res_prod.status_code, 200)
-        self.assertContains(res_prod, "Palta Hass")
+        self.assertContains(res_prod, "Quinua Blanca en Grano")
+        self.assertContains(res_prod, "Granos y Semillas Andinas")
 
-        # 2. Página del Cotizador
+        # 2. Página del Cotizador B2B
         res_coti = self.client.get(reverse('landing:cotizador'))
         self.assertEqual(res_coti.status_code, 200)
         self.assertContains(res_coti, "quote-form")
 
-        # 3. Página de Nosotros / Origen
+        # 3. Página de Sobre Nosotros (About Us)
         res_nos = self.client.get(reverse('landing:nosotros'))
         self.assertEqual(res_nos.status_code, 200)
-        self.assertContains(res_nos, "Origen & Campos Propios")
+        self.assertContains(res_nos, "AGRO SUR LATINO S.A.C.")
+        self.assertContains(res_nos, "20517805662")
 
         # 4. Página de Calidad / Certificaciones
         res_cal = self.client.get(reverse('landing:calidad'))
@@ -58,16 +73,16 @@ class QuotationAndDecoupledPagesTests(TestCase):
     def test_quote_persona_juridica_and_pdf_generation(self):
         data = {
             'client_type': 'JURIDICA_RUC',
-            'document_number': '20609876543',
-            'legal_name': 'AGROEXPORT IMPORT SAC',
-            'contact_name': 'Carlos Mendoza',
+            'document_number': '20517805662',
+            'legal_name': 'AGRO SUR LATINO IMPORT SAC',
+            'contact_name': 'David Comercial',
             'country': 'Perú',
-            'email': 'carlos@agroexport.pe',
+            'email': 'david@agrosurlatino.com',
             'phone': '+51 987654321',
             'incoterm': 'FOB',
             'destination_port': 'Callao',
             'items': [
-                {'product_id': self.product.id, 'quantity': 2, 'unit': 'CONTENEDOR_40', 'subtotal': 134400}
+                {'product_id': self.product.id, 'quantity': 1, 'unit': 'CONTENEDOR_40', 'subtotal': 57000}
             ]
         }
         response = self.client.post(
@@ -91,13 +106,13 @@ class QuotationAndDecoupledPagesTests(TestCase):
         data = {
             'client_type': 'NATURAL_RUC',
             'document_number': '10456789012',
-            'legal_name': 'Mendoza Frutos Frescos',
+            'legal_name': 'Mendoza Granos Andinos',
             'contact_name': 'Carlos Mendoza',
             'country': 'Perú',
-            'email': 'cmendoza@frutos.pe',
+            'email': 'cmendoza@granos.pe',
             'phone': '+51 987654321',
             'incoterm': 'FOB',
-            'items': [{'product_id': self.product.id, 'quantity': 1, 'unit': 'PALLET', 'subtotal': 3200}]
+            'items': [{'product_id': self.product.id, 'quantity': 1, 'unit': 'PALLET', 'subtotal': 2850}]
         }
         response = self.client.post(
             reverse('landing:submit_quote'),
@@ -111,14 +126,14 @@ class QuotationAndDecoupledPagesTests(TestCase):
         data = {
             'client_type': 'EXTRANJERO',
             'document_number': 'NL-845210987B01',
-            'legal_name': 'Rotterdam Fruit B.V.',
+            'legal_name': 'Rotterdam Grains B.V.',
             'contact_name': 'Jan Van Dijk',
             'country': 'Países Bajos',
-            'email': 'jan@rotterdamfruit.nl',
+            'email': 'jan@rotterdamgrains.nl',
             'phone': '+31 6 12345678',
             'incoterm': 'CIF',
             'destination_port': 'Port of Rotterdam',
-            'items': [{'product_id': self.product.id, 'quantity': 3, 'unit': 'CONTENEDOR_40', 'subtotal': 201600}]
+            'items': [{'product_id': self.product.id, 'quantity': 2, 'unit': 'CONTENEDOR_40', 'subtotal': 114000}]
         }
         response = self.client.post(
             reverse('landing:submit_quote'),
@@ -131,7 +146,7 @@ class QuotationAndDecoupledPagesTests(TestCase):
     def test_quote_invalid_ruc_rejected(self):
         data = {
             'client_type': 'JURIDICA_RUC',
-            'document_number': '10609876543',  # Inválido para Jurídica
+            'document_number': '10609876543',
             'legal_name': 'TEST EMPRESA',
             'contact_name': 'Test',
             'email': 'test@test.com',
@@ -143,3 +158,19 @@ class QuotationAndDecoupledPagesTests(TestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertFalse(response.json()['success'])
+
+    def test_contact_message_submission(self):
+        response = self.client.post(
+            reverse('landing:submit_contact'),
+            {
+                'full_name': 'Ana Torres',
+                'company': 'Andes Organic Foods',
+                'country': 'Estados Unidos',
+                'email': 'ana@andesorganic.com',
+                'product_interest': 'Quinua Blanca en Grano',
+                'message': 'Interesados en 2 contenedores de Quinua Blanca Orgánica.'
+            }
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json()['success'])
+        self.assertEqual(ContactMessage.objects.count(), 1)

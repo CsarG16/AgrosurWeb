@@ -3,7 +3,17 @@ from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
-from .models import HeroSlide, Product, CompanyStat, Certification, QuoteRequest, QuoteItem, ContactMessage, validate_peruvian_document
+from .models import (
+    HeroSlide,
+    ProductCategory,
+    Product,
+    CompanyStat,
+    Certification,
+    QuoteRequest,
+    QuoteItem,
+    ContactMessage,
+    validate_peruvian_document,
+)
 from .pdf import generate_quotation_pdf
 
 
@@ -13,6 +23,11 @@ def get_products_data(products):
             'id': p.id,
             'name': p.name,
             'name_en': p.name_en or p.name,
+            'category': p.category.name if p.category else 'Granos y Semillas',
+            'category_en': (p.category.name_en or p.category.name) if p.category else 'Grains & Seeds',
+            'category_slug': p.category.slug if p.category else 'granos',
+            'modality': p.modality_label_es,
+            'modality_en': p.modality_label_en,
             'variety': p.variety,
             'origin': p.origin,
             'origin_en': p.origin_en,
@@ -31,19 +46,24 @@ def get_products_data(products):
 
 
 def index(request):
-    """Página de Inicio / Home: Vista ejecutiva y general"""
+    """Página de Inicio / Home: Impacto Visual estilo Xpodeka + Productos desde SQLite3"""
     lang = request.GET.get('lang', 'es')
     if lang not in ['es', 'en']:
         lang = 'es'
 
     hero_slides = HeroSlide.objects.filter(is_active=True)
-    products = Product.objects.all()
+    categories = ProductCategory.objects.filter(is_active=True)
+    products = Product.objects.filter(is_active=True).select_related('category')
+    featured_products = products.filter(is_featured=True)
+    if not featured_products.exists():
+        featured_products = products
     stats = CompanyStat.objects.all()
     certifications = Certification.objects.all()
 
     context = {
         'hero_slides': hero_slides,
-        'featured_products': products[:3],
+        'categories': categories,
+        'featured_products': featured_products,
         'products': products,
         'products_json': json.dumps(get_products_data(products)),
         'stats': stats,
@@ -55,15 +75,17 @@ def index(request):
 
 
 def productos_view(request):
-    """Página dedicada: Catálogo de Frutos y Cosecha de Exportación"""
+    """Página dedicada: Catálogo Visual de Granos Andinos, Semillas y Menestras en SQLite3"""
     lang = request.GET.get('lang', 'es')
     if lang not in ['es', 'en']:
         lang = 'es'
 
-    products = Product.objects.all()
+    categories = ProductCategory.objects.filter(is_active=True)
+    products = Product.objects.filter(is_active=True).select_related('category')
     certifications = Certification.objects.all()
 
     context = {
+        'categories': categories,
         'products': products,
         'products_json': json.dumps(get_products_data(products)),
         'certifications': certifications,
@@ -74,14 +96,16 @@ def productos_view(request):
 
 
 def cotizador_view(request):
-    """Página dedicada: Mesa Inteligente de Cotizaciones B2B & RUC Perú / Tax ID"""
+    """Página dedicada: Mesa Inteligente de Cotizaciones B2B & Contacto"""
     lang = request.GET.get('lang', 'es')
     if lang not in ['es', 'en']:
         lang = 'es'
 
-    products = Product.objects.all()
+    categories = ProductCategory.objects.filter(is_active=True)
+    products = Product.objects.filter(is_active=True).select_related('category')
 
     context = {
+        'categories': categories,
         'products': products,
         'products_json': json.dumps(get_products_data(products)),
         'current_lang': lang,
@@ -91,7 +115,7 @@ def cotizador_view(request):
 
 
 def nosotros_view(request):
-    """Página dedicada: Origen, Campos Propios, Empaque y Logística Global"""
+    """Página dedicada: Sobre Nosotros (About Us) - Única sección con narrativa histórica e infraestructura"""
     lang = request.GET.get('lang', 'es')
     if lang not in ['es', 'en']:
         lang = 'es'
@@ -109,7 +133,7 @@ def nosotros_view(request):
 
 
 def calidad_view(request):
-    """Página dedicada: Certificaciones Globales, Inocuidad y Homologaciones"""
+    """Página dedicada: Certificaciones Globales, Inocuidad y Sostenibilidad"""
     lang = request.GET.get('lang', 'es')
     if lang not in ['es', 'en']:
         lang = 'es'
@@ -131,7 +155,7 @@ def quote_pdf(request, quote_id):
 
     response = HttpResponse(pdf_content, content_type='application/pdf')
     code = f"COT-{quote.id:04d}"
-    response['Content-Disposition'] = f'inline; filename="Cotizacion_Agrosur_{code}.pdf"'
+    response['Content-Disposition'] = f'inline; filename="Cotizacion_AgroSurLatino_{code}.pdf"'
     return response
 
 
@@ -172,7 +196,7 @@ def submit_quote(request):
         except ValidationError as e:
             return JsonResponse({'success': False, 'message': str(e.message)}, status=400)
 
-        if client_type == 'EXTRANJERO' and (not country or country.lower() == 'perú' or country.lower() == 'peru'):
+        if client_type == 'EXTRANJERO' and (not country or country.lower() in ['perú', 'peru']):
             msg = 'Para clientes internacionales, por favor especifique el país de destino/residencia.' if lang == 'es' else 'For international clients, please specify your destination country.'
             return JsonResponse({'success': False, 'message': msg}, status=400)
 
@@ -220,9 +244,9 @@ def submit_quote(request):
         pdf_url = f"/cotizacion/{quote.id}/pdf/"
 
         if lang == 'es':
-            success_msg = f"¡Cotización {quote_code} generada exitosamente! Se ha notificado a la Mesa de Exportación de Agrosur."
+            success_msg = f"¡Cotización {quote_code} generada exitosamente! Se ha notificado a Agro Sur Latino S.A.C."
         else:
-            success_msg = f"Quotation {quote_code} generated successfully! Agrosur's Export Desk has been notified."
+            success_msg = f"Quotation {quote_code} generated successfully! Agro Sur Latino's Export Desk has been notified."
 
         return JsonResponse({
             'success': True,
@@ -241,13 +265,18 @@ def submit_quote(request):
 
 @require_POST
 def submit_contact(request):
-    full_name = request.POST.get('full_name', '').strip()
-    company = request.POST.get('company', '').strip()
-    country = request.POST.get('country', '').strip()
-    email = request.POST.get('email', '').strip()
-    phone = request.POST.get('phone', '').strip()
-    product_interest = request.POST.get('product_interest', '').strip()
-    message = request.POST.get('message', '').strip()
+    if request.content_type == 'application/json':
+        data = json.loads(request.body)
+    else:
+        data = request.POST
+
+    full_name = data.get('full_name', '').strip()
+    company = data.get('company', '').strip()
+    country = data.get('country', '').strip()
+    email = data.get('email', '').strip()
+    phone = data.get('phone', '').strip()
+    product_interest = data.get('product_interest', '').strip()
+    message = data.get('message', '').strip()
 
     if not full_name or not email or not company:
         return JsonResponse({
@@ -258,7 +287,7 @@ def submit_contact(request):
     ContactMessage.objects.create(
         full_name=full_name,
         company=company,
-        country=country or 'No especificado',
+        country=country or 'Perú / Internacional',
         email=email,
         phone=phone,
         product_interest=product_interest,
@@ -267,5 +296,5 @@ def submit_contact(request):
 
     return JsonResponse({
         'success': True,
-        'message': f'¡Gracias {full_name}! Hemos recibido tu consulta comercial. Nuestro equipo de exportaciones te responderá a la brevedad.'
+        'message': f'¡Gracias {full_name}! Hemos recibido tu mensaje en Agro Sur Latino S.A.C. Te responderemos a la brevedad.'
     })

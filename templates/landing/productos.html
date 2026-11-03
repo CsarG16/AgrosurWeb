@@ -1,91 +1,73 @@
 {% extends 'landing/base.html' %}
 {% load static %}
 
-{% block title %}Nuestros Frutos de Exportación | Agrosur Perú{% endblock %}
+{% block title %}Catálogo Visual de Granos Andinos, Semillas y Menestras | Agro Sur Latino S.A.C.{% endblock %}
 
 {% block content %}
-<!-- Page Header Banner -->
-<section class="pt-32 pb-16 bg-agro-950 text-white relative overflow-hidden">
-  <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
-    <div class="max-w-3xl space-y-4">
-      <div class="flex items-center gap-2 text-xs text-agro-300 font-medium">
-        <a href="{% url 'landing:index' %}" class="hover:text-white transition-colors">Inicio</a>
-        <span>/</span>
-        <span class="text-white">Nuestros Frutos</span>
+<!-- Visual Header with Category Filter Buttons (Zero Clutter) -->
+<section class="py-12 xpodeka-wave-bg border-b border-xpo-border/80">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div>
+        <span class="text-xs uppercase tracking-[0.2em] text-xpo-red font-bold block mb-2" data-i18n="catalog_tag">ORGÁNICO & CONVENCIONAL</span>
+        <h1 class="font-serif font-semibold text-4xl sm:text-5xl text-stone-900 tracking-tight" data-i18n="catalog_title">
+          Nuestros Productos
+        </h1>
       </div>
-      <h1 class="font-display font-semibold text-4xl sm:text-5xl text-white tracking-tight" data-i18n="catalog_title">
-        Nuestros Frutos de Exportación
-      </h1>
-      <p class="text-stone-300 text-sm sm:text-base font-light leading-relaxed max-w-2xl" data-i18n="catalog_desc">
-        Seleccionados a mano en punto óptimo de maduración, con cadena de frío continua desde el empaque hasta puerto de destino.
-      </p>
+
+      <!-- Category Filter Pills from SQLite3 -->
+      <div class="flex flex-wrap items-center gap-2" id="category-filter-pills">
+        <button type="button" onclick="filterProductsByCategory('all', this)" class="product-filter-btn px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-xpo-red text-white transition-all">
+          <span data-i18n="filter_all">Todos</span> ({{ products.count }})
+        </button>
+        {% for cat in categories %}
+        <button type="button" onclick="filterProductsByCategory('{{ cat.slug }}', this)" class="product-filter-btn px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-white hover:bg-stone-100 text-stone-700 border border-stone-200 transition-all bilingual-name"
+                data-es="{{ cat.name }}" data-en="{{ cat.name_en|default:cat.name }}">
+          {{ cat.name }}
+        </button>
+        {% endfor %}
+      </div>
     </div>
   </div>
 </section>
 
-<!-- Main Products Section -->
-<section class="py-20 bg-white">
-  <div class="max-w-7xl mx-auto px-6 lg:px-12">
-    
-    <!-- Filter Pills Bar -->
-    <div class="flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-stone-200">
-      <div class="flex flex-wrap items-center gap-2" id="origin-filter-pills">
-        <button type="button" onclick="filterProducts('all', this)" class="product-filter-btn px-4 py-2 rounded-full text-xs font-medium bg-agro-700 text-white transition-colors">
-          Todos los Frutos ({{ products.count }})
-        </button>
-        <button type="button" onclick="filterProducts('Ica', this)" class="product-filter-btn px-4 py-2 rounded-full text-xs font-medium bg-stone-100 hover:bg-stone-200 text-stone-700 transition-colors">
-          Valles de Ica
-        </button>
-        <button type="button" onclick="filterProducts('Piura', this)" class="product-filter-btn px-4 py-2 rounded-full text-xs font-medium bg-stone-100 hover:bg-stone-200 text-stone-700 transition-colors">
-          Valles de Piura
-        </button>
-        <button type="button" onclick="filterProducts('Olmos', this)" class="product-filter-btn px-4 py-2 rounded-full text-xs font-medium bg-stone-100 hover:bg-stone-200 text-stone-700 transition-colors">
-          Valles de Olmos
-        </button>
-      </div>
+<!-- Main 100% Visual Products Gallery (Loaded from SQLite3) -->
+<section class="py-16 bg-white">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
 
-      <a href="{% url 'landing:cotizador' %}" class="inline-flex items-center gap-2 text-xs font-semibold text-agro-700 hover:text-agro-800">
-        <i data-lucide="calculator" class="w-4 h-4"></i>
-        <span>Cotizar Despacho Directo</span>
-      </a>
-    </div>
-
-    <!-- Product Visual Cards Grid -->
-    <div id="products-catalog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+    <div id="products-catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-7">
       {% for product in products %}
-      <div class="product-catalog-card card-hover-effect group relative rounded-2xl overflow-hidden bg-stone-900 shadow-sm cursor-pointer flex flex-col justify-end aspect-[4/5]"
-           data-origin="{{ product.origin }}"
+      <div class="product-catalog-card card-hover-effect group relative rounded-xl overflow-hidden bg-stone-900 shadow-md cursor-pointer flex flex-col justify-end aspect-[3/4]"
+           data-category="{{ product.category.slug|default:'granos-andinos' }}"
            onclick="openProductModal(this)"
-           data-product='{"id": {{ product.id }}, "name": "{{ product.name }}", "name_en": "{{ product.name_en }}", "scientific_name": "{{ product.scientific_name }}", "variety": "{{ product.variety }}", "origin": "{{ product.origin }}", "origin_en": "{{ product.origin_en }}", "season": "{{ product.season }}", "season_en": "{{ product.season_en }}", "packing_specs": "{{ product.packing_specs }}", "packing_specs_en": "{{ product.packing_specs_en }}", "image": "{{ product.get_image }}", "price_fob": {{ product.ref_price_fob_usd }}}'>
+           data-product='{"id": {{ product.id }}, "name": "{{ product.name|escapejs }}", "name_en": "{{ product.name_en|default:product.name|escapejs }}", "scientific_name": "{{ product.scientific_name|escapejs }}", "modality": "{{ product.modality_label_es|escapejs }}", "modality_en": "{{ product.modality_label_en|escapejs }}", "variety": "{{ product.variety|escapejs }}", "origin": "{{ product.origin|escapejs }}", "origin_en": "{{ product.origin_en|escapejs }}", "season": "{{ product.season|escapejs }}", "season_en": "{{ product.season_en|escapejs }}", "packing_specs": "{{ product.packing_specs|escapejs }}", "packing_specs_en": "{{ product.packing_specs_en|escapejs }}", "image": "{{ product.get_image|escapejs }}", "price_fob": {{ product.ref_price_fob_usd }}}'>
         
-        <img src="{{ product.get_image }}" alt="{{ product.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105">
-        <div class="absolute inset-0 bg-gradient-to-t from-agro-950/95 via-agro-950/40 to-transparent"></div>
+        <img src="{{ product.get_image }}" alt="{{ product.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent"></div>
 
-        <div class="absolute top-5 left-5 right-5 flex items-center justify-between z-10">
-          <span class="px-3 py-1 rounded-full glass-dark text-agro-200 text-xs font-medium backdrop-blur-md bilingual-origin" data-es="{{ product.origin }}" data-en="{{ product.origin_en }}">
-            {{ product.origin }}
+        <div class="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
+          <span class="px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-[10px] font-semibold uppercase tracking-wider border border-white/15 bilingual-name"
+                data-es="{{ product.modality_label_es }}" data-en="{{ product.modality_label_en }}">
+            {{ product.modality_label_es }}
           </span>
-          <span class="w-8 h-8 rounded-full bg-white/15 backdrop-blur-md text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+          <span class="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
             <i data-lucide="maximize-2" class="w-4 h-4"></i>
           </span>
         </div>
 
-        <div class="relative z-10 p-6 space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="text-agro-300 text-xs font-medium uppercase tracking-wider">{{ product.variety }}</span>
-            <span class="text-xs px-2.5 py-0.5 rounded-full bg-agro-950/70 text-agro-200 border border-agro-700/50 font-mono font-medium">FOB ${{ product.ref_price_fob_usd }}/{{ product.price_unit }}</span>
-          </div>
-          <h3 class="font-display font-medium text-2xl text-white group-hover:text-agro-200 transition-colors bilingual-name" data-es="{{ product.name }}" data-en="{{ product.name_en }}">
-            {{ product.name }}
-          </h3>
-          <p class="text-stone-300 text-xs line-clamp-1 flex items-center gap-1.5 bilingual-season" data-es="{{ product.season }}" data-en="{{ product.season_en }}">
-            <i data-lucide="calendar" class="w-3.5 h-3.5 text-agro-300 shrink-0"></i>
-            <span>Temporada: {{ product.season }}</span>
-          </p>
-
-          <div class="pt-3 border-t border-white/10 flex items-center justify-between text-xs text-stone-300 font-medium">
-            <span data-i18n="card_spec_btn">Ver Ficha Técnica</span>
-            <i data-lucide="arrow-right" class="w-4 h-4 text-agro-300 group-hover:translate-x-1 transition-transform"></i>
+        <div class="relative z-10 p-5 space-y-1.5">
+          <span class="text-amber-300/90 text-[10px] font-semibold uppercase tracking-widest block bilingual-origin"
+                data-es="{{ product.origin }}" data-en="{{ product.origin_en }}">
+            {{ product.origin }}
+          </span>
+          <div class="flex items-end justify-between gap-2">
+            <h3 class="font-serif font-semibold text-2xl text-white group-hover:text-amber-200 transition-colors bilingual-name"
+                data-es="{{ product.name }}" data-en="{{ product.name_en|default:product.name }}">
+              {{ product.name }}
+            </h3>
+            <span class="shrink-0 w-9 h-9 rounded-full bg-xpo-red text-white flex items-center justify-center shadow-sm">
+              <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+            </span>
           </div>
         </div>
 
@@ -93,102 +75,54 @@
       {% endfor %}
     </div>
 
-    <!-- Technical Specifications Table -->
-    <div class="mt-24 pt-12 border-t border-stone-200">
-      <div class="mb-8">
-        <span class="text-xs uppercase tracking-widest text-agro-700 font-semibold mb-1 block">Estándares de Empaque</span>
-        <h3 class="font-display font-semibold text-2xl text-stone-900">
-          Tabla de Especificaciones Técnicas de Exportación
-        </h3>
-      </div>
-
-      <div class="overflow-x-auto rounded-2xl border border-stone-200 shadow-sm">
-        <table class="w-full text-left text-xs">
-          <thead class="bg-agro-50 text-stone-700 uppercase font-semibold border-b border-stone-200">
-            <tr>
-              <th class="p-4">Fruto & Variedad</th>
-              <th class="p-4">Valle de Origen</th>
-              <th class="p-4">Ventana Cosecha</th>
-              <th class="p-4">Especificación de Empaque</th>
-              <th class="p-4">Ref. FOB USD</th>
-              <th class="p-4 text-center">Acción</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-stone-100 bg-white">
-            {% for product in products %}
-            <tr class="hover:bg-stone-50/80 transition-colors">
-              <td class="p-4 font-medium text-stone-900 flex items-center gap-3">
-                <img src="{{ product.get_image }}" alt="{{ product.name }}" class="w-10 h-10 rounded-lg object-cover">
-                <div>
-                  <span class="block font-semibold text-sm">{{ product.name }}</span>
-                  <span class="text-[11px] text-stone-500 font-mono">{{ product.scientific_name }}</span>
-                </div>
-              </td>
-              <td class="p-4 text-stone-600 font-medium">{{ product.origin }}</td>
-              <td class="p-4 text-stone-600">{{ product.season }}</td>
-              <td class="p-4 text-stone-600">{{ product.packing_specs }}</td>
-              <td class="p-4 font-mono font-semibold text-agro-700">${{ product.ref_price_fob_usd }}/{{ product.price_unit }}</td>
-              <td class="p-4 text-center">
-                <a href="{% url 'landing:cotizador' %}" class="inline-block px-3 py-1.5 rounded-lg bg-agro-600 hover:bg-agro-500 text-white font-medium text-xs transition-colors">
-                  Cotizar
-                </a>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-
   </div>
 </section>
 
-<!-- Modal de Inspección Técnica -->
-<div id="product-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-agro-950/80 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
-  <div class="modal-card bg-white rounded-2xl max-w-2xl w-full overflow-hidden shadow-xl transform scale-95 transition-transform duration-300 flex flex-col md:flex-row relative">
+<!-- Modal Visual de Inspección -->
+<div id="product-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+  <div class="modal-card bg-white rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col md:flex-row relative">
     
-    <button id="modal-close" class="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-stone-800/70 hover:bg-stone-900 text-white flex items-center justify-center transition-colors">
+    <button id="modal-close" type="button" class="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-black/70 hover:bg-xpo-red text-white flex items-center justify-center transition-colors">
       <i data-lucide="x" class="w-4 h-4"></i>
     </button>
 
-    <div class="md:w-1/2 h-64 md:h-auto relative bg-stone-900">
+    <div class="md:w-1/2 h-72 md:h-auto relative bg-stone-900">
       <img id="modal-image" src="" alt="Producto" class="w-full h-full object-cover">
-      <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
     </div>
 
     <div class="p-7 md:w-1/2 space-y-4 flex flex-col justify-between">
       <div>
         <div class="flex items-center justify-between mb-2">
-          <img src="{% static 'images/agrosurlogo.png' %}" alt="Agrosur" class="h-5 w-auto object-contain opacity-75">
-          <span id="modal-scientific" class="text-xs text-agro-700 font-mono italic"></span>
+          <img src="{% static 'images/agrosurlogo.png' %}" alt="Agro Sur Latino" class="h-5 w-auto object-contain opacity-80">
+          <span id="modal-scientific" class="text-xs text-xpo-red font-mono italic"></span>
         </div>
-        <h3 id="modal-title" class="font-display font-medium text-2xl text-stone-900"></h3>
+        <h3 id="modal-title" class="font-serif font-semibold text-2xl text-stone-900"></h3>
         
         <div class="mt-4 space-y-2.5 text-xs">
           <div class="p-2.5 rounded-xl bg-stone-50 border border-stone-200/80">
-            <span class="text-stone-400 block font-normal">Variedad:</span>
-            <span id="modal-variety" class="text-stone-800 font-medium text-sm"></span>
+            <span class="text-stone-400 block font-normal">Presentación / Calidad:</span>
+            <span id="modal-variety" class="text-stone-800 font-semibold text-sm"></span>
           </div>
 
           <div class="p-2.5 rounded-xl bg-stone-50 border border-stone-200/80">
-            <span class="text-stone-400 block font-normal">Origen / Valles:</span>
-            <span id="modal-origin" class="text-stone-800 font-medium"></span>
+            <span class="text-stone-400 block font-normal">Origen:</span>
+            <span id="modal-origin" class="text-stone-800 font-semibold"></span>
           </div>
 
           <div class="p-2.5 rounded-xl bg-stone-50 border border-stone-200/80">
-            <span class="text-stone-400 block font-normal">Ventana de Cosecha:</span>
-            <span id="modal-season" class="text-stone-800 font-medium"></span>
+            <span class="text-stone-400 block font-normal">Disponibilidad:</span>
+            <span id="modal-season" class="text-stone-800 font-semibold"></span>
           </div>
 
-          <div class="p-2.5 rounded-xl bg-agro-50 border border-agro-200/80">
-            <span class="text-agro-800 block font-normal">Especificación de Empaque:</span>
-            <span id="modal-specs" class="text-agro-950 font-medium"></span>
+          <div class="p-2.5 rounded-xl bg-[#fbfaf6] border border-xpo-border">
+            <span class="text-stone-500 block font-normal">Empaque de Exportación:</span>
+            <span id="modal-specs" class="text-stone-900 font-semibold"></span>
           </div>
         </div>
       </div>
 
-      <a href="{% url 'landing:cotizador' %}" class="w-full py-2.5 rounded-xl bg-agro-600 hover:bg-agro-700 text-white font-medium text-xs tracking-wider uppercase text-center block transition-colors mt-3" data-i18n="modal_quote_btn">
-        Cotizar este fruto
+      <a href="{% url 'landing:cotizador' %}" class="w-full py-3 rounded-full bg-xpo-red hover:bg-xpo-redDark text-white font-semibold text-xs tracking-widest uppercase text-center block transition-colors mt-3" data-i18n="modal_quote_btn">
+        Cotizar este producto
       </a>
     </div>
 
@@ -196,23 +130,33 @@
 </div>
 
 <script>
-  function filterProducts(origin, btn) {
+  function filterProductsByCategory(catSlug, btn) {
     document.querySelectorAll('.product-filter-btn').forEach(b => {
-      b.classList.remove('bg-agro-700', 'text-white');
-      b.classList.add('bg-stone-100', 'text-stone-700');
+      b.classList.remove('bg-xpo-red', 'text-white');
+      b.classList.add('bg-white', 'text-stone-700');
     });
-    btn.classList.remove('bg-stone-100', 'text-stone-700');
-    btn.classList.add('bg-agro-700', 'text-white');
+    btn.classList.remove('bg-white', 'text-stone-700');
+    btn.classList.add('bg-xpo-red', 'text-white');
 
     const cards = document.querySelectorAll('.product-catalog-card');
     cards.forEach(card => {
-      const cardOrigin = card.getAttribute('data-origin') || '';
-      if (origin === 'all' || cardOrigin.toLowerCase().includes(origin.toLowerCase())) {
+      const cardCat = card.getAttribute('data-category') || '';
+      if (catSlug === 'all' || cardCat === catSlug) {
         card.style.display = 'flex';
       } else {
         card.style.display = 'none';
       }
     });
   }
+
+  // Auto-filter if ?cat= param is present in URL
+  document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const cat = params.get('cat');
+    if (cat) {
+      const targetBtn = document.querySelector(`.product-filter-btn[onclick*="${cat}"]`);
+      if (targetBtn) targetBtn.click();
+    }
+  });
 </script>
 {% endblock %}
