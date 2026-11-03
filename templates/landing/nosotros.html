@@ -1,0 +1,168 @@
+{% extends 'landing/base.html' %}
+{% load static %}
+
+{% block title %}Origen & Campos Propios | Trazabilidad Agrosur Perú{% endblock %}
+
+{% block content %}
+<!-- Page Header Banner -->
+<section class="pt-32 pb-16 bg-agro-950 text-white relative overflow-hidden">
+  <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+    <div class="max-w-3xl space-y-4">
+      <div class="flex items-center gap-2 text-xs text-agro-300 font-medium">
+        <a href="{% url 'landing:index' %}" class="hover:text-white transition-colors">Inicio</a>
+        <span>/</span>
+        <span class="text-white">Origen & Campos</span>
+      </div>
+      <h1 class="font-display font-semibold text-4xl sm:text-5xl text-white tracking-tight" data-i18n="trace_title">
+        Origen & Campos Propios
+      </h1>
+      <p class="text-stone-300 text-sm sm:text-base font-light leading-relaxed max-w-2xl" data-i18n="trace_desc">
+        De los fértiles valles de Ica, Piura y Olmos hasta los puertos y mesas más exigentes de Europa, Asia y América.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Detailed 3-Step Traceability Architecture -->
+<section class="py-20 bg-white">
+  <div class="max-w-7xl mx-auto px-6 lg:px-12">
+    
+    <div class="space-y-20">
+      
+      <!-- Paso 1 -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div class="space-y-5">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-agro-100 text-agro-800 text-xs font-semibold">
+            Paso 01 • En Campo
+          </div>
+          <h2 class="font-display font-semibold text-3xl sm:text-4xl text-stone-900 tracking-tight" data-i18n="step_01_title">
+            Campos Propios & Riego Tecnificado
+          </h2>
+          <p class="text-stone-600 text-sm sm:text-base font-light leading-relaxed" data-i18n="step_01_desc">
+            Gestionamos más de 1,200 hectáreas de cultivo propio en valles costeros privilegiados del Perú. Nuestro sistema de fertirriego por goteo computarizado analiza la humedad radicular en tiempo real para optimizar cada gota de agua.
+          </p>
+          <ul class="space-y-3 text-xs sm:text-sm text-stone-700">
+            <li class="flex items-center gap-2.5">
+              <i data-lucide="check-circle" class="w-4 h-4 text-agro-600 shrink-0"></i>
+              <span>Sensores de tensión hídrica en subsuelo y estaciones meteorológicas propias.</span>
+            </li>
+            <li class="flex items-center gap-2.5">
+              <i data-lucide="check-circle" class="w-4 h-4 text-agro-600 shrink-0"></i>
+              <span>Manejo integrado de plagas (MIP) con control biológico natural libre de químicos agresivos.</span>
+            </li>
+            <li class="flex items-center gap-2.5">
+              <i data-lucide="check-circle" class="w-4 h-4 text-agro-600 shrink-0"></i>
+              <span>Cosecha manual selectiva en horarios matutinos para preservar frescura y turgencia.</span>
+            </li>
+          </ul>
+        </div>
+        <div class="h-96 rounded-2xl overflow-hidden shadow-sm relative">
+          <img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1000&q=80" alt="Campos de cultivo Agrosur" class="w-full h-full object-cover">
+        </div>
+      </div>
+
+      <!-- Paso 2 -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center lg:flex-row-reverse">
+        <div class="h-96 rounded-2xl overflow-hidden shadow-sm relative lg:order-2">
+          <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1000&q=80" alt="Packing automatizado Agrosur" class="w-full h-full object-cover">
+        </div>
+        <div class="space-y-5 lg:order-1">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-agro-100 text-agro-800 text-xs font-semibold">
+            Paso 02 • En Planta
+          </div>
+          <h2 class="font-display font-semibold text-3xl sm:text-4xl text-stone-900 tracking-tight" data-i18n="step_02_title">
+            Planta de Empaque & Cadena de Frío Continua
+          </h2>
+          <p class="text-stone-600 text-sm sm:text-base font-light leading-relaxed" data-i18n="step_02_desc">
+            Nuestras plantas de empaque cuentan con líneas de selección óptica computarizada que clasifican cada fruto por calibre exacto, color, peso y niveles de brix (°Bx) sin daño mecánico.
+          </p>
+          <ul class="space-y-3 text-xs sm:text-sm text-stone-700">
+            <li class="flex items-center gap-2.5">
+              <i data-lucide="check-circle" class="w-4 h-4 text-agro-600 shrink-0"></i>
+              <span>Túneles de pre-enfriado rápido por aire forzado (Forced Air Cooling) para bajar la temperatura de campo a 4°C en minutos.</span>
+            </li>
+            <li class="flex items-center gap-2.5">
+              <i data-lucide="check-circle" class="w-4 h-4 text-agro-600 shrink-0"></i>
+              <span>Salas de empaque con presión positiva y filtración HEPA para total inocuidad alimentaria.</span>
+            </li>
+            <li class="flex items-center gap-2.5">
+              <i data-lucide="check-circle" class="w-4 h-4 text-agro-600 shrink-0"></i>
+              <span>Trazabilidad unitaria por código QR y lote desde el árbol hasta la caja master final.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Paso 3 -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div class="space-y-5">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-agro-100 text-agro-800 text-xs font-semibold">
+            Paso 03 • Destino Internacional
+          </div>
+          <h2 class="font-display font-semibold text-3xl sm:text-4xl text-stone-900 tracking-tight" data-i18n="step_03_title">
+            Logística Multimodal Global Directa
+          </h2>
+          <p class="text-stone-600 text-sm sm:text-base font-light leading-relaxed" data-i18n="step_03_desc">
+            Coordinamos despachos marítimos y aéreos directos desde el Puerto del Callao, Pisco y Paita hacia los principales hubs logísticos del planeta (Rotterdam, Long Beach, Shanghai, Hamburgo, Algeciras).
+          </p>
+          <ul class="space-y-3 text-xs sm:text-sm text-stone-700">
+            <li class="flex items-center gap-2.5">
+              <i data-lucide="check-circle" class="w-4 h-4 text-agro-600 shrink-0"></i>
+              <span>Contenedores Reefer de 40ft con Atmósfera Controlada (CA) para frenar la respiración celular del fruto.</span>
+            </li>
+            <li class="flex items-center gap-2.5">
+              <i data-lucide="check-circle" class="w-4 h-4 text-agro-600 shrink-0"></i>
+              <span>Data loggers satelitales en tiempo real con monitoreo GPS de temperatura, humedad y niveles de CO2/O2.</span>
+            </li>
+            <li class="flex items-center gap-2.5">
+              <i data-lucide="check-circle" class="w-4 h-4 text-agro-600 shrink-0"></i>
+              <span>Certificados fitosanitarios oficiales SENASA Perú emitidos en línea previa inspección en planta.</span>
+            </li>
+          </ul>
+        </div>
+        <div class="h-96 rounded-2xl overflow-hidden shadow-sm relative">
+          <img src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1000&q=80" alt="Logística reefer de exportación" class="w-full h-full object-cover">
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Valle Profiles -->
+    <div class="mt-28 pt-16 border-t border-stone-200">
+      <div class="text-center max-w-2xl mx-auto mb-16 space-y-2">
+        <span class="text-xs uppercase tracking-widest text-agro-700 font-semibold">Microclimas del Perú</span>
+        <h3 class="font-display font-semibold text-3xl text-stone-900">
+          Nuestros Valles Productivos
+        </h3>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="p-8 rounded-2xl bg-stone-50 border border-stone-200/80 space-y-3">
+          <span class="text-xs font-mono font-semibold text-agro-700 uppercase">Valle de Ica</span>
+          <h4 class="font-display font-semibold text-xl text-stone-900">Palta Hass & Uvas de Mesa</h4>
+          <p class="text-xs text-stone-600 leading-relaxed">
+            Días soleados continuos y noches frescas que concentran un porcentaje óptimo de materia seca en la palta y un color uniforme sin semilla en la uva Red Globe y Sweet Globe.
+          </p>
+        </div>
+
+        <div class="p-8 rounded-2xl bg-stone-50 border border-stone-200/80 space-y-3">
+          <span class="text-xs font-mono font-semibold text-agro-700 uppercase">Valle de Piura</span>
+          <h4 class="font-display font-semibold text-xl text-stone-900">Mango Kent & Limón Tahití</h4>
+          <p class="text-xs text-stone-600 leading-relaxed">
+            Clima tropical seco del norte peruano con ausencia de lluvias durante la cosecha que asegura ausencia de hongos y una pulpa dulce sin fibra.
+          </p>
+        </div>
+
+        <div class="p-8 rounded-2xl bg-stone-50 border border-stone-200/80 space-y-3">
+          <span class="text-xs font-mono font-semibold text-agro-700 uppercase">Valles de Olmos</span>
+          <h4 class="font-display font-semibold text-xl text-stone-900">Arándanos Frescos & Superfoods</h4>
+          <p class="text-xs text-stone-600 leading-relaxed">
+            Tierras vírgenes regadas por las aguas trasandinas del río Huancabamba, ideales para variedades selectas de arándano de alto calibre y pruina intacta.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

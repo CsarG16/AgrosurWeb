@@ -1,0 +1,213 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Agrosur | Agroexportadora Peruana de Excelencia{% endblock %}</title>
+  <meta name="description" content="Agrosur Perú: Producción y exportación de Palta Hass, Arándanos, Uvas y Superfoods peruanos con los más altos estándares globales.">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="{% static 'images/agrosurlogo.png' %}">
+  <link rel="apple-touch-icon" href="{% static 'images/agrosurlogo.png' %}">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            display: ['Outfit', 'sans-serif'],
+          },
+          colors: {
+            agro: {
+              50: '#f6f8f5',    // Whisper pastel sage
+              100: '#ebf1e8',   // Pastel mist
+              200: '#d7e4d3',   // Soft matcha pastel
+              300: '#bed3b8',   // Calming sage leaf
+              400: '#9bb895',   // Muted botanical sage
+              500: '#759b6e',   // Balanced earthy eucalyptus (softer, no neon)
+              600: '#587c52',   // Natural leaf green
+              700: '#3f573b',   // Deep muted forest olive
+              800: '#2f432b',   // Rich botanical olive
+              900: '#1e2b1c',   // Soft dark olive forest
+              950: '#111810',   // Deepest matte organic carbon
+            },
+            sand: {
+              50: '#faf8f5',
+              100: '#f4ede2',
+              200: '#e8dcce',
+              300: '#d5c4af',
+            },
+            earth: {
+              800: '#26201b',
+              900: '#161311',
+            },
+            gold: {
+              300: '#f2e4b8',
+              400: '#dec489',
+              500: '#c5a55c',
+              600: '#a6853d',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Lenis Luxury Smooth Scroll Engine -->
+  <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=3">
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-[#fafaf8] text-stone-800 antialiased selection:bg-agro-200 selection:text-agro-900" data-lang="es" data-page="{{ active_page|default:'inicio' }}">
+
+  <!-- Minimal & Refined Navigation Bar -->
+  <header id="navbar" class="fixed top-0 left-0 right-0 z-40 transition-all duration-300 py-5 bg-transparent">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between">
+      
+      <!-- Brand Logo (Agrosur official logos) -->
+      <a href="{% url 'landing:index' %}" class="flex items-center gap-3 transition-opacity hover:opacity-90" aria-label="AGROSUR Inicio">
+        <img id="nav-logo-light" src="{% static 'images/agrosurlogo-light.png' %}" alt="AGROSUR" class="h-9 w-auto object-contain logo-light block transition-all duration-300">
+        <img id="nav-logo-dark" src="{% static 'images/agrosurlogo.png' %}" alt="AGROSUR" class="h-9 w-auto object-contain logo-dark hidden transition-all duration-300">
+        <span class="sr-only">AGROSUR PERÚ</span>
+      </a>
+
+      <!-- Desktop Links with Decoupled Routing -->
+      <nav class="hidden md:flex items-center gap-7">
+        <a href="{% url 'landing:index' %}" class="nav-link text-white/90 text-sm font-medium hover:text-white transition-colors {% if active_page == 'inicio' %}text-white font-semibold border-b border-agro-400 pb-0.5{% endif %}" data-i18n="nav_home">Inicio</a>
+        <a href="{% url 'landing:productos' %}" class="nav-link text-white/90 text-sm font-medium hover:text-white transition-colors {% if active_page == 'productos' %}text-white font-semibold border-b border-agro-400 pb-0.5{% endif %}" data-i18n="nav_products">Nuestros Frutos</a>
+        <a href="{% url 'landing:cotizador' %}" class="nav-link text-white/90 text-sm font-medium hover:text-white transition-colors flex items-center gap-2 {% if active_page == 'cotizador' %}text-white font-semibold border-b border-agro-400 pb-0.5{% endif %}" data-i18n="nav_quote">
+          <span class="w-1.5 h-1.5 rounded-full bg-agro-300"></span>
+          <span>Cotizador Online</span>
+        </a>
+        <a href="{% url 'landing:nosotros' %}" class="nav-link text-white/90 text-sm font-medium hover:text-white transition-colors {% if active_page == 'nosotros' %}text-white font-semibold border-b border-agro-400 pb-0.5{% endif %}" data-i18n="nav_origin">Origen & Campos</a>
+        <a href="{% url 'landing:calidad' %}" class="nav-link text-white/90 text-sm font-medium hover:text-white transition-colors {% if active_page == 'calidad' %}text-white font-semibold border-b border-agro-400 pb-0.5{% endif %}" data-i18n="nav_quality">Certificaciones</a>
+        
+        <!-- Language Switcher Pill -->
+        <div id="nav-lang-container" class="flex items-center rounded-full glass-dark p-0.5 border border-white/15 text-xs font-medium text-white transition-colors">
+          <button type="button" class="lang-btn px-2.5 py-1 rounded-full transition-all bg-agro-600 text-white font-medium" data-set-lang="es">ES</button>
+          <button type="button" class="lang-btn px-2.5 py-1 rounded-full transition-all text-stone-300 hover:text-white font-medium" data-set-lang="en">EN</button>
+        </div>
+
+        <a href="{% url 'landing:cotizador' %}" id="nav-cta-btn" class="px-5 py-2.5 rounded-full bg-agro-600 hover:bg-agro-500 text-white font-medium text-sm tracking-wide transition-colors" data-i18n="nav_cta">
+          Cotizar Despacho
+        </a>
+      </nav>
+
+      <!-- Mobile Hamburger Button & Lang Pill -->
+      <div class="flex md:hidden items-center gap-3">
+        <div id="nav-lang-container-mobile" class="flex items-center rounded-full glass-dark p-0.5 border border-white/15 text-xs font-medium text-white">
+          <button type="button" class="lang-btn px-2 py-0.5 rounded-full transition-all bg-agro-600 text-white font-medium" data-set-lang="es">ES</button>
+          <button type="button" class="lang-btn px-2 py-0.5 rounded-full transition-all text-stone-300 hover:text-white font-medium" data-set-lang="en">EN</button>
+        </div>
+        <button id="mobile-menu-toggle" class="text-white p-2 focus:outline-none" aria-label="Abrir Menú">
+          <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Dropdown -->
+    <div id="mobile-menu" class="hidden md:hidden glass-panel border border-stone-200/80 mt-3 px-6 py-5 shadow-lg space-y-3 rounded-2xl mx-4">
+      <div class="pb-3 border-b border-stone-200/60 flex items-center justify-between">
+        <img src="{% static 'images/agrosurlogo.png' %}" alt="Agrosur" class="h-7 w-auto object-contain">
+        <span class="text-[11px] font-medium text-stone-500 uppercase tracking-wider">Perú</span>
+      </div>
+      <a href="{% url 'landing:index' %}" class="block text-stone-800 font-medium py-1 hover:text-agro-700" data-i18n="nav_home">Inicio</a>
+      <a href="{% url 'landing:productos' %}" class="block text-stone-800 font-medium py-1 hover:text-agro-700" data-i18n="nav_products">Nuestros Frutos</a>
+      <a href="{% url 'landing:cotizador' %}" class="block font-medium py-1 text-agro-700" data-i18n="nav_quote">Cotizador Online</a>
+      <a href="{% url 'landing:nosotros' %}" class="block text-stone-800 font-medium py-1 hover:text-agro-700" data-i18n="nav_origin">Origen & Campos</a>
+      <a href="{% url 'landing:calidad' %}" class="block text-stone-800 font-medium py-1 hover:text-agro-700" data-i18n="nav_quality">Certificaciones</a>
+      <a href="{% url 'landing:cotizador' %}" class="block text-center py-2.5 rounded-xl bg-agro-600 text-white font-medium text-sm transition-colors mt-2" data-i18n="nav_cta">
+        Cotizar Despacho
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Content Block -->
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Live Toast Notification -->
+  <div id="notification-toast" class="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-6 py-4 rounded-2xl shadow-xl transition-all duration-500 transform translate-y-12 opacity-0 pointer-events-none">
+    <i data-lucide="check-circle" class="w-5 h-5 shrink-0"></i>
+    <span id="toast-message" class="text-sm font-medium"></span>
+  </div>
+
+  <!-- Floating Direct Cotizador Button (Minimalist) -->
+  <a href="{% url 'landing:cotizador' %}" class="fixed bottom-6 left-6 z-40 flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-agro-950/90 hover:bg-agro-900 border border-agro-800 text-agro-100 shadow-md backdrop-blur-md transition-colors" title="Cotizador RUC & Internacional">
+    <span class="w-2 h-2 rounded-full bg-agro-400"></span>
+    <span class="text-xs font-medium tracking-wide" data-i18n="floating_quote_btn">Cotizador B2B / RUC Activo</span>
+    <i data-lucide="calculator" class="w-4 h-4 text-agro-300"></i>
+  </a>
+
+  <!-- Footer -->
+  <footer class="bg-agro-950 text-stone-300 pt-20 pb-12 border-t border-agro-900/80 relative">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-12 pb-16 border-b border-agro-900/60">
+        
+        <div class="space-y-4 md:col-span-2">
+          <div class="flex items-center gap-3">
+            <img src="{% static 'images/agrosurlogo-light.png' %}" alt="AGROSUR PERÚ" class="h-10 w-auto object-contain">
+          </div>
+          <p class="text-stone-400 text-sm max-w-md leading-relaxed" data-i18n="footer_desc">
+            Agroexportadora peruana dedicada a llevar frutos frescos de alta gama a los mercados más competitivos del mundo, promoviendo agricultura sostenible, tecnología en campo y desarrollo social.
+          </p>
+          <div class="flex items-center gap-4 pt-2 text-stone-400">
+            <span class="text-xs flex items-center gap-1.5"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-agro-300"></i> Lima • Ica • Piura</span>
+            <span class="text-xs flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-agro-300"></i> Certificaciones Globales</span>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-white font-display font-medium text-sm mb-4 tracking-wider uppercase" data-i18n="footer_fruits_title">Frutos Principales</h4>
+          <ul class="space-y-2.5 text-sm text-stone-400">
+            <li>• Palta Hass Premium / Hass Avocado</li>
+            <li>• Arándano Fresco / Blueberries</li>
+            <li>• Uva de Mesa Sin Semilla / Table Grapes</li>
+            <li>• Mango Kent Exportación / Kent Mango</li>
+            <li>• Espárragos Verdes / Green Asparagus</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-white font-display font-medium text-sm mb-4 tracking-wider uppercase" data-i18n="footer_links_title">Enlaces</h4>
+          <ul class="space-y-2.5 text-sm text-stone-400">
+            <li><a href="{% url 'landing:index' %}" class="hover:text-white transition-colors" data-i18n="nav_home">Inicio</a></li>
+            <li><a href="{% url 'landing:productos' %}" class="hover:text-white transition-colors" data-i18n="nav_products">Nuestros Frutos</a></li>
+            <li><a href="{% url 'landing:cotizador' %}" class="hover:text-white transition-colors" data-i18n="nav_quote">Cotizador Online</a></li>
+            <li><a href="{% url 'landing:nosotros' %}" class="hover:text-white transition-colors" data-i18n="nav_origin">Origen & Campos</a></li>
+            <li><a href="{% url 'landing:calidad' %}" class="hover:text-white transition-colors" data-i18n="nav_quality">Estándares Internacionales</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="pt-8 flex flex-col md:flex-row items-center justify-between text-xs text-stone-500 gap-4">
+        <p>&copy; 2026 Agrosur S.A.C. Todos los derechos reservados. RUC 20608945123 • SUNAT Perú.</p>
+        <p class="text-stone-400">
+          Producción, Empaque y Exportación de Frutos Frescos de Origen Peruano
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="{% static 'js/main.js' %}?v=3"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

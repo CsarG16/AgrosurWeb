@@ -1,0 +1,131 @@
+/* Custom styling for Agrosur - Natural Pastel & Minimalist Aesthetic */
+
+:root {
+  --primary-dark: #111810;
+  --primary: #223120;
+  --primary-muted: #3f573b;
+  --accent-sage: #759b6e;
+  --accent-pastel: #bed3b8;
+  --accent-cream: #f6f8f5;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+  background-color: #fafaf8;
+  color: #2b332a;
+}
+
+/* Subtle Ken-Burns zoom effect for hero slider */
+@keyframes kenBurns {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.05);
+  }
+}
+
+.hero-slide-active img {
+  animation: kenBurns 12s ease-out forwards;
+}
+
+/* Infinite marquee ticker */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  display: flex;
+  width: 200%;
+  animation: marquee 32s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* Clean glassmorphism utility (subtle, no neon glow) */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(220, 226, 218, 0.7);
+}
+
+.glass-dark {
+  background: rgba(17, 24, 16, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Bulletproof Navbar Logo Switching */
+#navbar #nav-logo-dark {
+  display: none !important;
+}
+#navbar #nav-logo-light {
+  display: block !important;
+}
+
+#navbar.navbar-scrolled #nav-logo-dark {
+  display: block !important;
+}
+#navbar.navbar-scrolled #nav-logo-light {
+  display: none !important;
+}
+
+/* Clean Minimal Card hover effect (natural elevation, no neon glow) */
+.card-hover-effect {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+}
+
+.card-hover-effect:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px -6px rgba(17, 24, 16, 0.12);
+}
+
+/* Lenis Smooth Scroll Luxury Engine */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Custom scrollbar - soft pastel tones */
+::-webkit-scrollbar {
+  width: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #f6f8f5;
+}
+::-webkit-scrollbar-thumb {
+  background: #bed3b8;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9bb895;
+}

@@ -1,0 +1,43 @@
+# Entornos virtuales
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# Byte-compiled / cache de Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Base de datos local
+*.sqlite3
+*.sqlite3-journal
+
+# Archivos de entorno y credenciales
+.env
+.env.*
+!.env.example
+
+# Media subida por usuarios en desarrollo (mantener carpetas vacías si existen)
+media/hero/*
+!media/hero/.gitkeep
+media/products/*
+!media/products/.gitkeep
+
+# IDEs y editores
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log

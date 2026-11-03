@@ -1,0 +1,306 @@
+{% extends 'landing/base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- ======================================================== -->
+<!-- 1. HERO SLIDER SECTION (Clean, Atmospheric, Minimal)      -->
+<!-- ======================================================== -->
+<section id="inicio" class="relative w-full h-screen min-h-[680px] bg-agro-950 overflow-hidden flex items-center">
+
+  <!-- Slides Container -->
+  <div id="hero-slider" class="absolute inset-0 w-full h-full">
+    {% for slide in hero_slides %}
+    <div class="hero-slide absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out {% if forloop.first %}opacity-100 z-10 hero-slide-active{% else %}opacity-0 z-0 pointer-events-none{% endif %}">
+      <!-- Background Image with Overlay -->
+      <img src="{{ slide.get_image }}" alt="{{ slide.title }}" class="w-full h-full object-cover object-center transform scale-100 transition-transform duration-[12000ms]">
+      <div class="absolute inset-0 bg-gradient-to-t from-agro-950 via-agro-950/70 to-agro-950/40"></div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Hero Content Overlay -->
+  <div class="relative z-20 max-w-7xl mx-auto px-6 lg:px-12 w-full pt-16">
+    <div class="max-w-3xl space-y-6">
+
+      <!-- Main Headline -->
+      <h1 class="font-display font-semibold text-4xl sm:text-6xl lg:text-7xl text-white tracking-tight leading-[1.08]" data-i18n="hero_title">
+        La Excelencia de los Frutos del Perú al Mundo.
+      </h1>
+
+      <!-- Minimal Subtext -->
+      <p class="text-stone-300 text-base sm:text-lg font-light leading-relaxed max-w-2xl" data-i18n="hero_subtitle">
+        Cultivamos, cosechamos y exportamos los mejores superfoods y frutas frescas del país con trazabilidad garantizada y certificación internacional.
+      </p>
+
+      <!-- Action Buttons (Simple, Minimalist, No Glow) -->
+      <div class="flex flex-wrap items-center gap-4 pt-3">
+        <a href="{% url 'landing:cotizador' %}" class="px-7 py-3.5 rounded-full bg-agro-600 hover:bg-agro-500 text-white font-medium text-sm tracking-wide transition-colors flex items-center gap-2 border border-agro-500/30">
+          <i data-lucide="calculator" class="w-4 h-4 text-agro-200"></i>
+          <span data-i18n="hero_btn_quote">Cotizador RUC & Internacional</span>
+        </a>
+        <a href="{% url 'landing:productos' %}" class="px-7 py-3.5 rounded-full bg-white/10 hover:bg-white/15 text-white font-medium text-sm tracking-wide transition-colors border border-white/15 flex items-center gap-2">
+          <span data-i18n="hero_btn_explore">Ver Frutos de Exportación</span>
+          <i data-lucide="arrow-right" class="w-4 h-4 text-stone-300"></i>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Slider Controls & Indicators -->
+  <div class="absolute bottom-8 left-6 right-6 lg:left-12 lg:right-12 z-20 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      {% for slide in hero_slides %}
+      <button class="hero-indicator group flex flex-col gap-1 text-left focus:outline-none transition-opacity {% if forloop.first %}opacity-100{% else %}opacity-40{% endif %}" data-index="{{ forloop.counter0 }}">
+        <div class="w-16 sm:w-24 h-1 bg-white/20 rounded-full overflow-hidden">
+          <div class="indicator-bar h-full bg-agro-300 transition-all duration-500 {% if forloop.first %}w-full{% else %}w-0{% endif %}"></div>
+        </div>
+        <span class="text-[10px] text-white/70 font-medium tracking-wider uppercase hidden sm:block">0{{ forloop.counter }} {{ slide.badge }}</span>
+      </button>
+      {% endfor %}
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button id="hero-prev" class="w-10 h-10 rounded-full glass-dark hover:bg-white/20 text-white flex items-center justify-center transition-colors focus:outline-none border border-white/10" aria-label="Anterior">
+        <i data-lucide="chevron-left" class="w-4 h-4"></i>
+      </button>
+      <button id="hero-next" class="w-10 h-10 rounded-full glass-dark hover:bg-white/20 text-white flex items-center justify-center transition-colors focus:outline-none border border-white/10" aria-label="Siguiente">
+        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ======================================================== -->
+<!-- 2. INFINITE TICKER / CERTIFICATIONS                      -->
+<!-- ======================================================== -->
+<div class="bg-agro-900 py-4 border-y border-agro-800/60 overflow-hidden relative">
+  <div class="marquee-track flex items-center gap-8">
+    {% for cert in certifications %}
+    <div class="flex items-center gap-2.5 shrink-0 px-3.5 py-1.5 rounded-lg bg-agro-950/50 border border-agro-800/50">
+      <i data-lucide="award" class="w-4 h-4 text-agro-300"></i>
+      <div class="flex flex-col">
+        <span class="text-white/90 text-xs font-medium tracking-wider uppercase">{{ cert.name }}</span>
+        <span class="text-agro-300/80 text-[10px]">{{ cert.code }}</span>
+      </div>
+    </div>
+    {% endfor %}
+
+    {% for cert in certifications %}
+    <div class="flex items-center gap-2.5 shrink-0 px-3.5 py-1.5 rounded-lg bg-agro-950/50 border border-agro-800/50">
+      <i data-lucide="award" class="w-4 h-4 text-agro-300"></i>
+      <div class="flex flex-col">
+        <span class="text-white/90 text-xs font-medium tracking-wider uppercase">{{ cert.name }}</span>
+        <span class="text-agro-300/80 text-[10px]">{{ cert.code }}</span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+<!-- ======================================================== -->
+<!-- 3. LIVE STATS / METRICS                                  -->
+<!-- ======================================================== -->
+<section id="stats-section" class="py-20 bg-stone-50 border-b border-stone-200/80">
+  <div class="max-w-7xl mx-auto px-6 lg:px-12">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+      {% for stat in stats %}
+      <div class="bg-white p-7 rounded-2xl border border-stone-200/80 shadow-sm transition-shadow">
+        <div class="w-11 h-11 rounded-xl bg-agro-100 text-agro-800 flex items-center justify-center mb-5">
+          <i data-lucide="trending-up" class="w-5 h-5"></i>
+        </div>
+        <div class="stat-counter font-display font-semibold text-3xl sm:text-4xl text-agro-950 tracking-tight" data-target="{{ stat.value }}">
+          {{ stat.value }}
+        </div>
+        <p class="text-stone-500 text-xs sm:text-sm mt-1.5 font-normal leading-relaxed bilingual-name" data-es="{{ stat.label }}" data-en="{{ stat.label_en }}">
+          {{ stat.label }}
+        </p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+
+<!-- ======================================================== -->
+<!-- 4. FEATURED PRODUCTS PREVIEW (Direct access to catalog)  -->
+<!-- ======================================================== -->
+<section class="py-24 bg-white relative">
+  <div class="max-w-7xl mx-auto px-6 lg:px-12">
+    
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+      <div>
+        <span class="text-xs uppercase tracking-widest text-agro-700 font-semibold mb-2 block" data-i18n="catalog_tag">Catálogo de Cosecha</span>
+        <h2 class="font-display font-semibold text-3xl sm:text-4xl text-stone-900 tracking-tight" data-i18n="catalog_title">
+          Nuestros Frutos de Exportación
+        </h2>
+      </div>
+      <a href="{% url 'landing:productos' %}" class="inline-flex items-center gap-2 text-sm font-semibold text-agro-700 hover:text-agro-800 transition-colors">
+        <span>Ver Catálogo Completo</span>
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </a>
+    </div>
+
+    <!-- 3 Featured Fruit Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {% for product in featured_products %}
+      <div class="card-hover-effect group relative rounded-2xl overflow-hidden bg-stone-900 shadow-sm flex flex-col justify-end aspect-[4/5]">
+        <img src="{{ product.get_image }}" alt="{{ product.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105">
+        <div class="absolute inset-0 bg-gradient-to-t from-agro-950/95 via-agro-950/40 to-transparent"></div>
+
+        <div class="absolute top-5 left-5 right-5 flex items-center justify-between z-10">
+          <span class="px-3 py-1 rounded-full glass-dark text-agro-200 text-xs font-medium backdrop-blur-md">
+            {{ product.origin }}
+          </span>
+          <span class="text-xs px-2.5 py-0.5 rounded-full bg-agro-950/70 text-agro-200 border border-agro-700/50 font-mono font-medium">
+            FOB ${{ product.ref_price_fob_usd }}/{{ product.price_unit }}
+          </span>
+        </div>
+
+        <div class="relative z-10 p-6 space-y-2">
+          <span class="text-agro-300 text-xs font-medium uppercase tracking-wider">{{ product.variety }}</span>
+          <h3 class="font-display font-medium text-2xl text-white group-hover:text-agro-200 transition-colors">
+            {{ product.name }}
+          </h3>
+          <p class="text-stone-300 text-xs flex items-center gap-1.5">
+            <i data-lucide="calendar" class="w-3.5 h-3.5 text-agro-300 shrink-0"></i>
+            <span>{{ product.season }}</span>
+          </p>
+
+          <div class="pt-3 border-t border-white/10 flex items-center justify-between text-xs">
+            <a href="{% url 'landing:productos' %}" class="text-stone-300 hover:text-white font-medium flex items-center gap-1">
+              <span>Especificación técnica</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </a>
+            <a href="{% url 'landing:cotizador' %}" class="px-3 py-1 rounded-lg bg-agro-600 hover:bg-agro-500 text-white font-medium">
+              Cotizar
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="mt-12 text-center">
+      <a href="{% url 'landing:productos' %}" class="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-stone-900 hover:bg-stone-800 text-white text-sm font-medium transition-colors">
+        <span>Explorar todos los frutos disponibles ({{ products.count }})</span>
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ======================================================== -->
+<!-- 5. DEL CAMPO AL MUNDO OVERVIEW                           -->
+<!-- ======================================================== -->
+<section class="py-24 bg-agro-950 text-white relative overflow-hidden">
+  <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+    
+    <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
+      <span class="text-xs uppercase tracking-widest text-agro-300 font-medium" data-i18n="trace_tag">Trazabilidad Integral</span>
+      <h2 class="font-display font-semibold text-3xl sm:text-4xl tracking-tight text-white" data-i18n="trace_title">
+        El Estándar Agrosur
+      </h2>
+      <p class="text-stone-300 text-sm font-light leading-relaxed" data-i18n="trace_desc">
+        De los fértiles valles de Ica, Piura y Olmos hasta las mesas de Europa, Asia y América.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      
+      <div class="relative rounded-2xl overflow-hidden bg-agro-900/60 border border-agro-800/60 p-7 space-y-5 flex flex-col justify-between">
+        <div class="h-44 rounded-xl overflow-hidden relative">
+          <img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=800&q=80" alt="Campos propios" class="w-full h-full object-cover">
+          <div class="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-agro-700 text-white font-medium text-xs">Paso 01</div>
+        </div>
+        <div>
+          <h3 class="font-display font-medium text-lg text-white mb-2">Campos Propios & Riego Tecnificado</h3>
+          <p class="text-stone-300 text-xs sm:text-sm leading-relaxed font-light">
+            Gestión hídrica de precisión en valles desérticos con microclimas privilegiados que otorgan dulzura y firmeza.
+          </p>
+        </div>
+        <div class="pt-2 border-t border-agro-800/60 text-xs text-agro-300 font-medium">
+          <a href="{% url 'landing:nosotros' %}" class="inline-flex items-center gap-1 hover:underline">
+            <span>Conocer nuestros campos</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="relative rounded-2xl overflow-hidden bg-agro-900/60 border border-agro-800/60 p-7 space-y-5 flex flex-col justify-between">
+        <div class="h-44 rounded-xl overflow-hidden relative">
+          <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80" alt="Packing automatizado" class="w-full h-full object-cover">
+          <div class="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-agro-700 text-white font-medium text-xs">Paso 02</div>
+        </div>
+        <div>
+          <h3 class="font-display font-medium text-lg text-white mb-2">Planta de Empaque & Cadena de Frío</h3>
+          <p class="text-stone-300 text-xs sm:text-sm leading-relaxed font-light">
+            Líneas ópticas de selección por color, calibrado por peso y cámaras frigoríficas automáticas.
+          </p>
+        </div>
+        <div class="pt-2 border-t border-agro-800/60 text-xs text-agro-300 font-medium">
+          <a href="{% url 'landing:nosotros' %}" class="inline-flex items-center gap-1 hover:underline">
+            <span>Ver infraestructura packing</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="relative rounded-2xl overflow-hidden bg-agro-900/60 border border-agro-800/60 p-7 space-y-5 flex flex-col justify-between">
+        <div class="h-44 rounded-xl overflow-hidden relative">
+          <img src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=800&q=80" alt="Logística de exportación" class="w-full h-full object-cover">
+          <div class="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-agro-700 text-white font-medium text-xs">Paso 03</div>
+        </div>
+        <div>
+          <h3 class="font-display font-medium text-lg text-white mb-2">Logística Global Directa</h3>
+          <p class="text-stone-300 text-xs sm:text-sm leading-relaxed font-light">
+            Despachos multimodales vía contenedores reefer marítimos y carga aérea express con monitoreo satelital.
+          </p>
+        </div>
+        <div class="pt-2 border-t border-agro-800/60 text-xs text-agro-300 font-medium">
+          <a href="{% url 'landing:nosotros' %}" class="inline-flex items-center gap-1 hover:underline">
+            <span>Rutas internacionales</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ======================================================== -->
+<!-- 6. B2B COTIZADOR CALL TO ACTION                          -->
+<!-- ======================================================== -->
+<section class="py-20 bg-agro-50/70 border-t border-agro-200/60">
+  <div class="max-w-7xl mx-auto px-6 lg:px-12">
+    <div class="bg-white rounded-3xl p-8 sm:p-14 border border-agro-200/80 shadow-sm flex flex-col lg:flex-row items-center justify-between gap-8">
+      <div class="space-y-3 max-w-2xl">
+        <span class="text-xs uppercase tracking-widest text-agro-700 font-semibold block">Mesa de Cotizaciones B2B</span>
+        <h2 class="font-display font-semibold text-3xl sm:text-4xl text-stone-900 tracking-tight">
+          Cotiza tu próximo despacho de exportación en línea
+        </h2>
+        <p class="text-stone-600 text-sm font-light leading-relaxed">
+          Configuración por contenedor reefer de 40ft, pallets o toneladas, validación fiscal SUNAT / Tax ID internacional y descarga inmediata de proforma en PDF.
+        </p>
+      </div>
+      <div class="flex flex-col sm:flex-row items-center gap-4 shrink-0 w-full sm:w-auto">
+        <a href="{% url 'landing:cotizador' %}" class="w-full sm:w-auto px-8 py-4 rounded-full bg-agro-600 hover:bg-agro-500 text-white font-medium text-sm tracking-wide transition-colors text-center shadow-sm">
+          Ir al Cotizador Online
+        </a>
+        <a href="{% url 'landing:calidad' %}" class="w-full sm:w-auto px-8 py-4 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-800 font-medium text-sm transition-colors text-center">
+          Ver Certificaciones
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
