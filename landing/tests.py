@@ -43,6 +43,9 @@ class QuotationAndDecoupledPagesTests(TestCase):
         self.assertContains(response_es, "AGRO SUR LATINO")
         self.assertContains(response_es, "Quinua Blanca en Grano")
         self.assertContains(response_es, "Granos y semillas andinas")
+        self.assertContains(response_es, "Agro Sur Latino se fundó en 2007")
+        self.assertContains(response_es, "Nuestro principal objetivo es lograr una mejora continua")
+        self.assertContains(response_es, "Trabajamos y producimos bajo estándares y certificados")
 
         response_en = self.client.get(reverse('landing:index') + '?lang=en')
         self.assertEqual(response_en.status_code, 200)

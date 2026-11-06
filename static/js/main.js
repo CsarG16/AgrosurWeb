@@ -1,35 +1,38 @@
-// Agro Sur Latino S.A.C. — Visual-First Interactive Engine & Bilingual Dictionary
+// Agro Sur Latino S.A.C. — Green Botanical Identity & Bilingual Dictionary
 
 const translations = {
   es: {
     nav_home: "INICIO",
     nav_origin: "SOBRE NOSOTROS",
     nav_products: "PRODUCTOS",
-    nav_quality: "CALIDAD",
+    nav_quality: "CERTIFICACIONES",
     nav_contact: "CONTACTO",
-    nav_quote: "COTIZADOR B2B",
+    nav_quote: "COTIZADOR",
     nav_cta: "¿DESEAS UN TRATO?",
     floating_quote_btn: "Cotizador B2B",
     hero_btn_explore: "PRODUCTOS",
     hero_btn_quote: "COTIZAR",
-    panel_secondary_label: "Variedades Selectas",
-    catalog_tag: "ORGÁNICO & CONVENCIONAL",
+    panel_secondary_label: "Variedades",
     catalog_title: "Nuestros Productos",
     filter_all: "Todos",
-    contact_box_title: "¿Deseas un trato directo?",
-    btn_open_quoter: "Abrir Cotizador Proforma PDF",
-    c_lbl_name: "Nombre *",
-    c_lbl_company: "Empresa *",
-    c_lbl_email: "Correo *",
-    c_lbl_country: "País / Teléfono",
-    c_lbl_product: "Producto de Interés",
-    c_lbl_msg: "Mensaje / Volumen requerido",
-    c_btn_send: "Enviar Solicitud",
+    b3_tag: "DESDE 2007",
+    b3_headline: "Agro Sur Latino se fundó en 2007 bajo nuestro principio: “de los productores hacia el mundo”",
+    b3_btn_about: "SOBRE NOSOTROS",
+    b4_headline: "Nuestro principal objetivo es lograr una mejora continua y garantizar stock todo el año",
+    b4_card1_title: "Orgánico",
+    b4_card2_title: "Planta Propia",
+    b4_card3_title: "Stock 365 Días",
+    b4_img_title: "Almacenes en Huachipa • Lima",
+    b15_title: "Trabajamos y producimos bajo estándares y certificados",
+    cert_view_all: "Ver todos →",
+    contact_box_title: "¿Deseas un trato?",
+    btn_open_quoter: "Cotizador Proforma PDF",
+    c_btn_send: "Enviar",
     about_tag: "SOBRE NOSOTROS • ABOUT US",
     trace_title: "De los productores hacia el mundo",
     mission_title: "Nuestra Misión",
     vision_title: "Nuestra Visión",
-    cert_tag: "ESTÁNDARES INTERNACIONALES",
+    cert_tag: "CALIDAD INTERNACIONAL",
     cert_title: "Garantía Sanitaria & Certificaciones",
     quote_section_title: "¿Deseas un trato? Cotiza en línea",
     step1_title: "Datos Fiscales y Despacho",
@@ -47,40 +50,40 @@ const translations = {
     lbl_port: "Puerto / Ciudad Destino",
     lbl_notes: "Presentación requerida (Orgánico / Convencional / Sacos)",
     btn_submit_quote: "Generar Cotización & PDF",
-    footer_desc: "De los productores hacia el mundo. Comercialización, procesamiento y exportación de Granos Andinos, Semillas y Menestras en presentaciones Orgánicas y Convencionales.",
-    footer_fruits_title: "Líneas de Productos",
-    footer_links_title: "Navegación",
     modal_quote_btn: "Cotizar este producto",
   },
   en: {
     nav_home: "HOME",
     nav_origin: "ABOUT US",
     nav_products: "PRODUCTS",
-    nav_quality: "QUALITY",
+    nav_quality: "CERTIFICATIONS",
     nav_contact: "CONTACT",
     nav_quote: "B2B QUOTER",
     nav_cta: "WANT A DEAL?",
     floating_quote_btn: "B2B Quote",
     hero_btn_explore: "PRODUCTS",
     hero_btn_quote: "GET QUOTE",
-    panel_secondary_label: "Selected Varieties",
-    catalog_tag: "ORGANIC & CONVENTIONAL",
+    panel_secondary_label: "Varieties",
     catalog_title: "Our Products",
     filter_all: "All",
-    contact_box_title: "Looking for a direct deal?",
-    btn_open_quoter: "Open PDF Proforma Builder",
-    c_lbl_name: "Full Name *",
-    c_lbl_company: "Company *",
-    c_lbl_email: "Email *",
-    c_lbl_country: "Country / Phone",
-    c_lbl_product: "Product of Interest",
-    c_lbl_msg: "Message / Required Volume",
-    c_btn_send: "Send Inquiry",
+    b3_tag: "SINCE 2007",
+    b3_headline: "Agro Sur Latino was founded in 2007 under our principle: “from producers to the world”",
+    b3_btn_about: "ABOUT US",
+    b4_headline: "Our main objective is to achieve continuous improvement and guarantee year-round stock",
+    b4_card1_title: "Organic",
+    b4_card2_title: "Owned Plant",
+    b4_card3_title: "365-Day Stock",
+    b4_img_title: "Huachipa Warehouses • Lima",
+    b15_title: "We work and produce under international standards and certificates",
+    cert_view_all: "View all →",
+    contact_box_title: "Want a deal?",
+    btn_open_quoter: "PDF Proforma Builder",
+    c_btn_send: "Send",
     about_tag: "ABOUT US • AGRO SUR LATINO",
     trace_title: "From producers to the world",
     mission_title: "Our Mission",
     vision_title: "Our Vision",
-    cert_tag: "INTERNATIONAL STANDARDS",
+    cert_tag: "INTERNATIONAL QUALITY",
     cert_title: "Food Safety & Global Certifications",
     quote_section_title: "Want a deal? Quote online",
     step1_title: "Tax Identity & Shipping",
@@ -98,9 +101,6 @@ const translations = {
     lbl_port: "Destination Port / City",
     lbl_notes: "Required presentation (Organic / Conventional / Bags)",
     btn_submit_quote: "Generate Quote & PDF",
-    footer_desc: "From producers to the world. Processing and export of Peruvian Andean Grains, Seeds, and Pulses in Organic and Conventional presentations.",
-    footer_fruits_title: "Product Lines",
-    footer_links_title: "Navigation",
     modal_quote_btn: "Quote this product",
   }
 };
@@ -114,9 +114,9 @@ function setLanguage(lang) {
 
   document.querySelectorAll('.lang-btn').forEach(btn => {
     if (btn.getAttribute('data-set-lang') === lang) {
-      btn.className = 'lang-btn px-1.5 py-0.5 transition-colors text-stone-900 font-bold underline decoration-xpo-red underline-offset-4';
+      btn.className = 'lang-btn px-1.5 py-0.5 transition-colors text-agro-950 font-bold underline decoration-agro-600 underline-offset-4';
     } else {
-      btn.className = 'lang-btn px-1.5 py-0.5 transition-colors text-stone-500 hover:text-stone-900';
+      btn.className = 'lang-btn px-1.5 py-0.5 transition-colors text-agro-600 hover:text-agro-950';
     }
   });
 
@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   setLanguage(currentLanguage);
 
-  // Hero Visual Panels Slider (Xpodeka style)
+  // Hero Visual Panels Slider
   const slides = document.querySelectorAll('.hero-slide');
   const indicators = document.querySelectorAll('.hero-indicator');
   const watermarkEl = document.getElementById('hero-watermark');
@@ -315,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
       li.className = 'flex items-center justify-between text-xs py-1.5 border-b border-stone-800';
       li.innerHTML = `
         <span class="font-normal text-stone-200">${prodName} (${qty} ${unitLabel})</span>
-        <span class="font-mono font-medium text-amber-300">~$${Math.round(subtotal).toLocaleString()} USD</span>
+        <span class="font-mono font-medium text-agro-300">~$${Math.round(subtotal).toLocaleString()} USD</span>
       `;
       summaryList.appendChild(li);
     });
@@ -337,11 +337,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const row = e.target.closest('.quote-product-row');
       const controls = row.querySelector('.quote-controls');
       if (e.target.checked) {
-        row.classList.add('border-xpo-red', 'bg-red-50/20');
+        row.classList.add('border-agro-600', 'bg-agro-50/40');
         row.classList.remove('border-stone-200', 'bg-white');
         if (controls) controls.classList.remove('opacity-40', 'pointer-events-none');
       } else {
-        row.classList.remove('border-xpo-red', 'bg-red-50/20');
+        row.classList.remove('border-agro-600', 'bg-agro-50/40');
         row.classList.add('border-stone-200', 'bg-white');
         if (controls) controls.classList.add('opacity-40', 'pointer-events-none');
       }
@@ -497,7 +497,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!toast) return;
     toastMessage.innerText = msg;
     toast.className = `fixed bottom-6 right-6 z-50 flex items-center gap-3 px-6 py-4 rounded-2xl shadow-xl transition-all duration-500 transform translate-y-0 opacity-100 ${
-      isSuccess ? 'bg-stone-900 text-amber-200 border border-stone-700' : 'bg-red-900 text-white border border-red-700'
+      isSuccess ? 'bg-[#143d1f] text-white border border-agro-500' : 'bg-red-900 text-white border border-red-700'
     }`;
     setTimeout(() => {
       toast.classList.add('translate-y-12', 'opacity-0');

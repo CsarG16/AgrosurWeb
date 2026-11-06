@@ -120,10 +120,12 @@ def nosotros_view(request):
     if lang not in ['es', 'en']:
         lang = 'es'
 
+    categories = ProductCategory.objects.filter(is_active=True)
     stats = CompanyStat.objects.all()
     certifications = Certification.objects.all()
 
     context = {
+        'categories': categories,
         'stats': stats,
         'certifications': certifications,
         'current_lang': lang,
@@ -138,9 +140,11 @@ def calidad_view(request):
     if lang not in ['es', 'en']:
         lang = 'es'
 
+    categories = ProductCategory.objects.filter(is_active=True)
     certifications = Certification.objects.all()
 
     context = {
+        'categories': categories,
         'certifications': certifications,
         'current_lang': lang,
         'active_page': 'calidad',

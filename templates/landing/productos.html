@@ -4,24 +4,21 @@
 {% block title %}Catálogo Visual de Granos Andinos, Semillas y Menestras | Agro Sur Latino S.A.C.{% endblock %}
 
 {% block content %}
-<!-- Visual Header with Category Filter Buttons (Zero Clutter) -->
-<section class="py-12 xpodeka-wave-bg border-b border-xpo-border/80">
+<!-- Visual Header with Green Category Filter Buttons (Zero Clutter) -->
+<section class="py-10 xpodeka-wave-bg border-b border-agro-200">
   <div class="max-w-7xl mx-auto px-6 lg:px-10">
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
-      <div>
-        <span class="text-xs uppercase tracking-[0.2em] text-xpo-red font-bold block mb-2" data-i18n="catalog_tag">ORGÁNICO & CONVENCIONAL</span>
-        <h1 class="font-serif font-semibold text-4xl sm:text-5xl text-stone-900 tracking-tight" data-i18n="catalog_title">
-          Nuestros Productos
-        </h1>
-      </div>
+      <h1 class="font-serif font-semibold text-4xl sm:text-5xl text-agro-950 tracking-tight" data-i18n="catalog_title">
+        Nuestros Productos
+      </h1>
 
       <!-- Category Filter Pills from SQLite3 -->
       <div class="flex flex-wrap items-center gap-2" id="category-filter-pills">
-        <button type="button" onclick="filterProductsByCategory('all', this)" class="product-filter-btn px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-xpo-red text-white transition-all">
+        <button type="button" onclick="filterProductsByCategory('all', this)" class="product-filter-btn px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider bg-agro-600 text-white transition-all">
           <span data-i18n="filter_all">Todos</span> ({{ products.count }})
         </button>
         {% for cat in categories %}
-        <button type="button" onclick="filterProductsByCategory('{{ cat.slug }}', this)" class="product-filter-btn px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-white hover:bg-stone-100 text-stone-700 border border-stone-200 transition-all bilingual-name"
+        <button type="button" onclick="filterProductsByCategory('{{ cat.slug }}', this)" class="product-filter-btn px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider bg-white hover:bg-agro-50 text-agro-900 border border-agro-200 transition-all bilingual-name"
                 data-es="{{ cat.name }}" data-en="{{ cat.name_en|default:cat.name }}">
           {{ cat.name }}
         </button>
@@ -32,43 +29,27 @@
 </section>
 
 <!-- Main 100% Visual Products Gallery (Loaded from SQLite3) -->
-<section class="py-16 bg-white">
+<section class="py-14 bg-white">
   <div class="max-w-7xl mx-auto px-6 lg:px-10">
 
-    <div id="products-catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-7">
+    <div id="products-catalog-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
       {% for product in products %}
-      <div class="product-catalog-card card-hover-effect group relative rounded-xl overflow-hidden bg-stone-900 shadow-md cursor-pointer flex flex-col justify-end aspect-[3/4]"
+      <div class="product-catalog-card card-hover-effect group relative rounded-2xl overflow-hidden bg-agro-950 shadow-md cursor-pointer flex flex-col justify-end aspect-[4/4.2] border border-agro-100"
            data-category="{{ product.category.slug|default:'granos-andinos' }}"
            onclick="openProductModal(this)"
            data-product='{"id": {{ product.id }}, "name": "{{ product.name|escapejs }}", "name_en": "{{ product.name_en|default:product.name|escapejs }}", "scientific_name": "{{ product.scientific_name|escapejs }}", "modality": "{{ product.modality_label_es|escapejs }}", "modality_en": "{{ product.modality_label_en|escapejs }}", "variety": "{{ product.variety|escapejs }}", "origin": "{{ product.origin|escapejs }}", "origin_en": "{{ product.origin_en|escapejs }}", "season": "{{ product.season|escapejs }}", "season_en": "{{ product.season_en|escapejs }}", "packing_specs": "{{ product.packing_specs|escapejs }}", "packing_specs_en": "{{ product.packing_specs_en|escapejs }}", "image": "{{ product.get_image|escapejs }}", "price_fob": {{ product.ref_price_fob_usd }}}'>
         
         <img src="{{ product.get_image }}" alt="{{ product.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-agro-950/85 via-transparent to-transparent"></div>
 
-        <div class="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
-          <span class="px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-[10px] font-semibold uppercase tracking-wider border border-white/15 bilingual-name"
-                data-es="{{ product.modality_label_es }}" data-en="{{ product.modality_label_en }}">
-            {{ product.modality_label_es }}
+        <div class="relative z-10 p-4 sm:p-5 flex items-end justify-between gap-2">
+          <h3 class="font-serif font-semibold text-base sm:text-xl text-white group-hover:text-agro-200 transition-colors bilingual-name"
+              data-es="{{ product.name }}" data-en="{{ product.name_en|default:product.name }}">
+            {{ product.name }}
+          </h3>
+          <span class="shrink-0 w-8 h-8 rounded-full bg-agro-600 text-white flex items-center justify-center shadow-sm">
+            <i data-lucide="plus" class="w-4 h-4"></i>
           </span>
-          <span class="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-            <i data-lucide="maximize-2" class="w-4 h-4"></i>
-          </span>
-        </div>
-
-        <div class="relative z-10 p-5 space-y-1.5">
-          <span class="text-amber-300/90 text-[10px] font-semibold uppercase tracking-widest block bilingual-origin"
-                data-es="{{ product.origin }}" data-en="{{ product.origin_en }}">
-            {{ product.origin }}
-          </span>
-          <div class="flex items-end justify-between gap-2">
-            <h3 class="font-serif font-semibold text-2xl text-white group-hover:text-amber-200 transition-colors bilingual-name"
-                data-es="{{ product.name }}" data-en="{{ product.name_en|default:product.name }}">
-              {{ product.name }}
-            </h3>
-            <span class="shrink-0 w-9 h-9 rounded-full bg-xpo-red text-white flex items-center justify-center shadow-sm">
-              <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
-            </span>
-          </div>
         </div>
 
       </div>
@@ -79,14 +60,14 @@
 </section>
 
 <!-- Modal Visual de Inspección -->
-<div id="product-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+<div id="product-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-agro-950/80 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
   <div class="modal-card bg-white rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col md:flex-row relative">
     
-    <button id="modal-close" type="button" class="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-black/70 hover:bg-xpo-red text-white flex items-center justify-center transition-colors">
+    <button id="modal-close" type="button" class="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-agro-950/70 hover:bg-agro-600 text-white flex items-center justify-center transition-colors">
       <i data-lucide="x" class="w-4 h-4"></i>
     </button>
 
-    <div class="md:w-1/2 h-72 md:h-auto relative bg-stone-900">
+    <div class="md:w-1/2 h-72 md:h-auto relative bg-agro-950">
       <img id="modal-image" src="" alt="Producto" class="w-full h-full object-cover">
     </div>
 
@@ -94,34 +75,34 @@
       <div>
         <div class="flex items-center justify-between mb-2">
           <img src="{% static 'images/agrosurlogo.png' %}" alt="Agro Sur Latino" class="h-5 w-auto object-contain opacity-80">
-          <span id="modal-scientific" class="text-xs text-xpo-red font-mono italic"></span>
+          <span id="modal-scientific" class="text-xs text-agro-600 font-bold"></span>
         </div>
-        <h3 id="modal-title" class="font-serif font-semibold text-2xl text-stone-900"></h3>
+        <h3 id="modal-title" class="font-serif font-semibold text-2xl text-agro-950"></h3>
         
         <div class="mt-4 space-y-2.5 text-xs">
-          <div class="p-2.5 rounded-xl bg-stone-50 border border-stone-200/80">
-            <span class="text-stone-400 block font-normal">Presentación / Calidad:</span>
-            <span id="modal-variety" class="text-stone-800 font-semibold text-sm"></span>
+          <div class="p-2.5 rounded-xl bg-agro-50/70 border border-agro-200">
+            <span class="text-agro-700 block font-normal">Calidad:</span>
+            <span id="modal-variety" class="text-agro-950 font-semibold text-sm"></span>
           </div>
 
-          <div class="p-2.5 rounded-xl bg-stone-50 border border-stone-200/80">
-            <span class="text-stone-400 block font-normal">Origen:</span>
-            <span id="modal-origin" class="text-stone-800 font-semibold"></span>
+          <div class="p-2.5 rounded-xl bg-agro-50/70 border border-agro-200">
+            <span class="text-agro-700 block font-normal">Origen:</span>
+            <span id="modal-origin" class="text-agro-950 font-semibold"></span>
           </div>
 
-          <div class="p-2.5 rounded-xl bg-stone-50 border border-stone-200/80">
-            <span class="text-stone-400 block font-normal">Disponibilidad:</span>
-            <span id="modal-season" class="text-stone-800 font-semibold"></span>
+          <div class="p-2.5 rounded-xl bg-agro-50/70 border border-agro-200">
+            <span class="text-agro-700 block font-normal">Disponibilidad:</span>
+            <span id="modal-season" class="text-agro-950 font-semibold"></span>
           </div>
 
-          <div class="p-2.5 rounded-xl bg-[#fbfaf6] border border-xpo-border">
-            <span class="text-stone-500 block font-normal">Empaque de Exportación:</span>
-            <span id="modal-specs" class="text-stone-900 font-semibold"></span>
+          <div class="p-2.5 rounded-xl bg-agro-50/70 border border-agro-200">
+            <span class="text-agro-700 block font-normal">Empaque:</span>
+            <span id="modal-specs" class="text-agro-950 font-semibold"></span>
           </div>
         </div>
       </div>
 
-      <a href="{% url 'landing:cotizador' %}" class="w-full py-3 rounded-full bg-xpo-red hover:bg-xpo-redDark text-white font-semibold text-xs tracking-widest uppercase text-center block transition-colors mt-3" data-i18n="modal_quote_btn">
+      <a href="{% url 'landing:cotizador' %}" class="w-full py-3 rounded-full bg-agro-600 hover:bg-agro-700 text-white font-bold text-xs tracking-widest uppercase text-center block transition-colors mt-3" data-i18n="modal_quote_btn">
         Cotizar este producto
       </a>
     </div>
@@ -132,11 +113,11 @@
 <script>
   function filterProductsByCategory(catSlug, btn) {
     document.querySelectorAll('.product-filter-btn').forEach(b => {
-      b.classList.remove('bg-xpo-red', 'text-white');
-      b.classList.add('bg-white', 'text-stone-700');
+      b.classList.remove('bg-agro-600', 'text-white');
+      b.classList.add('bg-white', 'text-agro-900');
     });
-    btn.classList.remove('bg-white', 'text-stone-700');
-    btn.classList.add('bg-xpo-red', 'text-white');
+    btn.classList.remove('bg-white', 'text-agro-900');
+    btn.classList.add('bg-agro-600', 'text-white');
 
     const cards = document.querySelectorAll('.product-catalog-card');
     cards.forEach(card => {
@@ -149,7 +130,6 @@
     });
   }
 
-  // Auto-filter if ?cat= param is present in URL
   document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     const cat = params.get('cat');

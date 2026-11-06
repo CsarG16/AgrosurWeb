@@ -27,9 +27,9 @@ class HeroSlide(models.Model):
     badge = models.CharField(max_length=50, default="Granos Andinos", verbose_name="Insignia / Categoría (ES)")
     badge_en = models.CharField(max_length=50, default="Andean Grains", verbose_name="Insignia / Categoría (EN)")
     image = models.ImageField(upload_to="hero/", blank=True, null=True, verbose_name="Imagen Principal (Panel Vertical)")
-    image_url = models.URLField(blank=True, null=True, help_text="URL externa si no se sube imagen local", verbose_name="URL de Imagen Principal")
+    image_url = models.CharField(max_length=255, blank=True, null=True, help_text="Ruta local (/static/...) o URL externa", verbose_name="Ruta o URL de Imagen Principal")
     secondary_image = models.ImageField(upload_to="hero/", blank=True, null=True, verbose_name="Imagen Secundaria Lateral")
-    secondary_image_url = models.URLField(blank=True, null=True, help_text="URL externa para el segundo panel vertical estilo Xpodeka", verbose_name="URL Imagen Secundaria Lateral")
+    secondary_image_url = models.CharField(max_length=255, blank=True, null=True, help_text="Ruta local (/static/...) o URL externa para el segundo panel vertical estilo Xpodeka", verbose_name="Ruta o URL Imagen Secundaria Lateral")
     order = models.PositiveIntegerField(default=0, verbose_name="Orden")
     is_active = models.BooleanField(default=True, verbose_name="Activo")
 
@@ -61,7 +61,7 @@ class ProductCategory(models.Model):
     watermark_text = models.CharField(max_length=80, blank=True, default="Granos Andinos", verbose_name="Texto Marca de Agua (ES)")
     watermark_text_en = models.CharField(max_length=80, blank=True, default="Andean Grains", verbose_name="Texto Marca de Agua (EN)")
     image = models.ImageField(upload_to="categories/", blank=True, null=True, verbose_name="Fotografía Vertical de Categoría")
-    image_url = models.URLField(blank=True, null=True, verbose_name="URL de Fotografía de Respaldo")
+    image_url = models.CharField(max_length=255, blank=True, null=True, verbose_name="Ruta o URL de Fotografía de Respaldo")
     order = models.PositiveIntegerField(default=0, verbose_name="Orden de Visualización")
     is_active = models.BooleanField(default=True, verbose_name="Categoría Activa")
 
@@ -119,7 +119,7 @@ class Product(models.Model):
     min_order_en = models.CharField(max_length=80, default="1 FCL Container (20 MT)", verbose_name="Pedido Mínimo (EN)")
 
     image = models.ImageField(upload_to="products/", blank=True, null=True, verbose_name="Foto Principal (Subir Archivo)")
-    image_url = models.URLField(blank=True, null=True, verbose_name="URL Imagen Respaldo")
+    image_url = models.CharField(max_length=255, blank=True, null=True, verbose_name="Ruta o URL Imagen Respaldo")
     is_featured = models.BooleanField(default=True, verbose_name="Destacado en Portada")
     is_active = models.BooleanField(default=True, verbose_name="Producto Activo")
     order = models.PositiveIntegerField(default=0, verbose_name="Orden de Visualización")

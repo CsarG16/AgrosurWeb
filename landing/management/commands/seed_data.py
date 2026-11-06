@@ -6,7 +6,7 @@ class Command(BaseCommand):
     help = "Puebla la base de datos SQLite3 con el catálogo real de Agro Sur Latino S.A.C. (Granos Andinos, Semillas y Menestras)"
 
     def handle(self, *args, **options):
-        self.stdout.write("Actualizando base de datos SQLite3 con el catálogo oficial de Agro Sur Latino S.A.C....")
+        self.stdout.write("Actualizando base de datos SQLite3 con el catálogo e imágenes oficiales de Agro Sur Latino S.A.C....")
 
         HeroSlide.objects.all().delete()
         Product.objects.all().delete()
@@ -14,40 +14,40 @@ class Command(BaseCommand):
         CompanyStat.objects.all().delete()
         Certification.objects.all().delete()
 
-        # 1. Paneles del Primer Impacto ("Al abrir" estilo Xpodeka)
+        # 1. Paneles del Primer Impacto ("Al abrir" estilo Xpodeka) con Fotos Reales de Agro Sur Latino
         HeroSlide.objects.create(
             title="Granos y semillas andinas",
             title_en="Andean grains and seeds",
             tagline="Granos Andinos",
             tagline_en="Andean Grains",
-            badge="Orgánico & Convencional",
-            badge_en="Organic & Conventional",
-            image_url="https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=1000&q=85",
-            secondary_image_url="https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=1000&q=85",
+            badge="De los productores hacia el mundo",
+            badge_en="From producers to the world",
+            image_url="/static/images/products/quinua-tricolor.png",
+            secondary_image_url="/static/images/products/chia.jpg",
             order=1,
             is_active=True
         )
         HeroSlide.objects.create(
             title="Legumbres y menestras peruanas",
             title_en="Peruvian pulses and beans",
-            tagline="Legumbres",
+            tagline="Menestras",
             tagline_en="Pulses & Beans",
-            badge="Stock Todo el Año",
-            badge_en="Year-Round Stock",
-            image_url="https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=1000&q=85",
-            secondary_image_url="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1000&q=85",
+            badge="Stock Permanente 365 Días",
+            badge_en="Year-Round Permanent Stock",
+            image_url="/static/images/products/frejol-canario.png",
+            secondary_image_url="/static/images/products/pallar-bebe.png",
             order=2,
             is_active=True
         )
         HeroSlide.objects.create(
-            title="Superfoods de los productores al mundo",
-            title_en="Superfoods from producers to the world",
-            tagline="Superfoods",
-            tagline_en="Superfoods",
-            badge="+15 Años de Trayectoria",
-            badge_en="+15 Years of Excellence",
-            image_url="https://images.unsplash.com/photo-1505576399279-565b52d4ac71?auto=format&fit=crop&w=1000&q=85",
-            secondary_image_url="https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=1000&q=85",
+            title="Maíces y cultivos de los Andes",
+            title_en="Andean corn and native crops",
+            tagline="Cultivos Andinos",
+            tagline_en="Andean Crops",
+            badge="Orgánico & Convencional",
+            badge_en="Organic & Conventional",
+            image_url="/static/images/products/maiz-gigante.png",
+            secondary_image_url="/static/images/products/quinua-roja.png",
             order=3,
             is_active=True
         )
@@ -59,7 +59,7 @@ class Command(BaseCommand):
             slug="granos-andinos",
             watermark_text="Granos Andinos",
             watermark_text_en="Andean Grains",
-            image_url="https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=1000&q=85",
+            image_url="/static/images/products/quinua-tricolor.png",
             order=1,
             is_active=True
         )
@@ -69,7 +69,7 @@ class Command(BaseCommand):
             slug="legumbres-menestras",
             watermark_text="Menestras",
             watermark_text_en="Pulses & Beans",
-            image_url="https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=1000&q=85",
+            image_url="/static/images/products/frejol-canario.png",
             order=2,
             is_active=True
         )
@@ -79,7 +79,7 @@ class Command(BaseCommand):
             slug="maices-cultivos",
             watermark_text="Cultivos del Perú",
             watermark_text_en="Peruvian Crops",
-            image_url="https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=1000&q=85",
+            image_url="/static/images/products/maiz-gigante.png",
             order=3,
             is_active=True
         )
@@ -103,7 +103,7 @@ class Command(BaseCommand):
                 "price_unit": "Kg FOB Callao",
                 "min_order": "1 Contenedor FCL (20 TM)",
                 "min_order_en": "1 FCL Container (20 MT)",
-                "image_url": "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=1000&q=85",
+                "image_url": "/static/images/products/quinua-blanca.png",
                 "is_featured": True,
                 "is_active": True,
                 "order": 1,
@@ -125,7 +125,7 @@ class Command(BaseCommand):
                 "price_unit": "Kg FOB Callao",
                 "min_order": "1 Contenedor FCL (20 TM)",
                 "min_order_en": "1 FCL Container (20 MT)",
-                "image_url": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1000&q=85",
+                "image_url": "/static/images/products/quinua-roja.png",
                 "is_featured": True,
                 "is_active": True,
                 "order": 2,
@@ -147,7 +147,7 @@ class Command(BaseCommand):
                 "price_unit": "Kg FOB Callao",
                 "min_order": "1 Contenedor FCL (20 TM)",
                 "min_order_en": "1 FCL Container (20 MT)",
-                "image_url": "https://images.unsplash.com/photo-1505576399279-565b52d4ac71?auto=format&fit=crop&w=1000&q=85",
+                "image_url": "/static/images/products/quinua-negra.png",
                 "is_featured": True,
                 "is_active": True,
                 "order": 3,
@@ -169,7 +169,7 @@ class Command(BaseCommand):
                 "price_unit": "Kg FOB Callao",
                 "min_order": "1 Contenedor FCL (20 TM)",
                 "min_order_en": "1 FCL Container (20 MT)",
-                "image_url": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1000&q=85",
+                "image_url": "/static/images/products/quinua-tricolor.png",
                 "is_featured": True,
                 "is_active": True,
                 "order": 4,
@@ -191,7 +191,7 @@ class Command(BaseCommand):
                 "price_unit": "Kg FOB Callao",
                 "min_order": "1 Contenedor FCL (20 TM)",
                 "min_order_en": "1 FCL Container (20 MT)",
-                "image_url": "https://images.unsplash.com/photo-1514944298352-f4d732142f74?auto=format&fit=crop&w=1000&q=85",
+                "image_url": "/static/images/products/chia.jpg",
                 "is_featured": True,
                 "is_active": True,
                 "order": 5,
@@ -213,7 +213,7 @@ class Command(BaseCommand):
                 "price_unit": "Kg FOB Callao",
                 "min_order": "1 Contenedor FCL (20 TM)",
                 "min_order_en": "1 FCL Container (20 MT)",
-                "image_url": "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1000&q=85",
+                "image_url": "/static/images/products/quinua-blanca.png",
                 "is_featured": True,
                 "is_active": True,
                 "order": 6,
@@ -235,7 +235,7 @@ class Command(BaseCommand):
                 "price_unit": "Kg FOB Callao",
                 "min_order": "1 Contenedor FCL (21 TM)",
                 "min_order_en": "1 FCL Container (21 MT)",
-                "image_url": "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=1000&q=85",
+                "image_url": "/static/images/products/frejol-canario.png",
                 "is_featured": True,
                 "is_active": True,
                 "order": 7,
@@ -257,7 +257,7 @@ class Command(BaseCommand):
                 "price_unit": "Kg FOB Callao",
                 "min_order": "1 Contenedor FCL (21 TM)",
                 "min_order_en": "1 FCL Container (21 MT)",
-                "image_url": "https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=1000&q=85",
+                "image_url": "/static/images/products/frejol-castilla.png",
                 "is_featured": True,
                 "is_active": True,
                 "order": 8,
@@ -279,8 +279,8 @@ class Command(BaseCommand):
                 "price_unit": "Kg FOB Callao",
                 "min_order": "1 Contenedor FCL (21 TM)",
                 "min_order_en": "1 FCL Container (21 MT)",
-                "image_url": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=1000&q=85",
-                "is_featured": False,
+                "image_url": "/static/images/products/pallar-bebe.png",
+                "is_featured": True,
                 "is_active": True,
                 "order": 9,
             },
@@ -301,8 +301,8 @@ class Command(BaseCommand):
                 "price_unit": "Kg FOB Callao",
                 "min_order": "1 Contenedor FCL (21 TM)",
                 "min_order_en": "1 FCL Container (21 MT)",
-                "image_url": "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=1000&q=85",
-                "is_featured": False,
+                "image_url": "/static/images/products/zarandaja.png",
+                "is_featured": True,
                 "is_active": True,
                 "order": 10,
             },
@@ -323,8 +323,8 @@ class Command(BaseCommand):
                 "price_unit": "Kg FOB Callao",
                 "min_order": "1 Contenedor FCL (20 TM)",
                 "min_order_en": "1 FCL Container (20 MT)",
-                "image_url": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1000&q=85",
-                "is_featured": False,
+                "image_url": "/static/images/products/habas.png",
+                "is_featured": True,
                 "is_active": True,
                 "order": 11,
             },
@@ -345,7 +345,7 @@ class Command(BaseCommand):
                 "price_unit": "Kg FOB Callao",
                 "min_order": "1 Contenedor FCL (20 TM)",
                 "min_order_en": "1 FCL Container (20 MT)",
-                "image_url": "https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=1000&q=85",
+                "image_url": "/static/images/products/maiz-gigante.png",
                 "is_featured": True,
                 "is_active": True,
                 "order": 12,
@@ -356,10 +356,10 @@ class Command(BaseCommand):
 
         # 4. Métricas Corporativas de Agro Sur Latino S.A.C.
         stats = [
-            {"value": "+15 Años", "label": "De trayectoria agroexportadora desde 2007", "label_en": "Of agro-export experience since 2007", "order": 1},
+            {"value": "2007", "label": "Año de fundación — +17 años de experiencia", "label_en": "Year founded — +17 years of excellence", "order": 1},
             {"value": "365 Días", "label": "Stock permanente en almacenes propios", "label_en": "Year-round stock in owned warehouses", "order": 2},
             {"value": "100%", "label": "Granos Orgánicos y Convencionales", "label_en": "Organic & Conventional Andean grains", "order": 3},
-            {"value": "6+", "label": "Certificaciones globales de calidad", "label_en": "Global food safety certifications", "order": 4},
+            {"value": "8", "label": "Certificaciones globales de calidad", "label_en": "Global food safety certifications", "order": 4},
         ]
         for s in stats:
             CompanyStat.objects.create(**s)
@@ -449,4 +449,4 @@ class Command(BaseCommand):
                 estimated_subtotal_usd=59850.00
             )
 
-        self.stdout.write(self.style.SUCCESS("¡Base de datos SQLite3 poblada con los 12 productos y categorías de Agro Sur Latino S.A.C.!"))
+        self.stdout.write(self.style.SUCCESS("¡Base de datos SQLite3 poblada con los 12 productos e imágenes oficiales de Agro Sur Latino S.A.C.!"))
