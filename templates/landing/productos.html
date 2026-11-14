@@ -3,6 +3,11 @@
 
 {% block title %}Catálogo Visual de Granos Andinos, Semillas y Menestras | Agro Sur Latino S.A.C.{% endblock %}
 
+{% block title_en %}Product Catalog: Andean Grains, Seeds & Pulses | Agro Sur Latino S.A.C.{% endblock %}
+{% block meta_description %}Catálogo de quinua, chía, kiwicha, maíz gigante, frejoles, pallares y más: granos andinos orgánicos y convencionales del Perú.{% endblock %}
+{% block og_title %}Catálogo de productos | Agro Sur Latino{% endblock %}
+{% block og_desc_inner %}Catálogo de quinua, chía, kiwicha, maíz gigante, frejoles, pallares y más: granos andinos orgánicos y convencionales del Perú.{% endblock %}
+
 {% block content %}
 <!-- Visual Header with Green Category Filter Buttons (Zero Clutter) -->
 <section class="py-10 xpodeka-wave-bg border-b border-agro-200">
@@ -37,7 +42,7 @@
       <div class="product-catalog-card card-hover-effect group relative rounded-2xl overflow-hidden bg-agro-950 shadow-md cursor-pointer flex flex-col justify-end aspect-[4/4.2] border border-agro-100"
            data-category="{{ product.category.slug|default:'granos-andinos' }}"
            onclick="openProductModal(this)"
-           data-product='{"id": {{ product.id }}, "name": "{{ product.name|escapejs }}", "name_en": "{{ product.name_en|default:product.name|escapejs }}", "scientific_name": "{{ product.scientific_name|escapejs }}", "modality": "{{ product.modality_label_es|escapejs }}", "modality_en": "{{ product.modality_label_en|escapejs }}", "variety": "{{ product.variety|escapejs }}", "origin": "{{ product.origin|escapejs }}", "origin_en": "{{ product.origin_en|escapejs }}", "season": "{{ product.season|escapejs }}", "season_en": "{{ product.season_en|escapejs }}", "packing_specs": "{{ product.packing_specs|escapejs }}", "packing_specs_en": "{{ product.packing_specs_en|escapejs }}", "image": "{{ product.get_image|escapejs }}", "price_fob": {{ product.ref_price_fob_usd }}}'>
+           data-product='{"id": {{ product.id }}, "name": "{{ product.name|escapejs }}", "name_en": "{{ product.name_en|default:product.name|escapejs }}", "scientific_name": "{{ product.scientific_name|escapejs }}", "modality": "{{ product.modality_label_es|escapejs }}", "modality_en": "{{ product.modality_label_en|escapejs }}", "variety": "{{ product.variety|escapejs }}", "origin": "{{ product.origin|escapejs }}", "origin_en": "{{ product.origin_en|escapejs }}", "season": "{{ product.season|escapejs }}", "season_en": "{{ product.season_en|escapejs }}", "packing_specs": "{{ product.packing_specs|escapejs }}", "packing_specs_en": "{{ product.packing_specs_en|escapejs }}", "image": "{{ product.get_image|escapejs }}"}'>
         
         <img src="{{ product.get_image }}" alt="{{ product.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110">
         <div class="absolute inset-0 bg-gradient-to-t from-agro-950/85 via-transparent to-transparent"></div>

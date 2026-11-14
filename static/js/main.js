@@ -16,14 +16,16 @@ const translations = {
     catalog_title: "Nuestros Productos",
     filter_all: "Todos",
     b3_tag: "DESDE 2007",
-    b3_headline: "Agro Sur Latino se fundó en 2007 bajo nuestro principio: “de los productores hacia el mundo”",
+    hero_headline: "Granos andinos del Perú, con calidad de exportación",
+    hero_btn_about: "CONOCE AGRO SUR",
+    b3_headline: "Desde 2007, calidad andina para el mundo",
     b3_btn_about: "SOBRE NOSOTROS",
-    b4_headline: "Nuestro principal objetivo es lograr una mejora continua y garantizar stock todo el año",
+    b4_headline: "Mejora continua. Stock todo el año.",
     b4_card1_title: "Orgánico",
     b4_card2_title: "Planta Propia",
     b4_card3_title: "Stock 365 Días",
     b4_img_title: "Almacenes en Huachipa • Lima",
-    b15_title: "Trabajamos y producimos bajo estándares y certificados",
+    b15_title: "Certificaciones",
     cert_view_all: "Ver todos →",
     contact_box_title: "¿Deseas un trato?",
     btn_open_quoter: "Cotizador Proforma PDF",
@@ -51,6 +53,10 @@ const translations = {
     lbl_notes: "Presentación requerida (Orgánico / Convencional / Sacos)",
     btn_submit_quote: "Generar Cotización & PDF",
     modal_quote_btn: "Cotizar este producto",
+    about_lead: "Fundada en el año <strong>2007</strong>, <strong>AGRO SUR LATINO S.A.C.</strong> (RUC 20517805662) es una empresa peruana con amplia trayectoria en el mercado nacional e internacional, especializada en el acopio, procesamiento, comercialización y exportación de granos andinos, semillas y menestras en presentaciones <strong>Orgánicas y Convencionales</strong>.",
+    about_sub: "Contamos con almacenes propios estratégicamente ubicados en las principales regiones productoras del Perú (Ayacucho, Cusco, Puno y Costa) y nuestra planta central en Huachipa (Lima), lo que nos permite garantizar stock permanente y abastecimiento seguro durante todo el año.",
+    mission_desc: "Lograr una mejora continua en nuestras actividades de acopio, procesamiento y comercialización para brindar granos andinos, semillas y menestras de óptima calidad, cumpliendo estrictamente con los estándares de inocuidad exigidos por nuestros clientes nacionales e internacionales.",
+    vision_desc: "Consolidarnos como la empresa peruana líder en el suministro y agroexportación de granos andinos y productos orgánicos, garantizando trazabilidad integral, sostenibilidad con nuestras comunidades productoras y stock permanente durante todo el año.",
   },
   en: {
     nav_home: "HOME",
@@ -67,14 +73,16 @@ const translations = {
     catalog_title: "Our Products",
     filter_all: "All",
     b3_tag: "SINCE 2007",
-    b3_headline: "Agro Sur Latino was founded in 2007 under our principle: “from producers to the world”",
+    hero_headline: "Peruvian Andean grains, export quality",
+    hero_btn_about: "MEET AGRO SUR",
+    b3_headline: "Since 2007, Andean quality for the world",
     b3_btn_about: "ABOUT US",
-    b4_headline: "Our main objective is to achieve continuous improvement and guarantee year-round stock",
+    b4_headline: "Continuous improvement. Year-round stock.",
     b4_card1_title: "Organic",
     b4_card2_title: "Owned Plant",
     b4_card3_title: "365-Day Stock",
     b4_img_title: "Huachipa Warehouses • Lima",
-    b15_title: "We work and produce under international standards and certificates",
+    b15_title: "Certifications",
     cert_view_all: "View all →",
     contact_box_title: "Want a deal?",
     btn_open_quoter: "PDF Proforma Builder",
@@ -102,10 +110,125 @@ const translations = {
     lbl_notes: "Required presentation (Organic / Conventional / Bags)",
     btn_submit_quote: "Generate Quote & PDF",
     modal_quote_btn: "Quote this product",
+    about_lead: "Founded in <strong>2007</strong>, <strong>AGRO SUR LATINO S.A.C.</strong> (RUC 20517805662) is a Peruvian company with a long track record in domestic and international markets, specialized in sourcing, processing, trading and exporting Andean grains, seeds and pulses in <strong>Organic and Conventional</strong> presentations.",
+    about_sub: "We operate our own warehouses in the main producing regions of Peru (Ayacucho, Cusco, Puno and the Coast) and our central plant in Huachipa (Lima), which lets us guarantee permanent stock and a reliable supply all year round.",
+    mission_desc: "To achieve continuous improvement in our sourcing, processing and trading activities in order to deliver top-quality Andean grains, seeds and pulses, strictly meeting the food-safety standards required by our domestic and international customers.",
+    vision_desc: "To become the leading Peruvian company in the supply and export of Andean grains and organic products, ensuring full traceability, sustainability with our producer communities and permanent stock all year round.",
   }
 };
 
+// Textos estáticos sin clave: frase en español -> inglés (nodos de texto y atributos).
+const phraseEN = {
+  "• VER VIDEO • AGRO SUR LATINO • PERÚ": "• WATCH VIDEO • AGRO SUR LATINO • PERU",
+  "• STOCK TODO EL AÑO • CALIDAD EXPORTACIÓN": "• YEAR-ROUND STOCK • EXPORT QUALITY",
+  "Calidad:": "Quality:",
+  "Origen:": "Origin:",
+  "Disponibilidad:": "Availability:",
+  "Empaque:": "Packing:",
+  "© 2026 AGRO SUR LATINO S.A.C. • De los productores hacia el mundo.": "© 2026 AGRO SUR LATINO S.A.C. • From producers to the world.",
+  "Sede Central Huertos de Huachipa • Lima": "Headquarters, Huertos de Huachipa • Lima",
+  "Cosecha Andina • Ayacucho, Perú": "Andean Harvest • Ayacucho, Peru",
+  "365 Días": "365 Days",
+  "VIDEO INSTITUCIONAL": "CORPORATE VIDEO",
+  "Conoce nuestro proceso desde el campo andino hasta la exportación": "Discover our process, from the Andean field to export",
+  "Trabajamos de la mano con agricultores de Ayacucho y los Andes peruanos, aplicando rigurosos controles de selección, limpieza óptica y envasado en nuestra planta de Lima.": "We work hand in hand with farmers from Ayacucho and the Peruvian Andes, applying strict selection, optical cleaning and packing controls at our Lima plant.",
+  "01 • ORIGEN & ACOPIO": "01 • ORIGIN & SOURCING",
+  "Centros de Acopio en Ayacucho y Andes": "Collection Centers in Ayacucho and the Andes",
+  "Trabajamos directamente con productores locales en Quinua, Acocro, Tambillo, Acos Vinchos y Morochucos (Ayacucho), impulsando prácticas sostenibles y cultivo orgánico certificado.": "We work directly with local producers in Quinua, Acocro, Tambillo, Acos Vinchos and Morochucos (Ayacucho), promoting sustainable practices and certified organic farming.",
+  "02 • SEDE HUACHIPA (LIMA)": "02 • HUACHIPA HEADQUARTERS (LIMA)",
+  "Procesamiento y Selección de Granos": "Grain Processing and Selection",
+  "Nuestra sede principal en Huachipa (Lima) asegura procesamiento bajo normas HACCP y BRCGS con trazabilidad de lote completa.": "Our headquarters in Huachipa (Lima) ensures processing under HACCP and BRCGS standards with full lot traceability.",
+  "Huertos de Huachipa – Lurigancho, Lima - Perú": "Huertos de Huachipa – Lurigancho, Lima - Peru",
+  "03 • ALMACENES & EXPORTACIÓN": "03 • WAREHOUSES & EXPORT",
+  "Stock Permanente los 365 Días": "Permanent Stock, 365 Days a Year",
+  "Almacenes propios con stock todo el año en sacos multipliego de 25 kg y 50 lb, listos para despacho en contenedores FCL desde el Puerto del Callao hacia el mundo.": "Our own warehouses hold stock all year in 25 kg and 50 lb multi-wall bags, ready to ship in FCL containers from the Port of Callao to the world.",
+  "Solicitar Cotización": "Request a Quote",
+  "Certificación Oficial": "Official Certification",
+  "MESA COMERCIAL B2B • RUC & INTERNACIONAL": "B2B TRADING DESK • RUC & INTERNATIONAL",
+  "¡Cotización registrada!": "Quotation registered!",
+  "Código Oficial:": "Official Code:",
+  "Descarga tu Proforma Oficial en PDF emitida por AGRO SUR LATINO S.A.C.": "Download your official PDF proforma issued by AGRO SUR LATINO S.A.C.",
+  "Descargar Proforma PDF": "Download PDF Proforma",
+  "Cerrar": "Close",
+  "Orgánico y Convencional": "Organic & Conventional",
+  "100% Orgánico Certificado": "100% Certified Organic",
+  "Convencional Selecto": "Selected Conventional",
+  "Contenedor FCL (~20 TM)": "FCL Container (~20 MT)",
+  "Toneladas (TM)": "Metric Tons (MT)",
+  "Pallets (1 TM)": "Pallets (1 MT)",
+  "Sacos 25 kg": "25 kg Bags",
+  "Kilos": "Kilograms",
+  "RUC Empresa (11 dígitos) *": "Company RUC (11 digits) *",
+  "SUNAT: 11 dígitos iniciando con 20": "SUNAT: 11 digits starting with 20",
+  "FOB Callao - Perú": "FOB Callao - Peru",
+  "CIF Puerto Destino": "CIF Destination Port",
+  "CFR Costo y Flete": "CFR Cost & Freight",
+  "EXW Planta Huachipa - Lima": "EXW Huachipa Plant - Lima",
+  "seleccionados": "selected",
+  "Marca uno o más granos arriba para calcular la proforma.": "Select one or more grains above to calculate the proforma.",
+  "Total FOB Estimado:": "Estimated FOB Total:",
+  "Proforma PDF instantánea": "Instant PDF proforma",
+  "Abrir Menú": "Open Menu",
+  "Cerrar Video": "Close Video",
+  "Reproducir Video Corporativo": "Play Corporate Video",
+  "Agro Sur Latino S.A.C. Video Corporativo": "Agro Sur Latino S.A.C. Corporate Video",
+  "Nombre *": "Name *",
+  "País / WhatsApp": "Country / WhatsApp",
+  "Nombre de contacto": "Contact name",
+  "País de destino": "Destination country",
+  "Especificar modalidad orgánica o convencional y empaque...": "Specify organic or conventional and packing...",
+  "Cotizar Granos y Menestras": "Quote Grains & Pulses"
+};
+
+const _origText = new WeakMap();
+const _origAttrs = new WeakMap();
+const _normText = (t) => t.replace(/\s+/g, ' ').trim();
+
+function applyStaticTranslations(lang) {
+  const en = lang === 'en';
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(n => {
+    const tag = n.parentElement && n.parentElement.tagName;
+    if (!tag || tag === 'SCRIPT' || tag === 'STYLE') return;
+    if (!_origText.has(n)) {
+      if (!phraseEN[_normText(n.textContent)]) return;
+      _origText.set(n, n.textContent);
+    }
+    const orig = _origText.get(n);
+    n.textContent = en ? orig.replace(_normText(orig), phraseEN[_normText(orig)]) : orig;
+  });
+
+  document.querySelectorAll('[placeholder],[aria-label],[title],[alt]').forEach(el => {
+    ['placeholder', 'aria-label', 'title', 'alt'].forEach(attr => {
+      const cur = el.getAttribute(attr);
+      if (cur === null) return;
+      let store = _origAttrs.get(el);
+      if (!store) { store = {}; _origAttrs.set(el, store); }
+      if (!(attr in store)) {
+        if (!phraseEN[_normText(cur)]) return;
+        store[attr] = cur;
+      }
+      el.setAttribute(attr, en ? phraseEN[_normText(store[attr])] : store[attr]);
+    });
+  });
+
+  // Elementos con texto alternativo en el HTML (p. ej. opciones de producto)
+  document.querySelectorAll('[data-en-text]').forEach(el => {
+    if (!el.hasAttribute('data-es-text')) el.setAttribute('data-es-text', el.textContent);
+    el.textContent = en ? el.getAttribute('data-en-text') : el.getAttribute('data-es-text');
+  });
+
+  // Título de la pestaña
+  const metaTitle = document.querySelector('meta[name="title-en"]');
+  if (!window._titleEs) window._titleEs = document.title;
+  document.title = en && metaTitle ? metaTitle.content : window._titleEs;
+  document.documentElement.lang = lang;
+}
+
 let currentLanguage = localStorage.getItem('agrosur_lang') || 'es';
+const tr = (es, en) => (currentLanguage === 'en' ? en : es);
 
 function setLanguage(lang) {
   currentLanguage = lang;
@@ -124,7 +247,7 @@ function setLanguage(lang) {
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
     if (t[key]) {
-      el.innerText = t[key];
+      if (t[key].includes('<')) el.innerHTML = t[key]; else el.innerText = t[key];
     }
   });
 
@@ -143,7 +266,23 @@ function setLanguage(lang) {
     if (val) el.innerText = val;
   });
 
+  applyStaticTranslations(lang);
   updateClientTypeHints();
+  updatePriceLabels();
+}
+
+// Precio por kg en cada producto del cotizador: US$ FOB (exportación) o S/ con IGV (Perú)
+function updatePriceLabels() {
+  const labels = document.querySelectorAll('.quote-price');
+  if (!labels.length) return;
+  const type = document.querySelector('input[name="client_type"]:checked')?.value || 'JURIDICA_RUC';
+  const peru = type !== 'EXTRANJERO';
+  const en = currentLanguage === 'en';
+  labels.forEach(el => {
+    const value = el.getAttribute(peru ? 'data-pen' : 'data-usd');
+    const suffix = peru ? (en ? ' / kg (incl. VAT)' : ' / kg (incl. IGV)') : (en ? ' / kg FOB' : ' / kg FOB');
+    el.textContent = value + suffix;
+  });
 }
 
 function updateClientTypeHints() {
@@ -212,6 +351,69 @@ document.addEventListener('DOMContentLoaded', () => {
 
   setLanguage(currentLanguage);
 
+  // Animaciones de aparición al hacer scroll (estilo Xpodeka)
+  (function initScrollReveal() {
+    if (!('IntersectionObserver' in window)) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const targets = document.querySelectorAll([
+      'main section:not(.hero-photo) h1', 'main section:not(.hero-photo) h2', 'main section:not(.hero-photo) h3',
+      'main section:not(.hero-photo) > div > p', 'main section:not(.hero-photo) .reveal-item',
+      'main form',
+      'main section:not(.hero-photo) .rounded-2xl', 'main section:not(.hero-photo) .rounded-3xl',
+    ].join(','));
+
+    const seen = new Set();
+    const items = [];
+
+    // Las cuadrículas de productos aparecen como UN solo bloque (no fila por fila)
+    const productGrids = new Set([...document.querySelectorAll('main [data-product]')].map(e => e.parentElement));
+    const quoteGrid = document.getElementById('quote-items-selection');
+    if (quoteGrid) productGrids.add(quoteGrid);
+    productGrids.forEach(g => { if (g && !seen.has(g)) { seen.add(g); items.push(g); } });
+
+    targets.forEach(el => {
+      if (seen.has(el) || el.closest('#product-modal, #video-modal, #notification-toast, header, footer')) return;
+      // evita animar un elemento dentro de otro ya animado
+      if (items.some(p => p.contains(el))) return;
+      seen.add(el);
+      items.push(el);
+    });
+
+    // retraso escalonado entre hermanos
+    const counters = new Map();
+    items.forEach(el => {
+      const n = counters.get(el.parentElement) || 0;
+      counters.set(el.parentElement, n + 1);
+      el.style.setProperty('--reveal-delay', Math.min(n, 5) * 90 + 'ms');
+      el.classList.add('reveal');
+    });
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        io.unobserve(el);
+        el.classList.add('reveal-in');
+        // al terminar, quitar las clases para no pisar los hover/transiciones propios del elemento
+        setTimeout(() => {
+          el.classList.remove('reveal', 'reveal-in');
+          el.style.removeProperty('--reveal-delay');
+        }, 1300);
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -6% 0px' });
+
+    items.forEach(el => io.observe(el));
+  })();
+
+  // Menú: transparente sobre la foto del inicio, sólido al hacer scroll
+  const navbar = document.getElementById('navbar');
+  if (navbar) {
+    const onScroll = () => navbar.classList.toggle('is-scrolled', window.scrollY > 40);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
   // Hero Visual Panels Slider
   const slides = document.querySelectorAll('.hero-slide');
   const indicators = document.querySelectorAll('.hero-indicator');
@@ -279,58 +481,108 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Cotizador Interactive Product Selector
+  // Los montos los calcula el servidor (/api/quote/estimate/); aquí solo se muestran.
+  const MAX_QTY = { CONTENEDOR_FCL: 50, TONELADAS: 1000, PALLET: 1000, SACOS_25KG: 10000, KILOS: 100000 };
+  const selectedClientType = () => document.querySelector('input[name="client_type"]:checked')?.value || 'JURIDICA_RUC';
+  const isPeruType = (t) => t !== 'EXTRANJERO';
+
+  function collectQuoteItems() {
+    const items = [];
+    document.querySelectorAll('.quote-prod-checkbox:checked').forEach(cb => {
+      const row = cb.closest('.quote-product-row');
+      items.push({
+        product_id: parseInt(cb.value, 10),
+        name: cb.getAttribute('data-name'),
+        quantity: row.querySelector('.quote-qty-input')?.value || '',
+        unit: row.querySelector('.quote-unit-select')?.value || '',
+        unitLabel: (() => { const sel = row.querySelector('.quote-unit-select'); return sel?.options[sel.selectedIndex]?.text || ''; })(),
+      });
+    });
+    return items;
+  }
+
+  // Unidades disponibles según tipo de cliente (Perú: S/ con IGV, sacos o kilos)
+  function applyClientTypeUnits() {
+    const peru = isPeruType(selectedClientType());
+    document.querySelectorAll('.quote-unit-select').forEach(sel => {
+      Array.from(sel.options).forEach(opt => {
+        const scope = opt.getAttribute('data-scope');
+        const ok = scope === 'both' || (peru ? scope === 'peru' : scope === 'export');
+        opt.hidden = !ok;
+        opt.disabled = !ok;
+      });
+      if (sel.options[sel.selectedIndex]?.disabled) {
+        sel.value = peru ? 'SACOS_25KG' : 'CONTENEDOR_FCL';
+      }
+      const qty = sel.closest('.quote-product-row')?.querySelector('.quote-qty-input');
+      if (qty) qty.max = MAX_QTY[sel.value] || 50;
+    });
+  }
+
+  let estimateTimer = null;
+  let estimateSeq = 0;
   window.updateQuoteSummary = function() {
-    let selectedCount = 0;
-    let totalEst = 0;
+    clearTimeout(estimateTimer);
+    estimateTimer = setTimeout(runEstimate, 200);
+  };
+
+  async function runEstimate() {
     const summaryList = document.getElementById('quote-summary-items');
     if (!summaryList) return;
+    const items = collectQuoteItems();
+    const countBadge = document.getElementById('quote-selected-count');
+    if (countBadge) countBadge.innerText = items.length;
+    const placeholder = document.getElementById('quote-empty-placeholder');
+    if (placeholder) placeholder.classList.toggle('hidden', items.length > 0);
+    const totalEl = document.getElementById('quote-total-est');
+
     summaryList.innerHTML = '';
+    if (items.length === 0) {
+      if (totalEl) totalEl.innerText = '—';
+      return;
+    }
 
-    document.querySelectorAll('.quote-prod-checkbox:checked').forEach(cb => {
-      selectedCount++;
-      const prodCard = cb.closest('.quote-product-row');
-      const prodName = cb.getAttribute('data-name');
-      const priceFob = parseFloat(cb.getAttribute('data-price') || 0);
-      const qtyInput = prodCard.querySelector('.quote-qty-input');
-      const unitSelect = prodCard.querySelector('.quote-unit-select');
+    const seq = ++estimateSeq;
+    let data = null;
+    try {
+      const res = await fetch('/api/quote/estimate/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || '' },
+        body: JSON.stringify({ client_type: selectedClientType(), lang: currentLanguage, items: items.map(i => ({ product_id: i.product_id, quantity: i.quantity, unit: i.unit })) }),
+      });
+      data = await res.json();
+    } catch (err) {
+      data = null;
+    }
+    if (seq !== estimateSeq) return; // llegó una respuesta más nueva
 
-      const qty = parseFloat(qtyInput?.value || 1);
-      const unit = unitSelect?.value || 'CONTENEDOR_40';
-      const unitLabel = unitSelect?.options[unitSelect.selectedIndex]?.text || unit;
-
-      let subtotal = 0;
-      if (unit === 'CONTENEDOR_40') {
-        subtotal = qty * 20000 * priceFob;
-      } else if (unit === 'TONELADAS') {
-        subtotal = qty * 1000 * priceFob;
-      } else if (unit === 'PALLET') {
-        subtotal = qty * 1000 * priceFob;
-      } else {
-        subtotal = qty * 25 * priceFob;
-      }
-
-      totalEst += subtotal;
-
+    const subtotals = {};
+    if (data && data.success) data.items.forEach(i => { subtotals[i.product_id] = i.subtotal; });
+    items.forEach(i => {
       const li = document.createElement('div');
       li.className = 'flex items-center justify-between text-xs py-1.5 border-b border-stone-800';
-      li.innerHTML = `
-        <span class="font-normal text-stone-200">${prodName} (${qty} ${unitLabel})</span>
-        <span class="font-mono font-medium text-agro-300">~$${Math.round(subtotal).toLocaleString()} USD</span>
-      `;
+      const left = document.createElement('span');
+      left.className = 'font-normal text-stone-200';
+      left.textContent = `${i.name} (${i.quantity} ${i.unitLabel})`;
+      const right = document.createElement('span');
+      right.className = 'font-mono font-medium text-agro-300';
+      right.textContent = subtotals[i.product_id] ? `~${subtotals[i.product_id]}` : '—';
+      li.append(left, right);
       summaryList.appendChild(li);
     });
+    if (totalEl) totalEl.innerText = data && data.success ? data.total : (data?.message || '—');
+  }
 
-    const countBadge = document.getElementById('quote-selected-count');
-    if (countBadge) countBadge.innerText = selectedCount;
-
-    const totalEl = document.getElementById('quote-total-est');
-    if (totalEl) totalEl.innerText = `$${Math.round(totalEst).toLocaleString()} USD`;
-
-    const placeholder = document.getElementById('quote-empty-placeholder');
-    if (placeholder) {
-      placeholder.classList.toggle('hidden', selectedCount > 0);
-    }
-  };
+  document.querySelectorAll('input[name="client_type"]').forEach(r => {
+    r.addEventListener('change', () => { applyClientTypeUnits(); updatePriceLabels(); updateQuoteSummary(); });
+  });
+  document.querySelectorAll('.quote-unit-select').forEach(sel => {
+    sel.addEventListener('change', () => {
+      const qty = sel.closest('.quote-product-row')?.querySelector('.quote-qty-input');
+      if (qty) qty.max = MAX_QTY[sel.value] || 50;
+    });
+  });
+  applyClientTypeUnits();
 
   document.querySelectorAll('.quote-prod-checkbox').forEach(cb => {
     cb.addEventListener('change', (e) => {
@@ -367,7 +619,7 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const checkedItems = document.querySelectorAll('.quote-prod-checkbox:checked');
       if (checkedItems.length === 0) {
-        showToast('Por favor selecciona al menos un producto para cotizar.', false);
+        showToast(tr('Por favor selecciona al menos un producto para cotizar.', 'Please select at least one product to quote.'), false);
         return;
       }
 
@@ -375,15 +627,15 @@ document.addEventListener('DOMContentLoaded', () => {
       const docNum = document.getElementById('input-doc-number').value.trim();
 
       if (clientType === 'NATURAL_DNI' && !/^\d{8}$/.test(docNum)) {
-        showToast('El DNI debe contener exactamente 8 dígitos numéricos.', false);
+        showToast(tr('El DNI debe contener exactamente 8 dígitos numéricos.', 'The DNI must contain exactly 8 digits.'), false);
         return;
       }
       if (clientType === 'NATURAL_RUC' && (!/^\d{11}$/.test(docNum) || !docNum.startsWith('10'))) {
-        showToast('El RUC de Persona Natural debe tener 11 dígitos e iniciar con 10.', false);
+        showToast(tr('El RUC de Persona Natural debe tener 11 dígitos e iniciar con 10.', 'The personal RUC must have 11 digits and start with 10.'), false);
         return;
       }
       if (clientType === 'JURIDICA_RUC' && (!/^\d{11}$/.test(docNum) || !docNum.startsWith('20'))) {
-        showToast('El RUC de Empresa debe tener 11 dígitos e iniciar con 20.', false);
+        showToast(tr('El RUC de Empresa debe tener 11 dígitos e iniciar con 20.', 'The company RUC must have 11 digits and start with 20.'), false);
         return;
       }
 
@@ -391,25 +643,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const originalText = submitBtn.innerHTML;
       submitBtn.disabled = true;
 
-      const items = [];
-      checkedItems.forEach(cb => {
-        const row = cb.closest('.quote-product-row');
-        const qty = parseFloat(row.querySelector('.quote-qty-input')?.value || 1);
-        const unit = row.querySelector('.quote-unit-select')?.value || 'CONTENEDOR_40';
-        const priceFob = parseFloat(cb.getAttribute('data-price') || 0);
-        let subtotal = 0;
-        if (unit === 'CONTENEDOR_40') subtotal = qty * 20000 * priceFob;
-        else if (unit === 'TONELADAS') subtotal = qty * 1000 * priceFob;
-        else if (unit === 'PALLET') subtotal = qty * 1000 * priceFob;
-        else subtotal = qty * 25 * priceFob;
-
-        items.push({
-          product_id: parseInt(cb.value),
-          quantity: qty,
-          unit: unit,
-          subtotal: Math.round(subtotal)
-        });
-      });
+      const items = collectQuoteItems().map(i => ({ product_id: i.product_id, quantity: i.quantity, unit: i.unit }));
 
       const payload = {
         client_type: clientType,
@@ -423,6 +657,7 @@ document.addEventListener('DOMContentLoaded', () => {
         destination_port: document.getElementById('input-destination-port').value.trim(),
         notes: document.getElementById('input-notes').value.trim(),
         items: items,
+        website: document.getElementById('input-website')?.value || '',
         lang: currentLanguage,
       };
 
@@ -451,10 +686,10 @@ document.addEventListener('DOMContentLoaded', () => {
             banner.scrollIntoView({ behavior: 'smooth' });
           }
         } else {
-          showToast(data.message || 'Error al procesar la cotización.', false);
+          showToast(data.message || tr('Error al procesar la cotización.', 'Error processing the quotation.'), false);
         }
       } catch (err) {
-        showToast('Error de conexión con el servidor.', false);
+        showToast(tr('Error de conexión con el servidor.', 'Connection error with the server.'), false);
       } finally {
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalText;
@@ -468,6 +703,7 @@ document.addEventListener('DOMContentLoaded', () => {
     contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(contactForm);
+      formData.set('lang', currentLanguage);
       try {
         const res = await fetch('/api/contact/', {
           method: 'POST',
@@ -481,10 +717,10 @@ document.addEventListener('DOMContentLoaded', () => {
           showToast(data.message, true);
           contactForm.reset();
         } else {
-          showToast(data.message || 'Complete los campos requeridos.', false);
+          showToast(data.message || tr('Complete los campos requeridos.', 'Please complete the required fields.'), false);
         }
       } catch (err) {
-        showToast('Error al enviar el mensaje.', false);
+        showToast(tr('Error al enviar el mensaje.', 'Error sending the message.'), false);
       }
     });
   }

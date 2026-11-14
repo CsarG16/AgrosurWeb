@@ -1,10 +1,19 @@
 import io
 from datetime import datetime
+from decimal import Decimal
+
+from django.conf import settings
+from django.utils import timezone
+
+from . import pricing
 from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, HRFlowable
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, HRFlowable, Image
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_CENTER, TA_RIGHT
+
+COMPANY_ADDRESS = settings.COMPANY_ADDRESS
+COMPANY_EMAIL = settings.COMPANY_EMAIL
 
 
 def generate_quotation_pdf(quote):
@@ -87,13 +96,15 @@ def generate_quotation_pdf(quote):
 
     # 1. Cabecera Corporativa Real de Agro Sur Latino S.A.C.
     code = f"COT-{quote.id:04d}"
-    date_str = quote.created_at.strftime('%d/%m/%Y %H:%M') if hasattr(quote, 'created_at') and quote.created_at else datetime.now().strftime('%d/%m/%Y')
+    created = timezone.localtime(quote.created_at) if quote.created_at else timezone.localtime()
+    date_str = created.strftime('%d/%m/%Y %H:%M')
+    currency = quote.currency
 
     header_left = [
         Paragraph("<b>AGRO SUR LATINO S.A.C.</b>", title_style),
         Paragraph("RUC 20517805662 • Lima, Perú", subtitle_style),
         Paragraph("Granos Andinos, Semillas y Menestras (Orgánicos y Convencionales)", subtitle_style),
-        Paragraph("Jr. Antonio José de Sucre Mz. I Lte. 11, Huertos de Huachipa – Lima | david@agrosurlatino.com", subtitle_style),
+        Paragraph(f"{COMPANY_ADDRESS} | {COMPANY_EMAIL}", subtitle_style),
     ]
 
     header_right = [
@@ -102,6 +113,16 @@ def generate_quotation_pdf(quote):
         Paragraph(f"<b>Fecha:</b> {date_str}", right_style),
         Paragraph(f"<b>Incoterm Solicitado:</b> {quote.incoterm}", right_style),
     ]
+
+    logo_path = settings.BASE_DIR / 'static' / 'images' / 'agrosurlogo.png'
+    if logo_path.exists():
+        try:
+            logo = Image(str(logo_path), width=110, height=110 * 0.35)
+            logo.hAlign = 'LEFT'
+            logo._restrictSize(110, 60)
+            header_left.insert(0, logo)
+        except Exception:
+            pass
 
     header_table = Table([[header_left, header_right]], colWidths=[320, 212])
     header_table.setStyle(TableStyle([
@@ -172,10 +193,11 @@ def generate_quotation_pdf(quote):
     story.append(Spacer(1, 6))
 
     unit_labels = {
-        'CONTENEDOR_40': 'Contenedor FCL (~20-21 TM)',
-        'PALLET': 'Pallets Exportación',
+        'CONTENEDOR_FCL': 'Contenedor FCL (~20 TM)',
+        'PALLET': 'Pallets (1 TM)',
         'TONELADAS': 'Toneladas Métricas (TM)',
-        'CAJAS': 'Sacos Multipliego (25 kg)',
+        'SACOS_25KG': 'Sacos 25 kg',
+        'KILOS': 'Kilos',
     }
 
     items_data = [
@@ -183,22 +205,22 @@ def generate_quotation_pdf(quote):
             Paragraph("<b>Producto / Grano</b>", body_bold),
             Paragraph("<b>Modalidad & Origen</b>", body_bold),
             Paragraph("<b>Cantidad & Unidad</b>", body_bold),
-            Paragraph("<b>Ref. FOB Unit.</b>", right_bold),
+            Paragraph("<b>Precio por kg</b>" if currency == "PEN" else "<b>Ref. FOB por kg</b>", right_bold),
             Paragraph("<b>Subtotal Estimado</b>", right_bold),
         ]
     ]
 
-    total_est = 0
-    items = quote.items.all()
+    total_est = Decimal('0')
+    items = quote.items.select_related('product').all()
     if items:
         for it in items:
             p = it.product
             qty = it.quantity
             unit_name = unit_labels.get(it.unit, it.unit)
-            unit_price = f"${p.ref_price_fob_usd:.2f}/{p.price_unit}" if p else "Consultar"
-            subtotal_val = it.estimated_subtotal_usd or 0
-            total_est += float(subtotal_val)
-            subtotal_str = f"${subtotal_val:,.2f} USD" if subtotal_val else "Por cotizar"
+            unit_price = f"{pricing.money(pricing.unit_price(p, currency), currency)}/kg" if p else "Consultar"
+            subtotal_val = it.estimated_subtotal_usd or Decimal('0')
+            total_est += subtotal_val
+            subtotal_str = pricing.money(subtotal_val, currency) if subtotal_val else "Por cotizar"
 
             items_data.append([
                 Paragraph(p.name if p else "Grano Andino", body_bold),
@@ -213,15 +235,15 @@ def generate_quotation_pdf(quote):
             Paragraph("-", body_style),
             Paragraph("-", body_style),
             Paragraph("-", right_style),
-            Paragraph("$0.00 USD", right_style),
+            Paragraph(pricing.money(0, currency), right_style),
         ])
 
     items_data.append([
-        Paragraph("<b>TOTAL ESTIMADO DE REFERENCIA (FOB USD):</b>", body_bold),
+        Paragraph("<b>TOTAL ESTIMADO (S/ incluye IGV):</b>" if currency == "PEN" else "<b>TOTAL ESTIMADO DE REFERENCIA (FOB US$):</b>", body_bold),
         "",
         "",
         "",
-        Paragraph(f"<b>${total_est:,.2f} USD</b>", right_bold),
+        Paragraph(f"<b>{pricing.money(total_est, currency)}</b>", right_bold),
     ])
 
     items_table = Table(items_data, colWidths=[120, 130, 132, 70, 80])
@@ -262,7 +284,7 @@ def generate_quotation_pdf(quote):
         "1. <b>Disponibilidad y Stock:</b> Abastecimiento permanente todo el año desde nuestros almacenes en Huachipa (Lima) y centros de acopio en Ayacucho.<br/>"
         "2. <b>Presentaciones:</b> Disponible en modalidades Orgánica Certificada y Convencional según requerimiento del cliente.<br/>"
         "3. <b>Certificaciones:</b> HACCP, BRC, USDA Organic, EU Organic, JAS, FDA y Certificado Fitosanitario SENASA Perú.<br/>"
-        "4. <b>Contacto Comercial:</b> david@agrosurlatino.com • Jr. Antonio José de Sucre Mz. I Lte. 11, Huertos de Huachipa – Lima, Perú."
+        f"4. <b>Contacto Comercial:</b> {COMPANY_EMAIL} • {COMPANY_ADDRESS}, Lima, Perú."
     )
     terms_p = Paragraph(terms_text, subtitle_style)
     terms_table = Table([[terms_p]], colWidths=[532])

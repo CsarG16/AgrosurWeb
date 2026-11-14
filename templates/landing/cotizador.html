@@ -3,6 +3,11 @@
 
 {% block title %}Cotizador B2B de Granos y Menestras | Agro Sur Latino S.A.C.{% endblock %}
 
+{% block title_en %}B2B Quote Request: Grains & Pulses | Agro Sur Latino S.A.C.{% endblock %}
+{% block meta_description %}Solicita tu cotización de granos andinos, semillas y menestras: exportación FOB o venta en Perú. Recibe tu proforma en PDF.{% endblock %}
+{% block og_title %}Cotizador | Agro Sur Latino{% endblock %}
+{% block og_desc_inner %}Solicita tu cotización de granos andinos, semillas y menestras: exportación FOB o venta en Perú. Recibe tu proforma en PDF.{% endblock %}
+
 {% block content %}
 <!-- Minimal Visual Header -->
 <section class="py-12 xpodeka-wave-bg border-b border-xpo-border/80">
@@ -25,7 +30,7 @@
           <img src="{% static 'images/agrosurlogo-light.png' %}" alt="Agro Sur Latino" class="w-full h-auto object-contain">
         </div>
         <div>
-          <span class="text-xs uppercase tracking-wider text-amber-300 font-semibold">¡Cotización Registrada en SQLite3!</span>
+          <span class="text-xs uppercase tracking-wider text-amber-300 font-semibold">¡Cotización registrada!</span>
           <h3 class="text-xl font-serif font-semibold text-white">Código Oficial: <span id="quote-success-code" class="text-amber-300 font-mono">COT-0001</span></h3>
           <p class="text-stone-300 text-xs mt-0.5">Descarga tu Proforma Oficial en PDF emitida por AGRO SUR LATINO S.A.C.</p>
         </div>
@@ -43,6 +48,7 @@
 
     <form id="quote-form" class="space-y-10">
       {% csrf_token %}
+      <input type="text" name="website" id="input-website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
 
       <!-- PASO 1: Selecciona Visualmente los Granos y Semillas (Desde SQLite3) -->
       <div class="bg-[#fbfaf6] p-7 sm:p-9 rounded-2xl border border-xpo-border space-y-6">
@@ -51,15 +57,14 @@
             <div class="w-7 h-7 rounded-full bg-xpo-red text-white font-bold flex items-center justify-center text-xs">1</div>
             <h3 class="font-serif font-semibold text-xl text-stone-900" data-i18n="step2_title">Selecciona tus Productos y Volúmenes</h3>
           </div>
-          <span class="text-xs text-stone-500 font-medium hidden sm:inline">Catálogo en vivo desde SQLite3</span>
-        </div>
+                  </div>
 
         <div id="quote-items-selection" class="grid grid-cols-1 md:grid-cols-2 gap-4">
           {% for product in products %}
           <div class="quote-product-row border border-stone-200 rounded-xl p-4 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white">
             
             <label class="flex items-center gap-4 cursor-pointer flex-1">
-              <input type="checkbox" value="{{ product.id }}" data-name="{{ product.name }}" data-price="{{ product.ref_price_fob_usd }}" class="quote-prod-checkbox w-5 h-5 text-xpo-red rounded focus:ring-xpo-red cursor-pointer">
+              <input type="checkbox" value="{{ product.id }}" data-name="{{ product.name }}" class="quote-prod-checkbox w-5 h-5 text-xpo-red rounded focus:ring-xpo-red cursor-pointer">
               
               <div class="w-16 h-16 rounded-xl overflow-hidden shrink-0 border border-stone-200">
                 <img src="{{ product.get_image }}" alt="{{ product.name }}" class="w-full h-full object-cover">
@@ -70,21 +75,22 @@
                 <h4 class="font-serif font-semibold text-stone-900 text-base bilingual-name" data-es="{{ product.name }}" data-en="{{ product.name_en|default:product.name }}">
                   {{ product.name }}
                 </h4>
-                <span class="text-xs font-mono text-stone-500">Ref: ${{ product.ref_price_fob_usd }}/{{ product.price_unit }}</span>
+                <span class="quote-price block text-xs font-mono font-semibold text-agro-700 mt-0.5" data-usd="{{ product.price_usd_label }}" data-pen="{{ product.price_pen_label }}"></span>
               </div>
             </label>
 
             <div class="quote-controls flex items-center gap-2 opacity-40 pointer-events-none transition-opacity shrink-0">
               <div class="w-20">
-                <input type="number" min="1" max="100" value="1" class="quote-qty-input w-full px-2.5 py-2 rounded-lg border border-stone-300 text-xs font-bold text-stone-900 text-center" aria-label="Cantidad">
+                <input type="number" min="1" max="50" step="any" value="1" class="quote-qty-input w-full px-2.5 py-2 rounded-lg border border-stone-300 text-xs font-bold text-stone-900 text-center" aria-label="Cantidad">
               </div>
 
               <div class="w-40">
                 <select class="quote-unit-select w-full px-2.5 py-2 rounded-lg border border-stone-300 text-xs font-semibold text-stone-800 bg-white" aria-label="Unidad">
-                  <option value="CONTENEDOR_40" selected>Contenedor FCL (~20 TM)</option>
-                  <option value="TONELADAS">Toneladas (TM)</option>
-                  <option value="PALLET">Pallets (1 TM)</option>
-                  <option value="CAJAS">Sacos 25 kg</option>
+                  <option value="CONTENEDOR_FCL" data-scope="export" selected>Contenedor FCL (~20 TM)</option>
+                  <option value="TONELADAS" data-scope="export">Toneladas (TM)</option>
+                  <option value="PALLET" data-scope="export">Pallets (1 TM)</option>
+                  <option value="SACOS_25KG" data-scope="both">Sacos 25 kg</option>
+                  <option value="KILOS" data-scope="peru">Kilos</option>
                 </select>
               </div>
             </div>

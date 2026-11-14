@@ -3,118 +3,20 @@
 
 {% block content %}
 <!-- ======================================================================= -->
-<!-- 1. PRIMER IMPACTO ("AL ABRIR") — VERDE IDENTIDAD & FOTOS GIGANTES       -->
+<!-- 1. PRIMER IMPACTO — FOTO A TODO LO ANCHO + UNA FRASE (estilo Xpodeka)    -->
 <!-- ======================================================================= -->
-<section id="inicio" class="relative w-full min-h-[calc(100vh-69px)] xpodeka-wave-bg overflow-hidden flex items-center py-8 lg:py-12 border-b border-agro-200">
+<section id="inicio" class="hero-photo relative w-full min-h-[100svh] flex items-center justify-center overflow-hidden text-center">
+  <img src="{% static 'images/company/campo-atardecer.jpg' %}" alt="Agricultor revisando su cultivo al atardecer" fetchpriority="high"
+       class="absolute inset-0 w-full h-full object-cover object-[28%_center] md:object-center">
+  <div class="absolute inset-0 bg-gradient-to-b from-black/55 via-black/30 to-black/55"></div>
 
-  <!-- Green Organic Botanical Stains & Floating Seeds Illustrations -->
-  <svg class="pointer-events-none select-none absolute -top-14 -left-16 w-80 h-80 text-agro-500/15 z-0" viewBox="0 0 400 400" fill="currentColor" aria-hidden="true">
-    <path d="M296.5,64.2C342.1,99.8,378.4,156.9,369.8,214.5C361.2,272.1,307.7,330.2,245.4,352.9C183.1,375.6,112,362.9,66.8,318.4C21.6,273.9,2.3,197.6,25.2,135.8C48.1,74,113.2,26.7,179.9,21.5C246.6,16.3,250.9,28.6,296.5,64.2Z"/>
-  </svg>
-  <svg class="pointer-events-none select-none absolute bottom-4 right-8 w-72 h-72 text-agro-400/20 z-0" viewBox="0 0 400 400" fill="currentColor" aria-hidden="true">
-    <path d="M318.2,86.4C358.5,131.2,374.1,197.8,349.6,252.3C325.1,306.8,260.5,349.2,193.7,356.4C126.9,363.6,57.9,335.6,28.4,281.9C-1.1,228.2,8.9,148.8,51.8,96.7C94.7,44.6,170.5,19.8,236.4,31.5C302.3,43.2,277.9,41.6,318.2,86.4Z"/>
-  </svg>
-  <!-- Floating Botanical Leaf & Seeds Vector -->
-  <svg class="pointer-events-none select-none float-seed absolute top-14 left-[33%] hidden lg:block w-24 h-24 text-agro-600/45 z-0" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-    <ellipse cx="32" cy="40" rx="8" ry="13" transform="rotate(-25 32 40)" fill="#98cb90" fill-opacity="0.55" stroke="none"/>
-    <ellipse cx="64" cy="26" rx="6" ry="10" transform="rotate(18 64 26)" stroke-dasharray="2 2"/>
-    <ellipse cx="82" cy="58" rx="9" ry="14" transform="rotate(35 82 58)" fill="#2b7a3d" fill-opacity="0.35" stroke="none"/>
-    <circle cx="48" cy="70" r="4" fill="#3f9136" fill-opacity="0.5" stroke="none"/>
-  </svg>
-
-  <!-- Giant Subtle Green Watermark Text in Center Background -->
-  <div class="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden z-0">
-    <span id="hero-watermark" class="watermark-script text-[75px] sm:text-[135px] lg:text-[185px] font-serif font-semibold tracking-tight text-center leading-none select-none">
-      Granos<br>Andinos
-    </span>
-  </div>
-
-  <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 w-full">
-    {% for slide in hero_slides %}
-    <div class="hero-slide transition-all duration-700 ease-out {% if forloop.first %}opacity-100 relative z-10 hero-slide-active{% else %}opacity-0 absolute inset-0 pointer-events-none z-0 hidden{% endif %}"
-         data-watermark-es="{{ slide.tagline|default:'Granos Andinos' }}"
-         data-watermark-en="{{ slide.tagline_en|default:'Andean Grains' }}">
-      
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
-        
-        <!-- Left Column: ONLY Counter 01/03 + Short Title + 1 Green Button (Zero Clutter) -->
-        <div class="lg:col-span-4 space-y-6 text-left">
-          
-          <div class="flex items-center gap-3">
-            <span class="font-serif font-bold text-3xl text-agro-600">0{{ forloop.counter }}</span>
-            <span class="w-10 h-[2px] bg-agro-500"></span>
-            <span class="font-serif text-base text-agro-800/70">0{{ hero_slides.count }}</span>
-          </div>
-
-          <h1 class="font-serif font-semibold text-4xl sm:text-5xl lg:text-[54px] text-agro-950 tracking-tight leading-[1.06] bilingual-hero-title"
-              data-es="{{ slide.title }}" data-en="{{ slide.title_en|default:slide.title }}">
-            {{ slide.title }}
-          </h1>
-
-          <div class="pt-2">
-            <a href="#catalogo-visual" class="inline-flex items-center gap-2.5 px-8 py-4 rounded-full bg-agro-600 hover:bg-agro-700 text-white font-bold text-xs uppercase tracking-[0.18em] transition-all shadow-md hover:shadow-lg" data-i18n="hero_btn_explore">
-              <span>PRODUCTOS</span>
-              <i data-lucide="arrow-down" class="w-4 h-4"></i>
-            </a>
-          </div>
-        </div>
-
-        <!-- Center & Right Columns: Tall Vertical Photography Panels -->
-        <div class="lg:col-span-8 grid grid-cols-1 sm:grid-cols-12 gap-6 lg:gap-8 items-center">
-          
-          <!-- Main Tall Panel -->
-          <a href="#catalogo-visual" class="sm:col-span-7 xpodeka-panel block relative h-[380px] sm:h-[490px] lg:h-[530px] rounded-2xl overflow-hidden shadow-2xl border-2 border-white bg-agro-950 group">
-            <img src="{{ slide.get_image }}" alt="{{ slide.title }}" class="w-full h-full object-cover object-center transition-transform duration-1000 ease-out group-hover:scale-105">
-            <div class="absolute inset-0 bg-gradient-to-t from-agro-950/70 via-transparent to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
-            <div class="absolute bottom-5 left-5 right-5 flex items-center justify-between text-white">
-              <span class="font-serif text-lg sm:text-xl font-medium tracking-wide bilingual-hero-title" data-es="{{ slide.title }}" data-en="{{ slide.title_en|default:slide.title }}">{{ slide.title }}</span>
-              <span class="w-10 h-10 rounded-full bg-agro-600 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
-                <i data-lucide="arrow-down-right" class="w-4 h-4"></i>
-              </span>
-            </div>
-          </a>
-
-          <!-- Secondary Tall Panel -->
-          <a href="{% url 'landing:productos' %}" class="sm:col-span-5 xpodeka-panel block relative h-[340px] sm:h-[490px] lg:h-[530px] rounded-2xl overflow-hidden shadow-2xl border-2 border-white bg-agro-950 group">
-            <img src="{{ slide.get_secondary_image }}" alt="Variedades de Exportación" class="w-full h-full object-cover object-center transition-transform duration-1000 ease-out group-hover:scale-105">
-            <div class="absolute inset-0 bg-gradient-to-t from-agro-950/70 via-transparent to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
-            <div class="absolute bottom-5 left-5 right-5 flex items-center justify-between text-white">
-              <span class="font-serif text-base sm:text-lg font-medium tracking-wide" data-i18n="panel_secondary_label">Variedades</span>
-              <span class="w-9 h-9 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center group-hover:bg-agro-600 transition-colors">
-                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
-              </span>
-            </div>
-          </a>
-
-        </div>
-
-      </div>
-    </div>
-    {% endfor %}
-
-    <!-- Minimal Slider Controls Bottom Bar -->
-    <div class="mt-7 pt-3 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        {% for slide in hero_slides %}
-        <button type="button" class="hero-indicator group flex items-center gap-2 focus:outline-none transition-opacity {% if forloop.first %}opacity-100{% else %}opacity-40{% endif %}" data-index="{{ forloop.counter0 }}">
-          <div class="w-12 sm:w-16 h-1.5 bg-agro-200 rounded-full overflow-hidden">
-            <div class="indicator-bar h-full bg-agro-600 transition-all duration-500 {% if forloop.first %}w-full{% else %}w-0{% endif %}"></div>
-          </div>
-          <span class="text-[11px] text-agro-900 font-bold">0{{ forloop.counter }}</span>
-        </button>
-        {% endfor %}
-      </div>
-
-      <div class="flex items-center gap-2">
-        <button id="hero-prev" type="button" class="w-10 h-10 rounded-full bg-white hover:bg-agro-600 text-agro-900 hover:text-white flex items-center justify-center transition-colors border border-agro-300 shadow-2xs" aria-label="Anterior">
-          <i data-lucide="chevron-left" class="w-4 h-4"></i>
-        </button>
-        <button id="hero-next" type="button" class="w-10 h-10 rounded-full bg-white hover:bg-agro-600 text-agro-900 hover:text-white flex items-center justify-center transition-colors border border-agro-300 shadow-2xs" aria-label="Siguiente">
-          <i data-lucide="chevron-right" class="w-4 h-4"></i>
-        </button>
-      </div>
-    </div>
-
+  <div class="relative z-10 max-w-4xl mx-auto px-6 pt-24 pb-16 space-y-9">
+    <h1 class="font-serif font-semibold text-white text-4xl sm:text-5xl lg:text-6xl leading-[1.1] tracking-tight [text-shadow:0_2px_24px_rgba(0,0,0,.45)]" data-i18n="hero_headline">
+      Granos andinos del Perú, con calidad de exportación
+    </h1>
+    <a href="{% url 'landing:nosotros' %}" class="inline-flex items-center gap-2.5 px-8 py-4 rounded-full bg-agro-600 hover:bg-agro-500 text-white font-bold text-xs uppercase tracking-[0.18em] transition-all shadow-lg">
+      <span data-i18n="hero_btn_about">CONOCE AGRO SUR</span>
+    </a>
   </div>
 </section>
 
@@ -151,7 +53,7 @@
       <div class="visual-product-card card-hover-effect group relative rounded-2xl overflow-hidden bg-agro-950 cursor-pointer aspect-[4/4.2] flex flex-col justify-end shadow-md border border-agro-100"
            data-category="{{ product.category.slug|default:'granos-andinos' }}"
            onclick="openProductModal(this)"
-           data-product='{"id": {{ product.id }}, "name": "{{ product.name|escapejs }}", "name_en": "{{ product.name_en|default:product.name|escapejs }}", "scientific_name": "{{ product.scientific_name|escapejs }}", "modality": "{{ product.modality_label_es|escapejs }}", "modality_en": "{{ product.modality_label_en|escapejs }}", "variety": "{{ product.variety|escapejs }}", "origin": "{{ product.origin|escapejs }}", "origin_en": "{{ product.origin_en|escapejs }}", "season": "{{ product.season|escapejs }}", "season_en": "{{ product.season_en|escapejs }}", "packing_specs": "{{ product.packing_specs|escapejs }}", "packing_specs_en": "{{ product.packing_specs_en|escapejs }}", "image": "{{ product.get_image|escapejs }}", "price_fob": {{ product.ref_price_fob_usd }}}'>
+           data-product='{"id": {{ product.id }}, "name": "{{ product.name|escapejs }}", "name_en": "{{ product.name_en|default:product.name|escapejs }}", "scientific_name": "{{ product.scientific_name|escapejs }}", "modality": "{{ product.modality_label_es|escapejs }}", "modality_en": "{{ product.modality_label_en|escapejs }}", "variety": "{{ product.variety|escapejs }}", "origin": "{{ product.origin|escapejs }}", "origin_en": "{{ product.origin_en|escapejs }}", "season": "{{ product.season|escapejs }}", "season_en": "{{ product.season_en|escapejs }}", "packing_specs": "{{ product.packing_specs|escapejs }}", "packing_specs_en": "{{ product.packing_specs_en|escapejs }}", "image": "{{ product.get_image|escapejs }}"}'>
         
         <img src="{{ product.get_image }}" alt="{{ product.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110">
         <div class="absolute inset-0 bg-gradient-to-t from-agro-950/85 via-transparent to-transparent"></div>
@@ -199,7 +101,7 @@
         </div>
 
         <h2 class="font-serif font-semibold text-3xl sm:text-4xl lg:text-[42px] text-agro-950 tracking-tight leading-[1.14]" data-i18n="b3_headline">
-          Agro Sur Latino se fundó en 2007 bajo nuestro principio: “de los productores hacia el mundo”
+          Desde 2007, calidad andina para el mundo
         </h2>
 
         <div class="pt-2">
@@ -269,7 +171,7 @@
       <div class="lg:col-span-6 space-y-6">
         
         <h2 class="font-serif font-semibold text-3xl sm:text-4xl text-white tracking-tight leading-[1.18]" data-i18n="b4_headline">
-          Nuestro principal objetivo es lograr una mejora continua y garantizar stock todo el año
+          Mejora continua. Stock todo el año.
         </h2>
 
         <!-- Golden Wave SVG -->
@@ -338,7 +240,7 @@
 <section class="py-14 bg-white border-b border-agro-200 overflow-hidden">
   <div class="max-w-7xl mx-auto px-6 lg:px-10 mb-7 flex items-center justify-between gap-4">
     <h2 class="font-serif font-semibold text-2xl sm:text-3xl text-agro-950 tracking-tight" data-i18n="b15_title">
-      Trabajamos y producimos bajo estándares y certificados
+      Certificaciones
     </h2>
     <a href="{% url 'landing:calidad' %}" class="text-xs font-bold text-agro-600 hover:underline uppercase tracking-wider shrink-0" data-i18n="cert_view_all">
       Ver todos &rarr;
@@ -416,7 +318,7 @@
 
           <select name="product_interest" class="w-full px-4 py-3 rounded-xl border border-agro-200 text-sm bg-white focus:border-agro-600 outline-none">
             {% for p in products %}
-            <option value="{{ p.name }}">{{ p.name }} ({{ p.modality_label_es }})</option>
+            <option value="{{ p.name }}" data-en-text="{{ p.name_en|default:p.name }} ({{ p.modality_label_en }})">{{ p.name }} ({{ p.modality_label_es }})</option>
             {% endfor %}
           </select>
 
@@ -488,7 +390,7 @@
       </button>
     </div>
     <div class="aspect-video w-full bg-black">
-      <iframe id="corporate-video-iframe" class="w-full h-full" src="" title="Agro Sur Latino S.A.C. Video Corporativo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <iframe id="corporate-video-iframe" class="w-full h-full" src="" title="Agro Sur Latino S.A.C. Video Corporativo" frameborder="0" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
   </div>
 </div>

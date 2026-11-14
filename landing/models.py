@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 import re
+import uuid
 
 
 def validate_peruvian_document(client_type, doc_num):
@@ -217,6 +218,9 @@ class QuoteRequest(models.Model):
     destination_port = models.CharField(max_length=120, blank=True, verbose_name="Puerto / Ciudad de Destino")
     notes = models.TextField(blank=True, verbose_name="Notas / Presentación Orgánica o Convencional / Requerimientos")
 
+    currency = models.CharField(max_length=3, choices=[('USD', 'US$'), ('PEN', 'S/')], default='USD', verbose_name="Moneda")
+    public_token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False, verbose_name="Código público (enlace PDF)")
+
     status = models.CharField(max_length=20, choices=[
         ('NUEVO', 'Nuevo'),
         ('COTIZADO', 'Cotizado'),
@@ -240,17 +244,19 @@ class QuoteRequest(models.Model):
 
 class QuoteItem(models.Model):
     UNIT_CHOICES = [
-        ('CONTENEDOR_40', 'Contenedor FCL (~20-21 TM en Sacos)'),
-        ('PALLET', 'Pallets de Exportación (1 TM)'),
-        ('CAJAS', 'Sacos Multipliego (25 kg / 50 lb)'),
+        ('CONTENEDOR_FCL', 'Contenedor FCL (~20 TM)'),
+        ('PALLET', 'Pallets (1 TM)'),
+        ('SACOS_25KG', 'Sacos 25 kg'),
         ('TONELADAS', 'Toneladas Métricas (TM)'),
+        ('KILOS', 'Kilos'),
     ]
 
     quote_request = models.ForeignKey(QuoteRequest, related_name="items", on_delete=models.CASCADE, verbose_name="Cotización")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Producto")
     quantity = models.DecimalField(max_digits=10, decimal_places=2, default=1.00, verbose_name="Cantidad")
-    unit = models.CharField(max_length=40, choices=UNIT_CHOICES, default='CONTENEDOR_40', verbose_name="Unidad de Despacho")
-    estimated_subtotal_usd = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True, verbose_name="Subtotal Estimado USD")
+    unit = models.CharField(max_length=40, choices=UNIT_CHOICES, default='CONTENEDOR_FCL', verbose_name="Unidad de Despacho")
+    # Monto calculado en el servidor, en la moneda de la cotización (US$ o S/ con IGV).
+    estimated_subtotal_usd = models.DecimalField(max_digits=14, decimal_places=2, blank=True, null=True, verbose_name="Subtotal Estimado (moneda de la cotización)")
 
     class Meta:
         verbose_name = "Ítem de Cotización"

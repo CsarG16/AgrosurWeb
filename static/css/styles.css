@@ -151,3 +151,60 @@ html.lenis, html.lenis body {
 ::-webkit-scrollbar-thumb:hover {
   background: #2b7a3d;
 }
+
+
+/* ---- Menú transparente sobre la foto del inicio (estilo Xpodeka) ---- */
+.logo-light { display: none; }
+body[data-page="inicio"] #navbar:not(.is-scrolled) {
+  background: transparent;
+  border-color: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+body[data-page="inicio"] #navbar:not(.is-scrolled) .logo-dark { display: none; }
+body[data-page="inicio"] #navbar:not(.is-scrolled) .logo-light { display: block; }
+body[data-page="inicio"] #navbar:not(.is-scrolled) nav > a,
+body[data-page="inicio"] #navbar:not(.is-scrolled) nav > div > a,
+body[data-page="inicio"] #navbar:not(.is-scrolled) .lang-btn,
+body[data-page="inicio"] #navbar:not(.is-scrolled) #mobile-menu-toggle,
+body[data-page="inicio"] #navbar:not(.is-scrolled) header span {
+  color: #fff !important;
+}
+body[data-page="inicio"] #navbar:not(.is-scrolled) a[data-i18n="nav_cta"] {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: none;
+}
+body[data-page="inicio"] #navbar:not(.is-scrolled) a[data-i18n="nav_cta"]:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ---- Animaciones de aparición (scroll reveal) ---- */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.85s cubic-bezier(0.22, 0.61, 0.36, 1) var(--reveal-delay, 0ms),
+              transform 0.85s cubic-bezier(0.22, 0.61, 0.36, 1) var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.reveal.reveal-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Entrada suave de la primera pantalla */
+@keyframes hero-rise {
+  from { opacity: 0; transform: translateY(26px); }
+  to { opacity: 1; transform: none; }
+}
+.hero-photo h1 { animation: hero-rise 1s cubic-bezier(0.22, 0.61, 0.36, 1) 0.15s both; }
+.hero-photo a { animation: hero-rise 1s cubic-bezier(0.22, 0.61, 0.36, 1) 0.45s both; }
+.hero-photo > img { animation: hero-zoom 2.4s ease-out both; }
+@keyframes hero-zoom {
+  from { transform: scale(1.06); }
+  to { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .hero-photo h1, .hero-photo a, .hero-photo > img { animation: none; transition: none; opacity: 1; transform: none; }
+}

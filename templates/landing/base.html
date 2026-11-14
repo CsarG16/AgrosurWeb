@@ -5,7 +5,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Agro Sur Latino S.A.C. | Granos Andinos, Semillas y Menestras del Perú{% endblock %}</title>
-  <meta name="description" content="Agro Sur Latino S.A.C.: Comercialización, procesamiento y exportación de Quinua, Chía, Kiwicha y Menestras peruanas (Orgánicas y Convencionales).">
+  <meta name="title-en" content="{% block title_en %}Agro Sur Latino S.A.C. | Peruvian Andean Grains, Seeds & Pulses{% endblock %}">
+  <meta name="description" content="{% block meta_description %}Agro Sur Latino S.A.C.: comercialización, procesamiento y exportación de quinua, chía, kiwicha y menestras peruanas (orgánicas y convencionales).{% endblock %}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Agro Sur Latino S.A.C.">
+  <meta property="og:title" content="{% block og_title %}Agro Sur Latino S.A.C. | Granos andinos del Perú{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}{% block og_desc_inner %}Granos andinos, semillas y menestras peruanas, orgánicas y convencionales, para el mundo.{% endblock %}{% endblock %}">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'images/company/campo-atardecer.jpg' %}">
+  <meta name="twitter:card" content="summary_large_image">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="{% static 'images/agrosurlogo.png' %}">
@@ -63,7 +71,7 @@
   <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
 
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=7">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=9">
   {% block extra_head %}{% endblock %}
 </head>
 <body class="bg-[#f4f8f2] text-agro-950 antialiased selection:bg-agro-600/20 selection:text-agro-800" data-lang="es" data-page="{{ active_page|default:'inicio' }}">
@@ -74,7 +82,8 @@
       
       <!-- Brand Logo (Official Agrosur Green Logo) -->
       <a href="{% url 'landing:index' %}" class="flex items-center gap-3 transition-opacity hover:opacity-90 shrink-0" aria-label="AGRO SUR LATINO Inicio">
-        <img src="{% static 'images/agrosurlogo.png' %}" alt="AGRO SUR LATINO S.A.C." class="h-10 sm:h-11 w-auto object-contain">
+        <img src="{% static 'images/agrosurlogo.png' %}" alt="AGRO SUR LATINO S.A.C." class="logo-dark h-10 sm:h-11 w-auto object-contain">
+        <img src="{% static 'images/agrosurlogo-light.png' %}" alt="" aria-hidden="true" class="logo-light h-10 sm:h-11 w-auto object-contain">
       </a>
 
       <!-- Center Navigation Links -->
@@ -163,7 +172,7 @@
   </header>
 
   <!-- Main Content -->
-  <main class="pt-[69px]">
+  <main class="{% if active_page == 'inicio' %}pt-0{% else %}pt-[69px]{% endif %}">
     {% block content %}{% endblock %}
   </main>
 
@@ -188,7 +197,7 @@
           <img src="{% static 'images/agrosurlogo-light.png' %}" alt="AGRO SUR LATINO S.A.C." class="h-11 w-auto object-contain">
           <div class="text-xs text-agro-200/80 space-y-1">
             <p class="font-semibold text-white">AGRO SUR LATINO S.A.C. • RUC 20517805662</p>
-            <p>Huertos de Huachipa – Lurigancho, Lima - Perú • <a href="mailto:david@agrosurlatino.com" class="text-agro-300 hover:underline">david@agrosurlatino.com</a></p>
+            <p>{{ company_address }}, Lima - Perú • <a href="mailto:{{ company_email }}" class="text-agro-300 hover:underline">{{ company_email }}</a></p>
           </div>
         </div>
 
@@ -198,7 +207,6 @@
           <a href="{% url 'landing:productos' %}" class="hover:text-white transition-colors" data-i18n="nav_products">Productos</a>
           <a href="{% url 'landing:calidad' %}" class="hover:text-white transition-colors" data-i18n="nav_quality">Certificaciones</a>
           <a href="{% url 'landing:cotizador' %}" class="hover:text-white transition-colors" data-i18n="nav_quote">Cotizador</a>
-          <a href="/admin/" class="text-agro-400 hover:text-white transition-colors">Admin SQLite3</a>
         </div>
 
       </div>

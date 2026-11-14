@@ -39,6 +39,9 @@ media/products/*
 Thumbs.db
 desktop.ini
 
+# Archivos estáticos recolectados
+staticfiles/
+
 # Logs
 *.log
 

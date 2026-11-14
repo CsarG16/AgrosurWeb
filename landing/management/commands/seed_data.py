@@ -22,7 +22,7 @@ class Command(BaseCommand):
             tagline_en="Andean Grains",
             badge="De los productores hacia el mundo",
             badge_en="From producers to the world",
-            image_url="/static/images/products/quinua-tricolor.png",
+            image_url="/static/images/company/campo-atardecer.jpg",
             secondary_image_url="/static/images/products/chia.jpg",
             order=1,
             is_active=True

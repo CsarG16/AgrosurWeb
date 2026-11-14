@@ -1,0 +1,13 @@
+{% extends 'landing/base.html' %}
+{% block title %}Página no encontrada | Agro Sur Latino S.A.C.{% endblock %}
+{% block content %}
+<section class="max-w-3xl mx-auto px-6 py-24 text-center">
+  <p class="font-serif text-6xl text-agro-600 font-semibold">404</p>
+  <h1 class="font-serif text-3xl text-agro-950 mt-4">No encontramos esta página</h1>
+  <p class="text-stone-600 mt-3">Puede que el enlace haya cambiado. Vuelve al inicio o revisa nuestros productos.</p>
+  <div class="mt-8 flex justify-center gap-3">
+    <a href="{% url 'landing:index' %}" class="px-7 py-3 rounded-full bg-agro-600 hover:bg-agro-700 text-white text-xs font-bold uppercase tracking-widest">Inicio</a>
+    <a href="{% url 'landing:productos' %}" class="px-7 py-3 rounded-full border border-agro-600 text-agro-700 text-xs font-bold uppercase tracking-widest">Productos</a>
+  </div>
+</section>
+{% endblock %}
