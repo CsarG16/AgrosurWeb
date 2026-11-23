@@ -20,6 +20,12 @@ def generate_quotation_pdf(quote):
     """
     Genera un documento PDF profesional y corporativo de la cotización B2B de Agro Sur Latino S.A.C.
     """
+    lang = quote.lang if getattr(quote, 'lang', 'es') == 'en' else 'es'
+    peru = pricing.is_peru_client(quote.client_type)
+
+    def T(es, en):
+        return en if lang == 'en' else es
+
     buffer = io.BytesIO()
     doc = SimpleDocTemplate(
         buffer,
@@ -102,17 +108,22 @@ def generate_quotation_pdf(quote):
 
     header_left = [
         Paragraph("<b>AGRO SUR LATINO S.A.C.</b>", title_style),
-        Paragraph("RUC 20517805662 • Lima, Perú", subtitle_style),
-        Paragraph("Granos Andinos, Semillas y Menestras (Orgánicos y Convencionales)", subtitle_style),
+        Paragraph(T("RUC 20517805662 • Lima, Perú", "RUC 20517805662 • Lima, Peru"), subtitle_style),
+        Paragraph(T("Granos Andinos, Semillas y Menestras (Orgánicos y Convencionales)", "Andean Grains, Seeds & Pulses (Organic & Conventional)"), subtitle_style),
         Paragraph(f"{COMPANY_ADDRESS} | {COMPANY_EMAIL}", subtitle_style),
     ]
 
-    header_right = [
-        Paragraph("<b>PROFORMA DE EXPORTACIÓN</b>", right_bold),
-        Paragraph(f"<b>N° Documento:</b> {code}", right_style),
-        Paragraph(f"<b>Fecha:</b> {date_str}", right_style),
-        Paragraph(f"<b>Incoterm Solicitado:</b> {quote.incoterm}", right_style),
+    if peru:
+        # Cotización para Perú (RUC 20, RUC 10, DNI): sin Incoterm ni "proforma de exportación"
+        header_right = [Paragraph(T("<b>COTIZACIÓN</b>", "<b>QUOTATION</b>"), right_bold)]
+    else:
+        header_right = [Paragraph(T("<b>PROFORMA DE EXPORTACIÓN</b>", "<b>EXPORT PROFORMA INVOICE</b>"), right_bold)]
+    header_right += [
+        Paragraph(f"<b>{T('N° Documento', 'Document No.')}:</b> {code}", right_style),
+        Paragraph(f"<b>{T('Fecha', 'Date')}:</b> {date_str}", right_style),
     ]
+    if not peru and quote.incoterm:
+        header_right.append(Paragraph(f"<b>{T('Incoterm Solicitado', 'Requested Incoterm')}:</b> {quote.incoterm}", right_style))
 
     logo_path = settings.BASE_DIR / 'static' / 'images' / 'agrosurlogo.png'
     if logo_path.exists():
@@ -135,47 +146,46 @@ def generate_quotation_pdf(quote):
 
     story.append(HRFlowable(width="100%", thickness=1.5, color=c_accent, spaceBefore=4, spaceAfter=14))
 
-    # 2. Datos del Cliente / Importador
-    story.append(Paragraph("DATOS DEL CLIENTE / IMPORTADOR", heading_style))
+    # 2. Datos del cliente (en Perú: "Datos del cliente"; exportación: "cliente / importador")
+    if peru:
+        story.append(Paragraph(T("DATOS DEL CLIENTE", "CLIENT DETAILS"), heading_style))
+    else:
+        story.append(Paragraph(T("DATOS DEL CLIENTE / IMPORTADOR", "CLIENT / IMPORTER DETAILS"), heading_style))
     story.append(Spacer(1, 6))
 
     client_type_labels = {
-        'JURIDICA_RUC': 'Persona Jurídica / Empresa (RUC 20)',
-        'NATURAL_RUC': 'Persona Natural con Negocio (RUC 10)',
-        'NATURAL_DNI': 'Persona Natural (DNI Perú)',
-        'EXTRANJERO': 'Importador Internacional / Tax ID',
+        'JURIDICA_RUC': T('Persona Jurídica / Empresa (RUC 20)', 'Company (RUC 20)'),
+        'NATURAL_RUC': T('Persona Natural con Negocio (RUC 10)', 'Sole proprietor (RUC 10)'),
+        'NATURAL_DNI': T('Persona Natural (DNI Perú)', 'Individual (Peruvian DNI)'),
+        'EXTRANJERO': T('Importador Internacional / Tax ID', 'International importer / Tax ID'),
     }
     client_type_text = client_type_labels.get(quote.client_type, quote.client_type)
 
+    def lbl(es, en):
+        return Paragraph(f"<b>{T(es, en)}:</b>", body_style)
+
     client_info = [
-        [
-            Paragraph("<b>Razón Social / Nombre:</b>", body_style),
-            Paragraph(quote.legal_name, body_bold),
-            Paragraph("<b>Tipo de Cliente:</b>", body_style),
-            Paragraph(client_type_text, body_style),
-        ],
-        [
-            Paragraph("<b>N° Documento / Tax ID:</b>", body_style),
-            Paragraph(quote.document_number, body_bold),
-            Paragraph("<b>País de Destino:</b>", body_style),
-            Paragraph(quote.country, body_style),
-        ],
-        [
-            Paragraph("<b>Persona de Contacto:</b>", body_style),
-            Paragraph(quote.contact_name, body_style),
-            Paragraph("<b>Puerto / Destino:</b>", body_style),
-            Paragraph(quote.destination_port or "Callao / Por confirmar", body_style),
-        ],
-        [
-            Paragraph("<b>Correo Corporativo:</b>", body_style),
-            Paragraph(quote.email, body_style),
-            Paragraph("<b>Teléfono / WhatsApp:</b>", body_style),
-            Paragraph(quote.phone, body_style),
-        ],
+        [lbl("Razón Social / Nombre", "Company / Name"), Paragraph(quote.legal_name, body_bold),
+         lbl("Tipo de Cliente", "Client Type"), Paragraph(client_type_text, body_style)],
+        [lbl("N° Documento / Tax ID", "Document / Tax ID"), Paragraph(quote.document_number, body_bold),
+         lbl("País" if peru else "País de Destino", "Country" if peru else "Destination Country"), Paragraph(quote.country, body_style)],
     ]
+    if peru:
+        client_info += [
+            [lbl("Persona de Contacto", "Contact Person"), Paragraph(quote.contact_name, body_style),
+             lbl("Teléfono / WhatsApp", "Phone / WhatsApp"), Paragraph(quote.phone, body_style)],
+            [lbl("Correo", "Email"), Paragraph(quote.email, body_style), "", ""],
+        ]
+    else:
+        client_info += [
+            [lbl("Persona de Contacto", "Contact Person"), Paragraph(quote.contact_name, body_style),
+             lbl("Puerto / Destino", "Port / Destination"), Paragraph(quote.destination_port or T("Callao / Por confirmar", "Callao / To be confirmed"), body_style)],
+            [lbl("Correo Corporativo", "Corporate Email"), Paragraph(quote.email, body_style),
+             lbl("Teléfono / WhatsApp", "Phone / WhatsApp"), Paragraph(quote.phone, body_style)],
+        ]
 
     client_table = Table(client_info, colWidths=[120, 150, 110, 152])
-    client_table.setStyle(TableStyle([
+    client_style = [
         ('BACKGROUND', (0, 0), (-1, -1), c_bg_light),
         ('BOX', (0, 0), (-1, -1), 0.5, c_border),
         ('INNERGRID', (0, 0), (-1, -1), 0.5, c_border),
@@ -184,29 +194,25 @@ def generate_quotation_pdf(quote):
         ('BOTTOMPADDING', (0, 0), (-1, -1), 5),
         ('LEFTPADDING', (0, 0), (-1, -1), 6),
         ('RIGHTPADDING', (0, 0), (-1, -1), 6),
-    ]))
+    ]
+    if peru:
+        client_style.append(('SPAN', (1, 3), (3, 3)))
+    client_table.setStyle(TableStyle(client_style))
     story.append(client_table)
     story.append(Spacer(1, 16))
 
     # 3. Granos, Semillas y Volúmenes Cotizados
-    story.append(Paragraph("DETALLE DE PRODUCTOS Y VOLÚMENES ESTIMADOS", heading_style))
+    story.append(Paragraph(T("DETALLE DE PRODUCTOS Y VOLÚMENES ESTIMADOS", "PRODUCT DETAILS AND ESTIMATED VOLUMES"), heading_style))
     story.append(Spacer(1, 6))
 
-    unit_labels = {
-        'CONTENEDOR_FCL': 'Contenedor FCL (~20 TM)',
-        'PALLET': 'Pallets (1 TM)',
-        'TONELADAS': 'Toneladas Métricas (TM)',
-        'SACOS_25KG': 'Sacos 25 kg',
-        'KILOS': 'Kilos',
-    }
-
+    price_header = T("Precio por kg", "Price per kg") if currency == "PEN" else T("Ref. FOB por kg", "FOB ref. per kg")
     items_data = [
         [
-            Paragraph("<b>Producto / Grano</b>", body_bold),
-            Paragraph("<b>Modalidad & Origen</b>", body_bold),
-            Paragraph("<b>Cantidad & Unidad</b>", body_bold),
-            Paragraph("<b>Precio por kg</b>" if currency == "PEN" else "<b>Ref. FOB por kg</b>", right_bold),
-            Paragraph("<b>Subtotal Estimado</b>", right_bold),
+            Paragraph(f"<b>{T('Producto / Grano', 'Product / Grain')}</b>", body_bold),
+            Paragraph(f"<b>{T('Modalidad & Origen', 'Type & Origin')}</b>", body_bold),
+            Paragraph(f"<b>{T('Cantidad & Unidad', 'Quantity & Unit')}</b>", body_bold),
+            Paragraph(f"<b>{price_header}</b>", right_bold),
+            Paragraph(f"<b>{T('Subtotal Estimado', 'Estimated Subtotal')}</b>", right_bold),
         ]
     ]
 
@@ -215,23 +221,25 @@ def generate_quotation_pdf(quote):
     if items:
         for it in items:
             p = it.product
-            qty = it.quantity
-            unit_name = unit_labels.get(it.unit, it.unit)
-            unit_price = f"{pricing.money(pricing.unit_price(p, currency), currency)}/kg" if p else "Consultar"
+            unit_price = f"{pricing.money(pricing.unit_price(p, currency), currency)}/kg" if p else T("Consultar", "Inquire")
             subtotal_val = it.estimated_subtotal_usd or Decimal('0')
             total_est += subtotal_val
-            subtotal_str = pricing.money(subtotal_val, currency) if subtotal_val else "Por cotizar"
+            subtotal_str = pricing.money(subtotal_val, currency) if subtotal_val else T("Por cotizar", "To be quoted")
+            if p and lang == 'en':
+                type_origin = f"{p.modality_label_en} • {p.origin_en or p.origin}"
+            else:
+                type_origin = f"{p.variety} • {p.origin}" if p else "-"
 
             items_data.append([
-                Paragraph(p.name if p else "Grano Andino", body_bold),
-                Paragraph(f"{p.variety} • {p.origin}" if p else "-", body_style),
-                Paragraph(f"{qty:g} {unit_name}", body_style),
+                Paragraph(pricing.product_name(p, lang) if p else T("Grano Andino", "Andean Grain"), body_bold),
+                Paragraph(type_origin, body_style),
+                Paragraph(pricing.format_quantity(it.quantity, it.unit, lang), body_style),
                 Paragraph(unit_price, right_style),
                 Paragraph(subtotal_str, right_bold),
             ])
     else:
         items_data.append([
-            Paragraph("Sin ítems especificados", body_style),
+            Paragraph(T("Sin ítems especificados", "No items specified"), body_style),
             Paragraph("-", body_style),
             Paragraph("-", body_style),
             Paragraph("-", right_style),
@@ -239,7 +247,11 @@ def generate_quotation_pdf(quote):
         ])
 
     items_data.append([
-        Paragraph("<b>TOTAL ESTIMADO (S/ incluye IGV):</b>" if currency == "PEN" else "<b>TOTAL ESTIMADO DE REFERENCIA (FOB US$):</b>", body_bold),
+        Paragraph(
+            T("<b>TOTAL ESTIMADO (S/ incluye IGV):</b>", "<b>ESTIMATED TOTAL (S/ incl. VAT):</b>") if currency == "PEN"
+            else T("<b>TOTAL ESTIMADO DE REFERENCIA (FOB US$):</b>", "<b>ESTIMATED REFERENCE TOTAL (FOB US$):</b>"),
+            body_bold,
+        ),
         "",
         "",
         "",
@@ -265,7 +277,7 @@ def generate_quotation_pdf(quote):
 
     # 4. Notas del Pedido si existen
     if quote.notes:
-        story.append(Paragraph("NOTAS Y ESPECIFICACIONES ADICIONALES", heading_style))
+        story.append(Paragraph(T("NOTAS Y ESPECIFICACIONES ADICIONALES", "NOTES AND ADDITIONAL SPECIFICATIONS"), heading_style))
         story.append(Spacer(1, 4))
         notes_p = Paragraph(quote.notes, body_style)
         notes_table = Table([[notes_p]], colWidths=[532])
@@ -278,13 +290,17 @@ def generate_quotation_pdf(quote):
         story.append(Spacer(1, 14))
 
     # 5. Condiciones Comerciales
-    story.append(Paragraph("CONDICIONES COMERCIALES & CERTIFICACIONES DE CALIDAD", heading_style))
+    story.append(Paragraph(T("CONDICIONES COMERCIALES Y CERTIFICACIONES DE CALIDAD", "COMMERCIAL TERMS AND QUALITY CERTIFICATIONS"), heading_style))
     story.append(Spacer(1, 4))
-    terms_text = (
+    terms_text = T(
         "1. <b>Disponibilidad y Stock:</b> Abastecimiento permanente todo el año desde nuestros almacenes en Huachipa (Lima) y centros de acopio en Ayacucho.<br/>"
         "2. <b>Presentaciones:</b> Disponible en modalidades Orgánica Certificada y Convencional según requerimiento del cliente.<br/>"
         "3. <b>Certificaciones:</b> HACCP, BRC, USDA Organic, EU Organic, JAS, FDA y Certificado Fitosanitario SENASA Perú.<br/>"
-        f"4. <b>Contacto Comercial:</b> {COMPANY_EMAIL} • {COMPANY_ADDRESS}, Lima, Perú."
+        f"4. <b>Contacto Comercial:</b> {COMPANY_EMAIL} • {COMPANY_ADDRESS}, Lima, Perú.",
+        "1. <b>Availability and stock:</b> Year-round supply from our warehouses in Huachipa (Lima) and collection centers in Ayacucho.<br/>"
+        "2. <b>Presentations:</b> Available as Certified Organic and Conventional, according to the client's requirements.<br/>"
+        "3. <b>Certifications:</b> HACCP, BRC, USDA Organic, EU Organic, JAS, FDA and SENASA Peru Phytosanitary Certificate.<br/>"
+        f"4. <b>Sales contact:</b> {COMPANY_EMAIL} • {COMPANY_ADDRESS}, Lima, Peru.",
     )
     terms_p = Paragraph(terms_text, subtitle_style)
     terms_table = Table([[terms_p]], colWidths=[532])
@@ -296,7 +312,8 @@ def generate_quotation_pdf(quote):
     story.append(terms_table)
 
     story.append(Spacer(1, 20))
-    story.append(Paragraph("<i>Agro Sur Latino S.A.C. — De los productores hacia el mundo.</i>", ParagraphStyle(
+    slogan = settings.COMPANY_SLOGAN_EN if lang == 'en' else settings.COMPANY_SLOGAN
+    story.append(Paragraph(f"<i>Agro Sur Latino S.A.C. — {slogan}.</i>", ParagraphStyle(
         'FooterNote',
         parent=styles['Normal'],
         fontName='Helvetica-Oblique',

@@ -45,3 +45,4 @@ staticfiles/
 # Logs
 *.log
 
+node_modules/

@@ -1,0 +1,63 @@
+{% extends 'landing/base.html' %}
+{% load static %}
+
+{% block title %}Social: capacitación a productores y proceso de la quinua | Agro Sur Latino S.A.C.{% endblock %}
+{% block title_en %}Social: producer training and the quinoa process | Agro Sur Latino S.A.C.{% endblock %}
+{% block meta_description %}Fortalecimiento de las capacidades humanas en Ayacucho (Quinua, Acocro, Tambillo, Acos Vinchos y Morochucos) y las 10 etapas del proceso productivo de la quinua.{% endblock %}
+{% block og_title %}Social | Agro Sur Latino{% endblock %}
+{% block og_desc_inner %}Fortalecimiento de las capacidades humanas en Ayacucho y las 10 etapas del proceso productivo de la quinua.{% endblock %}
+{% block meta_description_en %}Strengthening human capabilities in Ayacucho (Quinua, Acocro, Tambillo, Acos Vinchos and Morochucos) and the 10 stages of the quinoa production process.{% endblock %}
+{% block og_title_en %}Social | Agro Sur Latino{% endblock %}
+{% block og_desc_inner_en %}Strengthening human capabilities in Ayacucho and the 10 stages of the quinoa production process.{% endblock %}
+
+{% block content %}
+<!-- Encabezado -->
+<section class="py-14 xpodeka-wave-bg border-b border-agro-200">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <span class="text-xs uppercase tracking-[0.2em] text-agro-600 font-bold block mb-2" data-i18n="social_tag">RESPONSABILIDAD SOCIAL</span>
+    <h1 class="font-serif font-semibold text-4xl sm:text-5xl text-agro-950 tracking-tight leading-tight">Fortalecimiento de las capacidades humanas</h1>
+    <p class="mt-5 max-w-3xl text-agro-900/80 text-base leading-relaxed">Trabajamos directamente con productores locales en Quinua, Acocro, Tambillo, Acos Vinchos y Morochucos (Ayacucho), impulsando prácticas sostenibles y cultivo orgánico certificado.</p>
+  </div>
+</section>
+
+<!-- Zonas de intervención: distritos de Ayacucho -->
+<section class="py-14 bg-white border-b border-agro-200">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="flex items-center gap-3 mb-8">
+      <i data-lucide="map-pin" class="w-5 h-5 text-agro-600"></i>
+      <h2 class="font-serif font-semibold text-2xl sm:text-3xl text-agro-950 tracking-tight">Zonas de intervención <span class="text-agro-600">•</span> <span>Ayacucho, Perú</span></h2>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+      {% for district in districts %}
+      <div class="reveal-item rounded-2xl bg-[#f4f8f2] border border-agro-200 p-5 text-center">
+        <span class="block text-[10px] font-bold uppercase tracking-[0.2em] text-agro-600">DISTRITO</span>
+        <span class="block mt-1.5 font-serif font-semibold text-xl text-agro-950">{{ district }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Procesos productivos de la quinua: 10 etapas -->
+<section class="py-14 sm:py-16 bg-[#f4f8f2]">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <h2 class="font-serif font-semibold text-3xl sm:text-4xl text-agro-950 tracking-tight">Procesos productivos de la quinua</h2>
+    <p class="mt-3 text-agro-900/70 text-sm">Las 10 etapas del cultivo, desde la siembra hasta el secado.</p>
+
+    <ol class="mt-9 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 list-none">
+      {% for stage in stages %}
+      <li class="group rounded-2xl overflow-hidden bg-white border border-agro-200 shadow-sm flex flex-col">
+        <div class="relative aspect-[4/3] bg-agro-950 overflow-hidden">
+          <img src="{% static stage.image %}" alt="{{ stage.es }}" data-alt-es="{{ stage.es }}" data-alt-en="{{ stage.en }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" decoding="async">
+          <span class="absolute top-3 left-3 w-9 h-9 rounded-full bg-agro-600 text-white font-bold text-sm flex items-center justify-center shadow-md" aria-hidden="true">{{ stage.n }}</span>
+        </div>
+        <div class="p-4">
+          <span class="block text-[10px] font-bold uppercase tracking-[0.2em] text-agro-600"><span>ETAPA</span> {{ stage.n }}</span>
+          <h3 class="mt-1 font-serif font-semibold text-lg text-agro-950 leading-snug bilingual-name" data-es="{{ stage.es }}" data-en="{{ stage.en }}">{{ stage.es }}</h3>
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+{% endblock %}

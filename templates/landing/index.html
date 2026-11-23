@@ -6,7 +6,7 @@
 <!-- 1. PRIMER IMPACTO — FOTO A TODO LO ANCHO + UNA FRASE (estilo Xpodeka)    -->
 <!-- ======================================================================= -->
 <section id="inicio" class="hero-photo relative w-full min-h-[100svh] flex items-center justify-center overflow-hidden text-center">
-  <img src="{% static 'images/company/campo-atardecer.jpg' %}" alt="Agricultor revisando su cultivo al atardecer" fetchpriority="high"
+  <img src="{% static 'images/company/campo-atardecer.webp' %}" alt="Agricultor revisando su cultivo al atardecer" fetchpriority="high"
        class="absolute inset-0 w-full h-full object-cover object-[28%_center] md:object-center">
   <div class="absolute inset-0 bg-gradient-to-b from-black/55 via-black/30 to-black/55"></div>
 
@@ -52,10 +52,10 @@
       {% for product in products %}
       <div class="visual-product-card card-hover-effect group relative rounded-2xl overflow-hidden bg-agro-950 cursor-pointer aspect-[4/4.2] flex flex-col justify-end shadow-md border border-agro-100"
            data-category="{{ product.category.slug|default:'granos-andinos' }}"
-           onclick="openProductModal(this)"
-           data-product='{"id": {{ product.id }}, "name": "{{ product.name|escapejs }}", "name_en": "{{ product.name_en|default:product.name|escapejs }}", "scientific_name": "{{ product.scientific_name|escapejs }}", "modality": "{{ product.modality_label_es|escapejs }}", "modality_en": "{{ product.modality_label_en|escapejs }}", "variety": "{{ product.variety|escapejs }}", "origin": "{{ product.origin|escapejs }}", "origin_en": "{{ product.origin_en|escapejs }}", "season": "{{ product.season|escapejs }}", "season_en": "{{ product.season_en|escapejs }}", "packing_specs": "{{ product.packing_specs|escapejs }}", "packing_specs_en": "{{ product.packing_specs_en|escapejs }}", "image": "{{ product.get_image|escapejs }}"}'>
+           onclick="openProductModal(this)" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Ver detalles de {{ product.name }}"
+           data-product='{"id": {{ product.id }}, "slug": "{{ product.slug }}", "name": "{{ product.name|escapejs }}", "name_en": "{{ product.name_en|default:product.name|escapejs }}", "scientific_name": "{{ product.scientific_name|escapejs }}", "modality": "{{ product.modality_label_es|escapejs }}", "modality_en": "{{ product.modality_label_en|escapejs }}", "variety": "{{ product.variety|escapejs }}", "origin": "{{ product.origin|escapejs }}", "origin_en": "{{ product.origin_en|escapejs }}", "season": "{{ product.season|escapejs }}", "season_en": "{{ product.season_en|escapejs }}", "packing_specs": "{{ product.packing_specs|escapejs }}", "packing_specs_en": "{{ product.packing_specs_en|escapejs }}", "image": "{{ product.get_image|escapejs }}"}'>
         
-        <img src="{{ product.get_image }}" alt="{{ product.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110">
+        <img src="{{ product.get_image }}" alt="{{ product.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" loading="lazy" decoding="async">
         <div class="absolute inset-0 bg-gradient-to-t from-agro-950/85 via-transparent to-transparent"></div>
 
         <!-- Bottom Minimal Label: ONLY Name + Green Plus Icon -->
@@ -116,7 +116,7 @@
       <!-- Right Column: Large Quinoa Harvest Field Photo + Rotating Video Play Button -->
       <div class="lg:col-span-7 relative">
         <div class="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white aspect-[16/10] bg-agro-950">
-          <img src="{% static 'images/company/campo-quinua.png' %}" alt="Cosecha de Quinua Agro Sur Latino" class="w-full h-full object-cover">
+          <img src="{% static 'images/company/campo-quinua.webp' %}" alt="Cosecha de Quinua Agro Sur Latino" class="w-full h-full object-cover" loading="lazy" decoding="async">
           <div class="absolute inset-0 bg-gradient-to-tr from-agro-950/45 via-transparent to-transparent"></div>
 
           <!-- Center Rotating Circular Text Badge + Video Play Button -->
@@ -139,7 +139,7 @@
 
         <!-- Secondary Floating Real Photo (Planta Huachipa Facade) -->
         <div class="hidden sm:block absolute -bottom-7 -left-6 w-52 rounded-xl overflow-hidden shadow-xl border-4 border-white bg-agro-950">
-          <img src="{% static 'images/company/fachada.jpg' %}" alt="Planta Agro Sur Latino Huachipa" class="w-full h-28 object-cover">
+          <img src="{% static 'images/company/fachada.webp' %}" alt="Planta Agro Sur Latino Huachipa" class="w-full h-28 object-cover" loading="lazy" decoding="async">
         </div>
       </div>
 
@@ -217,7 +217,7 @@
         </div>
 
         <div class="relative rounded-2xl overflow-hidden shadow-2xl border-2 border-agro-400/40 aspect-[16/10] bg-agro-950">
-          <img src="{% static 'images/company/sacos.jpg' %}" alt="Almacén de Sacos de Exportación Agro Sur Latino" class="w-full h-full object-cover">
+          <img src="{% static 'images/company/sacos.webp' %}" alt="Almacén de Sacos de Exportación Agro Sur Latino" class="w-full h-full object-cover" loading="lazy" decoding="async">
           <div class="absolute inset-0 bg-gradient-to-t from-agro-950/70 via-transparent to-transparent"></div>
           <div class="absolute bottom-4 left-5 right-5 flex items-center justify-between text-white">
             <span class="font-serif text-lg font-semibold" data-i18n="b4_img_title">Almacenes en Huachipa • Lima</span>
@@ -252,14 +252,14 @@
     <div class="marquee-track flex items-center gap-6 sm:gap-8">
       {% for cert in certifications %}
       <a href="{% url 'landing:calidad' %}" class="group flex items-center justify-center w-44 h-24 px-5 py-3 rounded-2xl bg-[#f4f8f2] border border-agro-200 hover:border-agro-600 shadow-2xs transition-all shrink-0" title="{{ cert.name }} — {{ cert.code }}">
-        <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="max-h-16 max-w-full object-contain group-hover:scale-105 transition-transform">
+        <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="max-h-16 max-w-full object-contain group-hover:scale-105 transition-transform" loading="lazy" decoding="async">
       </a>
       {% endfor %}
 
-      <!-- Duplicate set for seamless infinite loop -->
+      <!-- Copia duplicada para el bucle infinito (oculta a lectores de pantalla y al teclado) -->
       {% for cert in certifications %}
-      <a href="{% url 'landing:calidad' %}" class="group flex items-center justify-center w-44 h-24 px-5 py-3 rounded-2xl bg-[#f4f8f2] border border-agro-200 hover:border-agro-600 shadow-2xs transition-all shrink-0" title="{{ cert.name }} — {{ cert.code }}">
-        <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="max-h-16 max-w-full object-contain group-hover:scale-105 transition-transform">
+      <a href="{% url 'landing:calidad' %}" aria-hidden="true" tabindex="-1" class="group flex items-center justify-center w-44 h-24 px-5 py-3 rounded-2xl bg-[#f4f8f2] border border-agro-200 hover:border-agro-600 shadow-2xs transition-all shrink-0" title="{{ cert.name }} — {{ cert.code }}">
+        <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="max-h-16 max-w-full object-contain group-hover:scale-105 transition-transform" loading="lazy" decoding="async">
       </a>
       {% endfor %}
     </div>
@@ -276,7 +276,7 @@
       
       <!-- Visual Green Contact Card -->
       <div class="lg:col-span-5 bg-[#143d1f] text-white p-8 flex flex-col justify-between relative overflow-hidden">
-        <img src="{% static 'images/company/sacos.jpg' %}" alt="Almacén Agro Sur Latino" class="absolute inset-0 w-full h-full object-cover opacity-20">
+        <img src="{% static 'images/company/sacos.webp' %}" alt="Almacén Agro Sur Latino" class="absolute inset-0 w-full h-full object-cover opacity-20" loading="lazy" decoding="async">
         <div class="relative z-10 space-y-5">
           <img src="{% static 'images/agrosurlogo-light.png' %}" alt="Agro Sur Latino" class="h-10 w-auto object-contain">
           <h3 class="font-serif text-3xl text-white font-semibold leading-tight" data-i18n="contact_box_title">
@@ -285,12 +285,24 @@
           <div class="space-y-3 pt-1 text-xs text-agro-100">
             <div class="flex items-start gap-2.5">
               <i data-lucide="map-pin" class="w-4 h-4 text-agro-400 shrink-0 mt-0.5"></i>
-              <span>Huertos de Huachipa – Lurigancho, Lima - Perú</span>
+              <a href="{{ company_maps_url }}" target="_blank" rel="noopener" class="hover:underline" title="Ver en Google Maps">{{ company_address }}, Lima - Perú</a>
             </div>
             <div class="flex items-center gap-2.5">
               <i data-lucide="mail" class="w-4 h-4 text-agro-400 shrink-0"></i>
-              <a href="mailto:david@agrosurlatino.com" class="hover:underline font-medium">david@agrosurlatino.com</a>
+              <a href="mailto:{{ company_email }}" class="hover:underline font-medium">{{ company_email }}</a>
             </div>
+            {% if company_phone_href %}
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="phone" class="w-4 h-4 text-agro-400 shrink-0"></i>
+              <a href="{{ company_phone_href }}" class="hover:underline font-medium">{{ company_phone }}</a>
+            </div>
+            {% endif %}
+            {% if company_whatsapp_url %}
+            <a href="{{ company_whatsapp_url }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#25d366] hover:bg-[#1ebe5b] text-white font-bold text-xs uppercase tracking-wider transition-colors">
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+              <span>WhatsApp</span>
+            </a>
+            {% endif %}
           </div>
         </div>
 
@@ -342,7 +354,7 @@
     </button>
 
     <div class="md:w-1/2 h-72 md:h-auto relative bg-agro-950">
-      <img id="modal-image" src="" alt="Producto" class="w-full h-full object-cover">
+      <img id="modal-image" alt="" class="w-full h-full object-cover">
     </div>
 
     <div class="p-7 md:w-1/2 space-y-4 flex flex-col justify-between">
@@ -370,7 +382,7 @@
         </div>
       </div>
 
-      <a href="{% url 'landing:cotizador' %}" class="w-full py-3 rounded-full bg-agro-600 hover:bg-agro-700 text-white font-bold text-xs tracking-widest uppercase text-center block transition-colors mt-3" data-i18n="modal_quote_btn">
+      <a id="modal-quote-btn" href="{% url 'landing:cotizador' %}" data-quote-url="{% url 'landing:cotizador' %}" class="w-full py-3 rounded-full bg-agro-600 hover:bg-agro-700 text-white font-bold text-xs tracking-widest uppercase text-center block transition-colors mt-3" data-i18n="modal_quote_btn">
         Cotizar este producto
       </a>
     </div>

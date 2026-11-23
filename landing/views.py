@@ -20,6 +20,11 @@ from .pdf import generate_quotation_pdf
 from . import pricing, ratelimit
 
 
+def request_lang(request):
+    """Idioma de la página: 'en' bajo /en/..., 'es' en el resto (lo fija LocaleMiddleware)."""
+    return 'en' if getattr(request, 'LANGUAGE_CODE', 'es').startswith('en') else 'es'
+
+
 def get_products_data(products):
     return [
         {
@@ -48,9 +53,7 @@ def get_products_data(products):
 
 def index(request):
     """Página de Inicio / Home: Impacto Visual estilo Xpodeka + Productos desde SQLite3"""
-    lang = request.GET.get('lang', 'es')
-    if lang not in ['es', 'en']:
-        lang = 'es'
+    lang = request_lang(request)
 
     hero_slides = HeroSlide.objects.filter(is_active=True)
     categories = ProductCategory.objects.filter(is_active=True)
@@ -77,9 +80,7 @@ def index(request):
 
 def productos_view(request):
     """Página dedicada: Catálogo Visual de Granos Andinos, Semillas y Menestras en SQLite3"""
-    lang = request.GET.get('lang', 'es')
-    if lang not in ['es', 'en']:
-        lang = 'es'
+    lang = request_lang(request)
 
     categories = ProductCategory.objects.filter(is_active=True)
     products = Product.objects.filter(is_active=True).select_related('category')
@@ -98,9 +99,7 @@ def productos_view(request):
 
 def cotizador_view(request):
     """Página dedicada: Mesa Inteligente de Cotizaciones B2B & Contacto"""
-    lang = request.GET.get('lang', 'es')
-    if lang not in ['es', 'en']:
-        lang = 'es'
+    lang = request_lang(request)
 
     categories = ProductCategory.objects.filter(is_active=True)
     products = list(Product.objects.filter(is_active=True).select_related('category'))
@@ -109,8 +108,14 @@ def cotizador_view(request):
         p.price_usd_label = pricing.money(pricing.unit_price(p, 'USD'), 'USD')
         p.price_pen_label = pricing.money(pricing.unit_price(p, 'PEN'), 'PEN')
 
+    # Producto elegido en el catálogo: /cotizador/?producto=habas-secas (slug desconocido = se ignora)
+    selected_slug = request.GET.get('producto', '').strip()
+    if selected_slug not in {p.slug for p in products}:
+        selected_slug = ''
+
     context = {
         'categories': categories,
+        'selected_slug': selected_slug,
         'products': products,
         'products_json': json.dumps(get_products_data(products)),
         'current_lang': lang,
@@ -121,9 +126,7 @@ def cotizador_view(request):
 
 def nosotros_view(request):
     """Página dedicada: Sobre Nosotros (About Us) - Única sección con narrativa histórica e infraestructura"""
-    lang = request.GET.get('lang', 'es')
-    if lang not in ['es', 'en']:
-        lang = 'es'
+    lang = request_lang(request)
 
     categories = ProductCategory.objects.filter(is_active=True)
     stats = CompanyStat.objects.all()
@@ -141,9 +144,7 @@ def nosotros_view(request):
 
 def calidad_view(request):
     """Página dedicada: Certificaciones Globales, Inocuidad y Sostenibilidad"""
-    lang = request.GET.get('lang', 'es')
-    if lang not in ['es', 'en']:
-        lang = 'es'
+    lang = request_lang(request)
 
     categories = ProductCategory.objects.filter(is_active=True)
     certifications = Certification.objects.all()
@@ -155,6 +156,39 @@ def calidad_view(request):
         'active_page': 'calidad',
     }
     return render(request, 'landing/calidad.html', context)
+
+
+SOCIAL_DISTRICTS = ['Quinua', 'Acocro', 'Tambillo', 'Acos Vinchos', 'Morochucos']
+
+# Procesos productivos de la quinua (título ES, título EN); foto: static/images/social/etapa-NN.webp
+QUINOA_STAGES = [
+    ('Preparación y siembra de la Quinua', 'Quinoa land preparation and sowing'),
+    ('Pos emergencia de la Quinua', 'Quinoa post-emergence'),
+    ('Desarrollo vegetativo de la Quinua', 'Quinoa vegetative growth'),
+    ('Desarrollo reproductivo de la Quinua', 'Quinoa reproductive growth'),
+    ('Madurez de cosecha de la Quinua', 'Quinoa harvest maturity'),
+    ('Cosecha de la Quinua (corte)', 'Quinoa harvest (cutting)'),
+    ('Cosecha de la Quinua (trilla)', 'Quinoa harvest (threshing)'),
+    ('Cosecha de la Quinua (zarandeo)', 'Quinoa harvest (sieving)'),
+    ('Cosecha de la Quinua (ventilado)', 'Quinoa harvest (winnowing)'),
+    ('Cosecha de la Quinua (secado)', 'Quinoa harvest (drying)'),
+]
+
+
+def social_view(request):
+    """Página Social: capacitación a productores de Ayacucho y las 10 etapas del proceso de la quinua"""
+    lang = request_lang(request)
+    context = {
+        'categories': ProductCategory.objects.filter(is_active=True),
+        'districts': SOCIAL_DISTRICTS,
+        'stages': [
+            {'n': i, 'image': f'images/social/etapa-{i:02d}.webp', 'es': es, 'en': en}
+            for i, (es, en) in enumerate(QUINOA_STAGES, start=1)
+        ],
+        'current_lang': lang,
+        'active_page': 'social',
+    }
+    return render(request, 'landing/social.html', context)
 
 
 def quote_pdf(request, token):
@@ -227,7 +261,14 @@ def quote_estimate(request):
         'success': True,
         'currency': currency,
         'items': [
-            {'product_id': p.id, 'subtotal': pricing.money(sub, currency)} for p, q, u, sub in items
+            {
+                'product_id': p.id,
+                'subtotal': pricing.money(sub, currency),
+                # Nombre y cantidad en el idioma de la página (resumen "1 × 25 kg bag")
+                'name': pricing.product_name(p, lang),
+                'label': pricing.format_quantity(q, u, lang),
+            }
+            for p, q, u, sub in items
         ],
         'total': pricing.money(sum(sub for *_, sub in items), currency),
     })
@@ -284,7 +325,10 @@ def submit_quote(request):
             msg = 'Para clientes internacionales, por favor especifique el país de destino/residencia.' if lang == 'es' else 'For international clients, please specify your destination country.'
             return JsonResponse({'success': False, 'message': msg}, status=400)
 
-        if incoterm not in dict(QuoteRequest.INCOTERM_CHOICES):
+        if pricing.is_peru_client(client_type):
+            # Cotización en Perú (RUC 20, RUC 10, DNI): sin Incoterm ni puerto
+            incoterm, destination_port = '', ''
+        elif incoterm not in dict(QuoteRequest.INCOTERM_CHOICES):
             incoterm = 'FOB'
         legal_name, contact_name = legal_name[:160], contact_name[:120]
         email_field_ok = '@' in email and len(email) <= 254
@@ -309,6 +353,7 @@ def submit_quote(request):
                 destination_port=destination_port[:120],
                 notes=notes[:2000],
                 currency=currency,
+                lang=lang,
             )
             for product, qty, unit, subtotal in items:
                 QuoteItem.objects.create(

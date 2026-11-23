@@ -76,9 +76,10 @@ class ProductAdmin(admin.ModelAdmin):
     )
     list_filter = ('category', 'modality', 'is_featured', 'is_active')
     search_fields = ('name', 'name_en', 'scientific_name', 'variety', 'origin')
+    prepopulated_fields = {'slug': ('name',)}
     fieldsets = (
         ("Identificación y Categoría", {
-            'fields': ('category', 'name', 'name_en', 'scientific_name', 'modality', 'variety')
+            'fields': ('category', 'name', 'name_en', 'slug', 'scientific_name', 'modality', 'variety')
         }),
         ("Fotografía Visual (Subir Archivo o Pegar URL)", {
             'fields': ('image', 'image_url')

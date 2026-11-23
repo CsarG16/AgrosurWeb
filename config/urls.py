@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.i18n import i18n_patterns
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.sitemaps import Sitemap
@@ -11,9 +12,13 @@ from django.urls import reverse
 class StaticPagesSitemap(Sitemap):
     changefreq = 'monthly'
     priority = 0.8
+    # Una entrada por idioma (/ y /en/) con etiquetas hreflang entre ellas
+    i18n = True
+    alternates = True
+    x_default = True
 
     def items(self):
-        return ['landing:index', 'landing:nosotros', 'landing:productos', 'landing:calidad', 'landing:cotizador']
+        return ['landing:index', 'landing:nosotros', 'landing:productos', 'landing:calidad', 'landing:social', 'landing:cotizador']
 
     def location(self, item):
         return reverse(item)
@@ -25,6 +30,8 @@ def robots_txt(request):
         "Disallow: /admin/",
         "Disallow: /api/",
         "Disallow: /cotizacion/",
+        "Disallow: /en/api/",
+        "Disallow: /en/cotizacion/",
         f"Sitemap: {request.scheme}://{request.get_host()}/sitemap.xml",
         "",
     ])
@@ -35,8 +42,13 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('robots.txt', robots_txt),
     path('sitemap.xml', sitemap, {'sitemaps': {'pages': StaticPagesSitemap}}, name='sitemap'),
-    path('', include('landing.urls', namespace='landing')),
 ]
+
+# Páginas del sitio: español sin prefijo (/productos/) e inglés con /en/ (/en/productos/)
+urlpatterns += i18n_patterns(
+    path('', include('landing.urls', namespace='landing')),
+    prefix_default_language=False,
+)
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

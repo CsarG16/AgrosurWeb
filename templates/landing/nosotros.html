@@ -1,12 +1,15 @@
 {% extends 'landing/base.html' %}
 {% load static %}
 
-{% block title %}Sobre Nosotros (About Us) | Agro Sur Latino S.A.C.{% endblock %}
+{% block title %}Sobre Nosotros | Agro Sur Latino S.A.C.{% endblock %}
 
 {% block title_en %}About Us | Agro Sur Latino S.A.C.{% endblock %}
 {% block meta_description %}Sobre Agro Sur Latino S.A.C.: acopio, procesamiento y exportación de granos andinos, semillas y menestras desde Huachipa, Lima.{% endblock %}
 {% block og_title %}Conoce a Agro Sur Latino{% endblock %}
 {% block og_desc_inner %}Sobre Agro Sur Latino S.A.C.: acopio, procesamiento y exportación de granos andinos, semillas y menestras desde Huachipa, Lima.{% endblock %}
+{% block meta_description_en %}About Agro Sur Latino S.A.C.: sourcing, processing and export of Andean grains, seeds and pulses from Huachipa, Lima.{% endblock %}
+{% block og_title_en %}Meet Agro Sur Latino{% endblock %}
+{% block og_desc_inner_en %}About Agro Sur Latino S.A.C.: sourcing, processing and export of Andean grains, seeds and pulses from Huachipa, Lima.{% endblock %}
 
 {% block content %}
 <!-- Editorial Header Banner ("About Us" — Única sección con narrativa corporativa e historia) -->
@@ -16,10 +19,10 @@
       
       <div class="lg:col-span-6 space-y-5">
         <span class="text-xs uppercase tracking-[0.2em] text-xpo-red font-bold block" data-i18n="about_tag">
-          SOBRE NOSOTROS • ABOUT US
+          SOBRE NOSOTROS
         </span>
         <h1 class="font-serif font-semibold text-4xl sm:text-5xl text-stone-900 tracking-tight leading-tight" data-i18n="trace_title">
-          De los productores hacia el mundo
+          Un futuro sembrado hace miles de años
         </h1>
         <p class="text-stone-600 text-base leading-relaxed" data-i18n="about_lead">
           Fundada en el año <strong>2007</strong>, <strong>AGRO SUR LATINO S.A.C.</strong> (RUC 20517805662) es una empresa peruana con amplia trayectoria en el mercado nacional e internacional, especializada en el acopio, procesamiento, comercialización y exportación de granos andinos, semillas y menestras en presentaciones <strong>Orgánicas y Convencionales</strong>.
@@ -32,12 +35,12 @@
       <!-- Real Official Company Photos from agrosurlatino.com -->
       <div class="lg:col-span-6 grid grid-cols-2 gap-5">
         <div class="h-80 sm:h-96 rounded-xl overflow-hidden shadow-lg relative group bg-stone-900">
-          <img src="{% static 'images/company/fachada.jpg' %}" alt="Planta Central Agro Sur Latino Huachipa" class="w-full h-full object-cover">
+          <img src="{% static 'images/company/fachada.webp' %}" alt="Planta Central Agro Sur Latino Huachipa" class="w-full h-full object-cover" loading="lazy" decoding="async">
           <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
           <span class="absolute bottom-4 left-4 right-4 text-xs text-white font-semibold">Sede Central Huertos de Huachipa • Lima</span>
         </div>
         <div class="h-80 sm:h-96 rounded-xl overflow-hidden shadow-lg mt-8 relative group bg-stone-900">
-          <img src="{% static 'images/company/campo-quinua.png' %}" alt="Campos de Quinua en Ayacucho" class="w-full h-full object-cover">
+          <img src="{% static 'images/company/campo-quinua.webp' %}" alt="Campos de Quinua en Ayacucho" class="w-full h-full object-cover" loading="lazy" decoding="async">
           <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
           <span class="absolute bottom-4 left-4 right-4 text-xs text-white font-semibold">Cosecha Andina • Ayacucho, Perú</span>
         </div>
@@ -56,9 +59,16 @@
         <div class="stat-counter font-serif font-semibold text-3xl sm:text-4xl text-xpo-red tracking-tight" data-target="{{ stat.value }}">
           {{ stat.value }}
         </div>
+        {% if stat.value == company_founded_year|stringformat:"s" %}
+        {# Años de trayectoria calculados desde el año de fundación (settings.COMPANY_FOUNDED_YEAR) #}
+        <p class="text-stone-600 text-xs sm:text-sm mt-1.5 font-medium bilingual-name" data-es="{{ stat.label }} — {{ company_years }} años de trayectoria" data-en="{{ stat.label_en|default:stat.label }} — {{ company_years }} years of experience">
+          {{ stat.label }} — {{ company_years }} años de trayectoria
+        </p>
+        {% else %}
         <p class="text-stone-600 text-xs sm:text-sm mt-1.5 font-medium bilingual-name" data-es="{{ stat.label }}" data-en="{{ stat.label_en }}">
           {{ stat.label }}
         </p>
+        {% endif %}
       </div>
       {% endfor %}
     </div>
@@ -115,10 +125,10 @@
       
       <div class="rounded-2xl overflow-hidden border border-stone-200 bg-white shadow-sm flex flex-col">
         <div class="h-56 overflow-hidden bg-stone-900">
-          <img src="{% static 'images/company/campo-quinua.png' %}" alt="Origen & Campos en Ayacucho" class="w-full h-full object-cover">
+          <img src="{% static 'images/company/campo-quinua.webp' %}" alt="Origen y Campos en Ayacucho" class="w-full h-full object-cover" loading="lazy" decoding="async">
         </div>
         <div class="p-7 space-y-3 flex-1">
-          <span class="text-[11px] font-bold uppercase tracking-widest text-xpo-red">01 • ORIGEN & ACOPIO</span>
+          <span class="text-[11px] font-bold uppercase tracking-widest text-xpo-red">01 • ORIGEN Y ACOPIO</span>
           <h3 class="font-serif font-semibold text-xl text-stone-900">Centros de Acopio en Ayacucho y Andes</h3>
           <p class="text-stone-600 text-xs sm:text-sm leading-relaxed">
             Trabajamos directamente con productores locales en Quinua, Acocro, Tambillo, Acos Vinchos y Morochucos (Ayacucho), impulsando prácticas sostenibles y cultivo orgánico certificado.
@@ -128,7 +138,7 @@
 
       <div class="rounded-2xl overflow-hidden border border-stone-200 bg-white shadow-sm flex flex-col">
         <div class="h-56 overflow-hidden bg-stone-900">
-          <img src="{% static 'images/company/proceso.jpg' %}" alt="Procesamiento de Granos en Huachipa" class="w-full h-full object-cover">
+          <img src="{% static 'images/company/proceso.webp' %}" alt="Procesamiento de Granos en Huachipa" class="w-full h-full object-cover" loading="lazy" decoding="async">
         </div>
         <div class="p-7 space-y-3 flex-1">
           <span class="text-[11px] font-bold uppercase tracking-widest text-xpo-red">02 • SEDE HUACHIPA (LIMA)</span>
@@ -141,10 +151,10 @@
 
       <div class="rounded-2xl overflow-hidden border border-stone-200 bg-white shadow-sm flex flex-col">
         <div class="h-56 overflow-hidden bg-stone-900">
-          <img src="{% static 'images/company/sacos.jpg' %}" alt="Almacenes Propios y Sacos de Exportación" class="w-full h-full object-cover">
+          <img src="{% static 'images/company/sacos.webp' %}" alt="Almacenes Propios y Sacos de Exportación" class="w-full h-full object-cover" loading="lazy" decoding="async">
         </div>
         <div class="p-7 space-y-3 flex-1">
-          <span class="text-[11px] font-bold uppercase tracking-widest text-xpo-red">03 • ALMACENES & EXPORTACIÓN</span>
+          <span class="text-[11px] font-bold uppercase tracking-widest text-xpo-red">03 • ALMACENES Y EXPORTACIÓN</span>
           <h3 class="font-serif font-semibold text-xl text-stone-900">Stock Permanente los 365 Días</h3>
           <p class="text-stone-600 text-xs sm:text-sm leading-relaxed">
             Almacenes propios con stock todo el año en sacos multipliego de 25 kg y 50 lb, listos para despacho en contenedores FCL desde el Puerto del Callao hacia el mundo.

@@ -71,3 +71,43 @@ def money(amount, currency):
     """Formato fijo (no localizado): US$ 67,687.50 / S/ 1,234.00."""
     symbol = 'S/' if currency == 'PEN' else 'US$'
     return f"{symbol} {Decimal(amount):,.2f}"
+
+
+# Etiquetas de unidad por idioma: (singular, plural). {} = sin cantidad delante ("× ") para TM/kg.
+UNIT_LABELS = {
+    'es': {
+        'CONTENEDOR_FCL': ('contenedor FCL (~20 TM)', 'contenedores FCL (~20 TM)'),
+        'PALLET': ('pallet (1 TM)', 'pallets (1 TM)'),
+        'SACOS_25KG': ('saco de 25 kg', 'sacos de 25 kg'),
+        'TONELADAS': ('TM', 'TM'),
+        'KILOS': ('kg', 'kg'),
+    },
+    'en': {
+        'CONTENEDOR_FCL': ('FCL container (~20 MT)', 'FCL containers (~20 MT)'),
+        'PALLET': ('pallet (1 MT)', 'pallets (1 MT)'),
+        'SACOS_25KG': ('25 kg bag', '25 kg bags'),
+        'TONELADAS': ('MT', 'MT'),
+        'KILOS': ('kg', 'kg'),
+    },
+}
+_BARE_UNITS = {'TONELADAS', 'KILOS'}  # "5 TM", "250 kg" (sin "×")
+
+
+def _plain(qty):
+    """Decimal('1.00') -> '1', Decimal('2.50') -> '2.5', Decimal('1000') -> '1000'."""
+    return format(Decimal(qty).normalize(), 'f')
+
+
+def format_quantity(qty, unit, lang='es'):
+    """'1 × 25 kg bag', '2 × 25 kg bags', '5 MT'. Misma función para el resumen web y el PDF."""
+    labels = UNIT_LABELS.get(lang, UNIT_LABELS['es']).get(unit)
+    if not labels:
+        return f"{_plain(qty)} {unit}"
+    qty = Decimal(qty)
+    label = labels[0] if qty == 1 else labels[1]
+    sep = ' ' if unit in _BARE_UNITS else ' × '
+    return f"{_plain(qty)}{sep}{label}"
+
+
+def product_name(product, lang='es'):
+    return (product.name_en or product.name) if lang == 'en' else product.name

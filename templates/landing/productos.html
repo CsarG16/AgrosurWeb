@@ -7,6 +7,9 @@
 {% block meta_description %}Catálogo de quinua, chía, kiwicha, maíz gigante, frejoles, pallares y más: granos andinos orgánicos y convencionales del Perú.{% endblock %}
 {% block og_title %}Catálogo de productos | Agro Sur Latino{% endblock %}
 {% block og_desc_inner %}Catálogo de quinua, chía, kiwicha, maíz gigante, frejoles, pallares y más: granos andinos orgánicos y convencionales del Perú.{% endblock %}
+{% block meta_description_en %}Catalog of quinoa, chia, kiwicha (amaranth), giant corn, beans, lima beans and more: organic and conventional Andean grains from Peru.{% endblock %}
+{% block og_title_en %}Product catalog | Agro Sur Latino{% endblock %}
+{% block og_desc_inner_en %}Catalog of quinoa, chia, kiwicha (amaranth), giant corn, beans, lima beans and more: organic and conventional Andean grains from Peru.{% endblock %}
 
 {% block content %}
 <!-- Visual Header with Green Category Filter Buttons (Zero Clutter) -->
@@ -41,10 +44,10 @@
       {% for product in products %}
       <div class="product-catalog-card card-hover-effect group relative rounded-2xl overflow-hidden bg-agro-950 shadow-md cursor-pointer flex flex-col justify-end aspect-[4/4.2] border border-agro-100"
            data-category="{{ product.category.slug|default:'granos-andinos' }}"
-           onclick="openProductModal(this)"
-           data-product='{"id": {{ product.id }}, "name": "{{ product.name|escapejs }}", "name_en": "{{ product.name_en|default:product.name|escapejs }}", "scientific_name": "{{ product.scientific_name|escapejs }}", "modality": "{{ product.modality_label_es|escapejs }}", "modality_en": "{{ product.modality_label_en|escapejs }}", "variety": "{{ product.variety|escapejs }}", "origin": "{{ product.origin|escapejs }}", "origin_en": "{{ product.origin_en|escapejs }}", "season": "{{ product.season|escapejs }}", "season_en": "{{ product.season_en|escapejs }}", "packing_specs": "{{ product.packing_specs|escapejs }}", "packing_specs_en": "{{ product.packing_specs_en|escapejs }}", "image": "{{ product.get_image|escapejs }}"}'>
+           onclick="openProductModal(this)" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Ver detalles de {{ product.name }}"
+           data-product='{"id": {{ product.id }}, "slug": "{{ product.slug }}", "name": "{{ product.name|escapejs }}", "name_en": "{{ product.name_en|default:product.name|escapejs }}", "scientific_name": "{{ product.scientific_name|escapejs }}", "modality": "{{ product.modality_label_es|escapejs }}", "modality_en": "{{ product.modality_label_en|escapejs }}", "variety": "{{ product.variety|escapejs }}", "origin": "{{ product.origin|escapejs }}", "origin_en": "{{ product.origin_en|escapejs }}", "season": "{{ product.season|escapejs }}", "season_en": "{{ product.season_en|escapejs }}", "packing_specs": "{{ product.packing_specs|escapejs }}", "packing_specs_en": "{{ product.packing_specs_en|escapejs }}", "image": "{{ product.get_image|escapejs }}"}'>
         
-        <img src="{{ product.get_image }}" alt="{{ product.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110">
+        <img src="{{ product.get_image }}" alt="{{ product.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" loading="lazy" decoding="async">
         <div class="absolute inset-0 bg-gradient-to-t from-agro-950/85 via-transparent to-transparent"></div>
 
         <div class="relative z-10 p-4 sm:p-5 flex items-end justify-between gap-2">
@@ -73,13 +76,13 @@
     </button>
 
     <div class="md:w-1/2 h-72 md:h-auto relative bg-agro-950">
-      <img id="modal-image" src="" alt="Producto" class="w-full h-full object-cover">
+      <img id="modal-image" alt="" class="w-full h-full object-cover">
     </div>
 
     <div class="p-7 md:w-1/2 space-y-4 flex flex-col justify-between">
       <div>
         <div class="flex items-center justify-between mb-2">
-          <img src="{% static 'images/agrosurlogo.png' %}" alt="Agro Sur Latino" class="h-5 w-auto object-contain opacity-80">
+          <img src="{% static 'images/agrosurlogo.png' %}" alt="Agro Sur Latino" class="h-5 w-auto object-contain opacity-80" loading="lazy" decoding="async">
           <span id="modal-scientific" class="text-xs text-agro-600 font-bold"></span>
         </div>
         <h3 id="modal-title" class="font-serif font-semibold text-2xl text-agro-950"></h3>
@@ -107,7 +110,7 @@
         </div>
       </div>
 
-      <a href="{% url 'landing:cotizador' %}" class="w-full py-3 rounded-full bg-agro-600 hover:bg-agro-700 text-white font-bold text-xs tracking-widest uppercase text-center block transition-colors mt-3" data-i18n="modal_quote_btn">
+      <a id="modal-quote-btn" href="{% url 'landing:cotizador' %}" data-quote-url="{% url 'landing:cotizador' %}" class="w-full py-3 rounded-full bg-agro-600 hover:bg-agro-700 text-white font-bold text-xs tracking-widest uppercase text-center block transition-colors mt-3" data-i18n="modal_quote_btn">
         Cotizar este producto
       </a>
     </div>

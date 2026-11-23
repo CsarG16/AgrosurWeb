@@ -88,3 +88,48 @@ Para verificar que las validaciones tributarias (RUC 20, RUC 10, DNI, Tax ID ext
 ```powershell
 python manage.py test
 ```
+
+---
+
+## 🛠️ Estilos, imágenes e idiomas
+
+### Estilos (Tailwind CLI)
+Ya no se usa el CDN de Tailwind. Los estilos se compilan a `static/css/app.css` (se versiona en git, así el servidor no necesita Node):
+```powershell
+npm install            # solo la primera vez
+npm run build:css      # compila (ejecutar antes de subir cambios de plantillas o de main.js)
+npm run watch:css      # recompila mientras desarrollas
+```
+La configuración está en `tailwind.config.js` (colores `agro`/`xpo`, punto de quiebre `nav` = 1200 px para el menú completo).
+
+### Imágenes
+Todas las fotos se sirven en WebP. Para añadir o convertir imágenes:
+```powershell
+python scripts/optimize_images.py --convert foto.png static/images/products/mi-producto.webp
+```
+Objetivo: 80–150 KB por foto. Las plantillas ya usan `loading="lazy"` en todo lo que está bajo el banner principal.
+
+### Inglés
+El español vive en la raíz (`/productos/`) y el inglés bajo `/en/` (`/en/productos/`), con `hreflang`, canonical y sitemap por idioma. El texto del cuerpo en inglés lo traduce `static/js/main.js` (diccionario `translations` y `phraseEN`); el `<title>` y la meta descripción los renderiza Django (bloques `title_en`, `meta_description_en` en cada plantilla).
+
+### Datos de contacto
+Teléfono y WhatsApp se leen de variables de entorno y **solo se muestran si existen** (contacto y pie de página):
+```
+COMPANY_PHONE="+51 1 234 5678"
+COMPANY_WHATSAPP="51987654321"
+```
+
+### Despliegue en PythonAnywhere
+```bash
+git pull
+pip install -r requirements.txt
+python manage.py migrate          # incluye 0007 (slug de productos) y 0008 (imágenes .webp y textos)
+python manage.py collectstatic --noinput
+# Web > Reload
+```
+
+### Cambio al dominio agrosurlatino.com (cuando esté disponible)
+Canonical, `og:url`, sitemap y robots usan el dominio de la petición, así que no hay URLs fijas que editar. Falta:
+1. Apuntar el dominio a PythonAnywhere (Web > Add a new web app / dominio propio) y activar HTTPS.
+2. Variables de entorno: `DJANGO_ALLOWED_HOSTS` (ya incluye `agrosurlatino.com` y `www.`), `DJANGO_CSRF_TRUSTED_ORIGINS="https://agrosurlatino.com,https://www.agrosurlatino.com"` y, si `request.scheme` sale `http`, `DJANGO_BEHIND_PROXY=1`.
+3. Redirigir `gablol.pythonanywhere.com` → dominio nuevo y enviar el nuevo `sitemap.xml` a Google Search Console.

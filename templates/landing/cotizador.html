@@ -7,12 +7,15 @@
 {% block meta_description %}Solicita tu cotización de granos andinos, semillas y menestras: exportación FOB o venta en Perú. Recibe tu proforma en PDF.{% endblock %}
 {% block og_title %}Cotizador | Agro Sur Latino{% endblock %}
 {% block og_desc_inner %}Solicita tu cotización de granos andinos, semillas y menestras: exportación FOB o venta en Perú. Recibe tu proforma en PDF.{% endblock %}
+{% block meta_description_en %}Request a quote for Andean grains, seeds and pulses: FOB export or sales in Peru. Get your PDF proforma.{% endblock %}
+{% block og_title_en %}Quote request | Agro Sur Latino{% endblock %}
+{% block og_desc_inner_en %}Request a quote for Andean grains, seeds and pulses: FOB export or sales in Peru. Get your PDF proforma.{% endblock %}
 
 {% block content %}
 <!-- Minimal Visual Header -->
 <section class="py-12 xpodeka-wave-bg border-b border-xpo-border/80">
   <div class="max-w-7xl mx-auto px-6 lg:px-10">
-    <span class="text-xs uppercase tracking-[0.2em] text-xpo-red font-bold block mb-2">MESA COMERCIAL B2B • RUC & INTERNACIONAL</span>
+    <span class="text-xs uppercase tracking-[0.2em] text-xpo-red font-bold block mb-2">MESA COMERCIAL B2B • RUC E INTERNACIONAL</span>
     <h1 class="font-serif font-semibold text-3xl sm:text-5xl text-stone-900 tracking-tight" data-i18n="quote_section_title">
       ¿Deseas un trato? Cotiza en línea
     </h1>
@@ -64,10 +67,10 @@
           <div class="quote-product-row border border-stone-200 rounded-xl p-4 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white">
             
             <label class="flex items-center gap-4 cursor-pointer flex-1">
-              <input type="checkbox" value="{{ product.id }}" data-name="{{ product.name }}" class="quote-prod-checkbox w-5 h-5 text-xpo-red rounded focus:ring-xpo-red cursor-pointer">
+              <input type="checkbox" value="{{ product.id }}" data-name="{{ product.name }}" {% if product.slug == selected_slug %}checked{% endif %} class="quote-prod-checkbox w-5 h-5 text-xpo-red rounded focus:ring-xpo-red cursor-pointer">
               
               <div class="w-16 h-16 rounded-xl overflow-hidden shrink-0 border border-stone-200">
-                <img src="{{ product.get_image }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+                <img src="{{ product.get_image }}" alt="{{ product.name }}" class="w-full h-full object-cover" loading="lazy" decoding="async">
               </div>
 
               <div>
@@ -176,7 +179,7 @@
               <input type="text" id="input-phone" required placeholder="+51 987 654 321" class="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-sm outline-none focus:border-xpo-red">
             </div>
 
-            <div>
+            <div id="incoterm-field">
               <label class="block text-[11px] font-bold uppercase tracking-wider text-stone-700 mb-1" data-i18n="lbl_incoterm">Incoterm</label>
               <select id="input-incoterm" class="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-sm font-medium outline-none">
                 <option value="FOB" selected>FOB Callao - Perú</option>
@@ -186,7 +189,7 @@
               </select>
             </div>
 
-            <div>
+            <div id="port-field">
               <label class="block text-[11px] font-bold uppercase tracking-wider text-stone-700 mb-1" data-i18n="lbl_port">Puerto / Ciudad Destino</label>
               <input type="text" id="input-destination-port" placeholder="Ej: Rotterdam, Miami, Callao..." class="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-sm outline-none focus:border-xpo-red">
             </div>
@@ -215,7 +218,7 @@
 
           <div class="pt-4 border-t border-stone-800 flex items-center justify-between">
             <div>
-              <span class="text-xs text-stone-400 block">Total FOB Estimado:</span>
+              <span id="quote-total-label" class="text-xs text-stone-400 block">Total FOB Estimado:</span>
               <span class="text-[10px] text-amber-300">Proforma PDF instantánea</span>
             </div>
             <div id="quote-total-est" class="font-serif font-semibold text-2xl sm:text-3xl text-amber-300 font-mono">
@@ -225,7 +228,7 @@
 
           <button type="submit" class="w-full py-4 rounded-full bg-xpo-red hover:bg-xpo-redDark text-white font-semibold text-xs uppercase tracking-[0.16em] transition-colors flex items-center justify-center gap-2 shadow-md">
             <i data-lucide="send" class="w-4 h-4"></i>
-            <span data-i18n="btn_submit_quote">Generar Cotización & PDF</span>
+            <span data-i18n="btn_submit_quote">Generar Cotización y PDF</span>
           </button>
         </div>
 

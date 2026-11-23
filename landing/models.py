@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.utils.text import slugify
 import re
 import uuid
 
@@ -18,6 +19,17 @@ def validate_peruvian_document(client_type, doc_num):
     elif client_type == 'EXTRANJERO':
         if len(doc_num) < 4:
             raise ValidationError("Ingrese un Tax ID / VAT / Registro Fiscal internacional válido.")
+
+
+def unique_product_slug(name, exclude_pk=None):
+    """Slug a partir del nombre ('Habas Secas' -> 'habas-secas'), con sufijo -2, -3… si ya existe."""
+    base = slugify(name)[:130] or 'producto'
+    slug, n = base, 2
+    existing = Product.objects.exclude(pk=exclude_pk) if exclude_pk else Product.objects.all()
+    while existing.filter(slug=slug).exists():
+        slug = f"{base}-{n}"
+        n += 1
+    return slug
 
 
 class HeroSlide(models.Model):
@@ -98,6 +110,13 @@ class Product(models.Model):
     )
     name = models.CharField(max_length=120, verbose_name="Nombre del Producto (ES)")
     name_en = models.CharField(max_length=120, blank=True, verbose_name="Nombre del Producto (EN)")
+    slug = models.SlugField(
+        max_length=140,
+        unique=True,
+        blank=True,
+        verbose_name="Identificador (slug)",
+        help_text="Se genera solo desde el nombre. Se usa en enlaces como /cotizador/?producto=habas-secas",
+    )
     scientific_name = models.CharField(max_length=120, blank=True, verbose_name="Nombre Científico")
     modality = models.CharField(
         max_length=30,
@@ -132,6 +151,11 @@ class Product(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.variety})"
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = unique_product_slug(self.name, exclude_pk=self.pk)
+        super().save(*args, **kwargs)
 
     @property
     def get_image(self):
@@ -214,11 +238,12 @@ class QuoteRequest(models.Model):
     country = models.CharField(max_length=100, default="Perú", verbose_name="País")
     email = models.EmailField(verbose_name="Correo Electrónico")
     phone = models.CharField(max_length=50, verbose_name="Teléfono / WhatsApp")
-    incoterm = models.CharField(max_length=10, choices=INCOTERM_CHOICES, default='FOB', verbose_name="Incoterm Solicitado")
+    incoterm = models.CharField(max_length=10, choices=INCOTERM_CHOICES, default='FOB', blank=True, verbose_name="Incoterm Solicitado", help_text="Vacío en cotizaciones para clientes de Perú (RUC 20, RUC 10 y DNI).")
     destination_port = models.CharField(max_length=120, blank=True, verbose_name="Puerto / Ciudad de Destino")
     notes = models.TextField(blank=True, verbose_name="Notas / Presentación Orgánica o Convencional / Requerimientos")
 
     currency = models.CharField(max_length=3, choices=[('USD', 'US$'), ('PEN', 'S/')], default='USD', verbose_name="Moneda")
+    lang = models.CharField(max_length=2, choices=[('es', 'Español'), ('en', 'English')], default='es', verbose_name="Idioma de la cotización (PDF)")
     public_token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False, verbose_name="Código público (enlace PDF)")
 
     status = models.CharField(max_length=20, choices=[

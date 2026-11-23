@@ -1,18 +1,35 @@
-{% load static %}
+{% load static i18n %}{% get_current_language as LANGUAGE_CODE %}
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="{{ LANGUAGE_CODE }}" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% if LANGUAGE_CODE == 'en' %}
+  <title>{% block title_en %}Agro Sur Latino S.A.C. | Peruvian Andean Grains, Seeds & Pulses{% endblock %}</title>
+  <meta name="description" content="{% block meta_description_en %}Agro Sur Latino S.A.C.: sourcing, processing and export of Peruvian quinoa, chia, kiwicha (amaranth) and pulses, organic and conventional.{% endblock %}">
+  {% else %}
   <title>{% block title %}Agro Sur Latino S.A.C. | Granos Andinos, Semillas y Menestras del Perú{% endblock %}</title>
-  <meta name="title-en" content="{% block title_en %}Agro Sur Latino S.A.C. | Peruvian Andean Grains, Seeds & Pulses{% endblock %}">
   <meta name="description" content="{% block meta_description %}Agro Sur Latino S.A.C.: comercialización, procesamiento y exportación de quinua, chía, kiwicha y menestras peruanas (orgánicas y convencionales).{% endblock %}">
+  {% endif %}
+
+  <!-- URL canónica y versiones por idioma (SEO internacional) -->
+  <link rel="canonical" href="{{ canonical_url }}">
+  <link rel="alternate" hreflang="es" href="{{ hreflang_urls.es }}">
+  <link rel="alternate" hreflang="en" href="{{ hreflang_urls.en }}">
+  <link rel="alternate" hreflang="x-default" href="{{ default_url }}">
+
   <meta property="og:type" content="website">
+  <meta property="og:locale" content="{% if LANGUAGE_CODE == 'en' %}en_US{% else %}es_PE{% endif %}">
   <meta property="og:site_name" content="Agro Sur Latino S.A.C.">
+  {% if LANGUAGE_CODE == 'en' %}
+  <meta property="og:title" content="{% block og_title_en %}Agro Sur Latino S.A.C. | Andean grains from Peru{% endblock %}">
+  <meta property="og:description" content="{% block og_desc_inner_en %}Peruvian Andean grains, seeds and pulses, organic and conventional, for the world.{% endblock %}">
+  {% else %}
   <meta property="og:title" content="{% block og_title %}Agro Sur Latino S.A.C. | Granos andinos del Perú{% endblock %}">
   <meta property="og:description" content="{% block og_description %}{% block og_desc_inner %}Granos andinos, semillas y menestras peruanas, orgánicas y convencionales, para el mundo.{% endblock %}{% endblock %}">
-  <meta property="og:url" content="{{ request.build_absolute_uri }}">
-  <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'images/company/campo-atardecer.jpg' %}">
+  {% endif %}
+  <meta property="og:url" content="{{ canonical_url }}">
+  <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'images/company/og-image.jpg' %}">
   <meta name="twitter:card" content="summary_large_image">
 
   <!-- Favicon -->
@@ -24,54 +41,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Plus Jakarta Sans', 'sans-serif'],
-            display: ['Outfit', 'sans-serif'],
-            serif: ['Playfair Display', 'Georgia', 'serif'],
-          },
-          colors: {
-            agro: {
-              50: '#f2f8f1',
-              100: '#e1f0de',
-              200: '#c4e2be',
-              300: '#98cb90',
-              400: '#65af5b',
-              500: '#3f9136',
-              600: '#2b7a3d',
-              700: '#215f30',
-              800: '#1b4c27',
-              900: '#14361d',
-              950: '#0b2010',
-            },
-            xpo: {
-              cream: '#f4f8f2',
-              sand: '#e6f0e2',
-              border: '#cde0c6',
-              // Mapped to Agro Sur Latino's Official Identity Green!
-              red: '#2b7a3d',
-              redDark: '#1e5c2c',
-              gold: '#c5a059',
-            }
-          }
-        }
-      }
-    }
-  </script>
-
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Lucide Icons (versión fija) -->
+  <script src="https://unpkg.com/lucide@1.66.0/dist/umd/lucide.min.js"></script>
 
   <!-- Lenis Smooth Scroll Engine -->
   <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
 
-  <!-- Custom CSS -->
+  <!-- Custom CSS, luego Tailwind compilado (npm run build:css) para conservar el orden de cascada del CDN anterior -->
   <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=9">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}?v=4">
   {% block extra_head %}{% endblock %}
 </head>
 <body class="bg-[#f4f8f2] text-agro-950 antialiased selection:bg-agro-600/20 selection:text-agro-800" data-lang="es" data-page="{{ active_page|default:'inicio' }}">
@@ -81,32 +59,32 @@
     <div class="max-w-7xl mx-auto px-6 lg:px-10 flex items-center justify-between">
       
       <!-- Brand Logo (Official Agrosur Green Logo) -->
-      <a href="{% url 'landing:index' %}" class="flex items-center gap-3 transition-opacity hover:opacity-90 shrink-0" aria-label="AGRO SUR LATINO Inicio">
-        <img src="{% static 'images/agrosurlogo.png' %}" alt="AGRO SUR LATINO S.A.C." class="logo-dark h-10 sm:h-11 w-auto object-contain">
+      <a href="{% url 'landing:index' %}" class="flex items-center gap-3 transition-opacity hover:opacity-90 shrink-0" aria-label="Inicio – Agro Sur Latino">
+        <img src="{% static 'images/agrosurlogo.png' %}" alt="" aria-hidden="true" class="logo-dark h-10 sm:h-11 w-auto object-contain">
         <img src="{% static 'images/agrosurlogo-light.png' %}" alt="" aria-hidden="true" class="logo-light h-10 sm:h-11 w-auto object-contain">
       </a>
 
       <!-- Center Navigation Links -->
-      <nav class="hidden md:flex items-center gap-8">
-        <a href="{% url 'landing:nosotros' %}" class="text-xs tracking-[0.14em] uppercase font-bold transition-colors {% if active_page == 'nosotros' %}text-agro-600 border-b-2 border-agro-600 pb-1{% else %}text-agro-900 hover:text-agro-600{% endif %}" data-i18n="nav_origin">
+      <nav class="hidden nav:flex items-center gap-5 xl:gap-8">
+        <a href="{% url 'landing:nosotros' %}" class="whitespace-nowrap text-xs tracking-[0.14em] uppercase font-bold transition-colors {% if active_page == 'nosotros' %}text-agro-600 border-b-2 border-agro-600 pb-1{% else %}text-agro-900 hover:text-agro-600{% endif %}" data-i18n="nav_origin">
           SOBRE NOSOTROS
         </a>
 
         <!-- PRODUCTOS with Visual Mega-Menu Dropdown -->
         <div class="relative group py-2">
-          <a href="{% url 'landing:productos' %}" class="inline-flex items-center gap-1 text-xs tracking-[0.14em] uppercase font-bold transition-colors {% if active_page == 'productos' %}text-agro-600 border-b-2 border-agro-600 pb-1{% else %}text-agro-900 group-hover:text-agro-600{% endif %}">
+          <a href="{% url 'landing:productos' %}" class="inline-flex items-center gap-1 whitespace-nowrap text-xs tracking-[0.14em] uppercase font-bold transition-colors {% if active_page == 'productos' %}text-agro-600 border-b-2 border-agro-600 pb-1{% else %}text-agro-900 group-hover:text-agro-600{% endif %}">
             <span data-i18n="nav_products">PRODUCTOS</span>
             <i data-lucide="chevron-down" class="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180"></i>
           </a>
 
           <!-- Visual Mega-Dropdown Card -->
-          <div class="absolute left-1/2 -translate-x-1/2 top-full pt-3 w-[540px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+          <div class="absolute left-1/2 -translate-x-1/2 top-full pt-3 w-[540px] opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200 z-50">
             <div class="bg-[#f4f8f2] rounded-2xl border border-agro-200 shadow-2xl p-4">
               <div class="grid grid-cols-3 gap-3.5">
                 {% for cat in categories %}
-                <a href="{% url 'landing:productos' %}?cat={{ cat.slug }}" class="group/item block rounded-xl overflow-hidden bg-white border border-agro-200 hover:border-agro-600 transition-all shadow-2xs">
+                <a href="{% url 'landing:productos' %}?cat={{ cat.slug }}" aria-label="{{ cat.name }}" class="group/item block rounded-xl overflow-hidden bg-white border border-agro-200 hover:border-agro-600 transition-all shadow-2xs">
                   <div class="h-28 overflow-hidden relative bg-agro-900">
-                    <img src="{{ cat.get_image }}" alt="{{ cat.name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover/item:scale-110">
+                    <img src="{{ cat.get_image }}" alt="" class="w-full h-full object-cover transition-transform duration-500 group-hover/item:scale-110" loading="lazy" decoding="async">
                     <div class="absolute inset-0 bg-gradient-to-t from-agro-950/70 via-transparent to-transparent"></div>
                   </div>
                   <div class="p-2.5 text-center">
@@ -123,33 +101,36 @@
           </div>
         </div>
 
-        <a href="{% url 'landing:calidad' %}" class="text-xs tracking-[0.14em] uppercase font-bold transition-colors {% if active_page == 'calidad' %}text-agro-600 border-b-2 border-agro-600 pb-1{% else %}text-agro-900 hover:text-agro-600{% endif %}" data-i18n="nav_quality">
+        <a href="{% url 'landing:calidad' %}" class="whitespace-nowrap text-xs tracking-[0.14em] uppercase font-bold transition-colors {% if active_page == 'calidad' %}text-agro-600 border-b-2 border-agro-600 pb-1{% else %}text-agro-900 hover:text-agro-600{% endif %}" data-i18n="nav_quality">
           CERTIFICACIONES
         </a>
-        <a href="{% url 'landing:index' %}#contacto" class="text-xs tracking-[0.14em] uppercase font-bold text-agro-900 hover:text-agro-600 transition-colors" data-i18n="nav_contact">
+        <a href="{% url 'landing:social' %}" class="whitespace-nowrap text-xs tracking-[0.14em] uppercase font-bold transition-colors {% if active_page == 'social' %}text-agro-600 border-b-2 border-agro-600 pb-1{% else %}text-agro-900 hover:text-agro-600{% endif %}" data-i18n="nav_social">
+          SOCIAL
+        </a>
+        <a href="{% url 'landing:index' %}#contacto" class="whitespace-nowrap text-xs tracking-[0.14em] uppercase font-bold text-agro-900 hover:text-agro-600 transition-colors" data-i18n="nav_contact">
           CONTACTO
         </a>
       </nav>
 
       <!-- Right Side: Language Switcher (EN | ES) + Green Pill Button -->
-      <div class="hidden md:flex items-center gap-5">
+      <div class="hidden nav:flex items-center gap-5">
         <div class="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-agro-700">
-          <button type="button" class="lang-btn px-1.5 py-0.5 transition-colors hover:text-agro-950" data-set-lang="en">EN</button>
+          <a href="{{ lang_links.en }}" hreflang="en" lang="en" title="English" class="lang-btn inline-block px-1.5 py-0.5 transition-colors hover:text-agro-950" data-set-lang="en">EN</a>
           <span class="text-agro-300">|</span>
-          <button type="button" class="lang-btn px-1.5 py-0.5 transition-colors text-agro-950 font-bold underline decoration-agro-600 underline-offset-4" data-set-lang="es">ES</button>
+          <a href="{{ lang_links.es }}" hreflang="es" lang="es" title="Español" class="lang-btn inline-block px-1.5 py-0.5 transition-colors text-agro-950 font-bold underline decoration-agro-600 underline-offset-4" data-set-lang="es">ES</a>
         </div>
 
-        <a href="{% url 'landing:cotizador' %}" class="px-5 py-2.5 rounded-full bg-agro-600 hover:bg-agro-700 text-white font-bold text-[11px] uppercase tracking-[0.14em] transition-all duration-300 shadow-sm" data-i18n="nav_cta">
+        <a href="{% url 'landing:cotizador' %}" class="whitespace-nowrap px-5 py-2.5 rounded-full bg-agro-600 hover:bg-agro-700 text-white font-bold text-[11px] uppercase tracking-[0.14em] transition-all duration-300 shadow-sm" data-i18n="nav_cta">
           ¿DESEAS UN TRATO?
         </a>
       </div>
 
       <!-- Mobile Hamburger & Lang -->
-      <div class="flex md:hidden items-center gap-3">
+      <div class="flex nav:hidden items-center gap-3">
         <div class="flex items-center gap-1 text-xs font-semibold text-agro-800">
-          <button type="button" class="lang-btn px-1.5 py-0.5" data-set-lang="en">EN</button>
+          <a href="{{ lang_links.en }}" hreflang="en" lang="en" title="English" class="lang-btn inline-block px-1.5 py-0.5" data-set-lang="en">EN</a>
           <span>|</span>
-          <button type="button" class="lang-btn px-1.5 py-0.5 font-bold text-agro-950" data-set-lang="es">ES</button>
+          <a href="{{ lang_links.es }}" hreflang="es" lang="es" title="Español" class="lang-btn inline-block px-1.5 py-0.5 font-bold text-agro-950" data-set-lang="es">ES</a>
         </div>
         <button id="mobile-menu-toggle" class="text-agro-950 p-2 focus:outline-none" aria-label="Abrir Menú">
           <i data-lucide="menu" class="w-6 h-6"></i>
@@ -159,11 +140,12 @@
     </div>
 
     <!-- Mobile Dropdown -->
-    <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-agro-200 mt-3.5 px-6 py-5 shadow-lg space-y-3">
+    <div id="mobile-menu" class="hidden nav:hidden bg-white border-b border-agro-200 mt-3.5 px-6 py-5 shadow-lg space-y-3">
       <a href="{% url 'landing:index' %}" class="block text-agro-950 text-xs uppercase tracking-widest font-bold py-2 hover:text-agro-600" data-i18n="nav_home">INICIO</a>
       <a href="{% url 'landing:nosotros' %}" class="block text-agro-950 text-xs uppercase tracking-widest font-bold py-2 hover:text-agro-600" data-i18n="nav_origin">SOBRE NOSOTROS</a>
       <a href="{% url 'landing:productos' %}" class="block text-agro-950 text-xs uppercase tracking-widest font-bold py-2 hover:text-agro-600" data-i18n="nav_products">PRODUCTOS</a>
       <a href="{% url 'landing:calidad' %}" class="block text-agro-950 text-xs uppercase tracking-widest font-bold py-2 hover:text-agro-600" data-i18n="nav_quality">CERTIFICACIONES</a>
+      <a href="{% url 'landing:social' %}" class="block text-agro-950 text-xs uppercase tracking-widest font-bold py-2 hover:text-agro-600" data-i18n="nav_social">SOCIAL</a>
       <a href="{% url 'landing:index' %}#contacto" class="block text-agro-950 text-xs uppercase tracking-widest font-bold py-2 hover:text-agro-600" data-i18n="nav_contact">CONTACTO</a>
       <a href="{% url 'landing:cotizador' %}" class="block text-center py-3 rounded-full bg-agro-600 text-white font-bold text-xs uppercase tracking-widest transition-colors mt-2" data-i18n="nav_cta">
         ¿DESEAS UN TRATO?
@@ -197,7 +179,12 @@
           <img src="{% static 'images/agrosurlogo-light.png' %}" alt="AGRO SUR LATINO S.A.C." class="h-11 w-auto object-contain">
           <div class="text-xs text-agro-200/80 space-y-1">
             <p class="font-semibold text-white">AGRO SUR LATINO S.A.C. • RUC 20517805662</p>
-            <p>{{ company_address }}, Lima - Perú • <a href="mailto:{{ company_email }}" class="text-agro-300 hover:underline">{{ company_email }}</a></p>
+            <p><a href="{{ company_maps_url }}" target="_blank" rel="noopener" class="hover:text-white hover:underline" title="Ver en Google Maps">{{ company_address }}, Lima - Perú</a></p>
+            <p class="flex flex-wrap items-center gap-x-4 gap-y-1">
+              <a href="mailto:{{ company_email }}" class="text-agro-300 hover:underline">{{ company_email }}</a>
+              {% if company_phone_href %}<a href="{{ company_phone_href }}" class="text-agro-300 hover:underline">{{ company_phone }}</a>{% endif %}
+              {% if company_whatsapp_url %}<a href="{{ company_whatsapp_url }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-agro-600 hover:bg-agro-500 text-white font-semibold transition-colors">WhatsApp</a>{% endif %}
+            </p>
           </div>
         </div>
 
@@ -206,20 +193,21 @@
           <a href="{% url 'landing:nosotros' %}" class="hover:text-white transition-colors" data-i18n="nav_origin">Sobre Nosotros</a>
           <a href="{% url 'landing:productos' %}" class="hover:text-white transition-colors" data-i18n="nav_products">Productos</a>
           <a href="{% url 'landing:calidad' %}" class="hover:text-white transition-colors" data-i18n="nav_quality">Certificaciones</a>
+          <a href="{% url 'landing:social' %}" class="hover:text-white transition-colors" data-i18n="nav_social">Social</a>
           <a href="{% url 'landing:cotizador' %}" class="hover:text-white transition-colors" data-i18n="nav_quote">Cotizador</a>
         </div>
 
       </div>
 
       <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-[11px] text-agro-300/70 gap-3">
-        <p>&copy; 2026 AGRO SUR LATINO S.A.C. • De los productores hacia el mundo.</p>
-        <p>HACCP • USDA Organic • EU Organic • JAS • FDA • BRCGS</p>
+        <p>&copy; {% now 'Y' %} AGRO SUR LATINO S.A.C. • <span>Un futuro sembrado hace miles de años.</span></p>
+        <p>{% for name in cert_names %}{{ name }}{% if not forloop.last %} • {% endif %}{% endfor %}</p>
       </div>
     </div>
   </footer>
 
   <!-- Scripts -->
-  <script src="{% static 'js/main.js' %}?v=7"></script>
+  <script src="{% static 'js/main.js' %}?v=16"></script>
   {% block extra_js %}{% endblock %}
 </body>
 </html>

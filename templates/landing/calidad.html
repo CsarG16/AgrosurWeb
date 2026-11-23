@@ -1,12 +1,15 @@
 {% extends 'landing/base.html' %}
 {% load static %}
 
-{% block title %}Garantía Sanitaria & Certificaciones Globales | Agro Sur Latino S.A.C.{% endblock %}
+{% block title %}Garantía Sanitaria y Certificaciones Globales | Agro Sur Latino S.A.C.{% endblock %}
 
 {% block title_en %}Food Safety & Global Certifications | Agro Sur Latino S.A.C.{% endblock %}
-{% block meta_description %}Certificaciones y estándares de calidad de Agro Sur Latino S.A.C.: HACCP, JAS, USDA Organic, EU Organic y BRCGS.{% endblock %}
+{% block meta_description %}Certificaciones y estándares de calidad de Agro Sur Latino S.A.C.: {{ cert_names_text }}.{% endblock %}
 {% block og_title %}Calidad y certificaciones | Agro Sur Latino{% endblock %}
-{% block og_desc_inner %}Certificaciones y estándares de calidad de Agro Sur Latino S.A.C.: HACCP, JAS, USDA Organic, EU Organic y BRCGS.{% endblock %}
+{% block og_desc_inner %}Certificaciones y estándares de calidad de Agro Sur Latino S.A.C.: {{ cert_names_text }}.{% endblock %}
+{% block meta_description_en %}Quality certifications and standards of Agro Sur Latino S.A.C.: {{ cert_names_text }}.{% endblock %}
+{% block og_title_en %}Quality and certifications | Agro Sur Latino{% endblock %}
+{% block og_desc_inner_en %}Quality certifications and standards of Agro Sur Latino S.A.C.: {{ cert_names_text }}.{% endblock %}
 
 {% block content %}
 <!-- Visual Header -->
@@ -15,7 +18,7 @@
     <div>
       <span class="text-xs uppercase tracking-[0.2em] text-xpo-red font-bold block mb-2" data-i18n="cert_tag">ESTÁNDARES INTERNACIONALES</span>
       <h1 class="font-serif font-semibold text-4xl sm:text-5xl text-stone-900 tracking-tight" data-i18n="cert_title">
-        Garantía Sanitaria & Certificaciones
+        Garantía Sanitaria y Certificaciones
       </h1>
     </div>
     <a href="{% url 'landing:cotizador' %}" class="px-7 py-3 rounded-full bg-xpo-red hover:bg-xpo-redDark text-white font-semibold text-xs uppercase tracking-widest transition-colors">
@@ -29,13 +32,13 @@
   <div class="marquee-track flex items-center gap-10">
     {% for cert in certifications %}
     <div class="flex items-center gap-3 px-5 py-2.5 rounded-xl bg-white border border-stone-200/80 shadow-2xs shrink-0">
-      <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="h-10 w-auto object-contain">
+      <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="h-10 w-auto object-contain" loading="lazy" decoding="async">
       <span class="text-xs font-bold text-stone-800 uppercase tracking-wider">{{ cert.name }}</span>
     </div>
     {% endfor %}
     {% for cert in certifications %}
-    <div class="flex items-center gap-3 px-5 py-2.5 rounded-xl bg-white border border-stone-200/80 shadow-2xs shrink-0">
-      <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="h-10 w-auto object-contain">
+    <div aria-hidden="true" class="flex items-center gap-3 px-5 py-2.5 rounded-xl bg-white border border-stone-200/80 shadow-2xs shrink-0">
+      <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="h-10 w-auto object-contain" loading="lazy" decoding="async">
       <span class="text-xs font-bold text-stone-800 uppercase tracking-wider">{{ cert.name }}</span>
     </div>
     {% endfor %}
@@ -51,7 +54,7 @@
       <div class="card-hover-effect p-7 rounded-2xl bg-[#fbfaf6] border border-xpo-border flex flex-col items-center text-center justify-between space-y-5">
         
         <div class="w-full h-36 bg-white rounded-xl border border-stone-200/80 p-5 flex items-center justify-center shadow-2xs">
-          <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="max-h-24 max-w-full object-contain transition-transform duration-300 hover:scale-105">
+          <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="max-h-24 max-w-full object-contain transition-transform duration-300 hover:scale-105" loading="lazy" decoding="async">
         </div>
 
         <div class="space-y-1.5">
