@@ -15,7 +15,7 @@
 <!-- Minimal Visual Header -->
 <section class="py-12 xpodeka-wave-bg border-b border-xpo-border/80">
   <div class="max-w-7xl mx-auto px-6 lg:px-10">
-    <span class="text-xs uppercase tracking-[0.2em] text-xpo-red font-bold block mb-2">MESA COMERCIAL B2B • RUC E INTERNACIONAL</span>
+    <span class="text-xs uppercase tracking-[0.2em] text-agro-600 font-bold block mb-2">MESA COMERCIAL B2B • RUC E INTERNACIONAL</span>
     <h1 class="font-serif font-semibold text-3xl sm:text-5xl text-stone-900 tracking-tight" data-i18n="quote_section_title">
       ¿Deseas un trato? Cotiza en línea
     </h1>
@@ -39,7 +39,7 @@
         </div>
       </div>
       <div class="flex flex-wrap items-center gap-3">
-        <a id="quote-success-pdf-btn" href="#" target="_blank" class="px-6 py-3 rounded-full bg-xpo-red hover:bg-xpo-redDark text-white text-xs font-semibold uppercase tracking-wider inline-flex items-center gap-2 transition-colors shadow-sm">
+        <a id="quote-success-pdf-btn" href="#" target="_blank" class="px-6 py-3 rounded-full bg-agro-600 hover:bg-agro-700 text-white text-xs font-semibold uppercase tracking-wider inline-flex items-center gap-2 transition-colors shadow-sm">
           <i data-lucide="file-text" class="w-4 h-4"></i>
           <span>Descargar Proforma PDF</span>
         </a>
@@ -57,24 +57,24 @@
       <div class="bg-[#fbfaf6] p-7 sm:p-9 rounded-2xl border border-xpo-border space-y-6">
         <div class="flex items-center justify-between pb-4 border-b border-xpo-border">
           <div class="flex items-center gap-3">
-            <div class="w-7 h-7 rounded-full bg-xpo-red text-white font-bold flex items-center justify-center text-xs">1</div>
+            <div class="w-7 h-7 rounded-full bg-agro-600 text-white font-bold flex items-center justify-center text-xs">1</div>
             <h3 class="font-serif font-semibold text-xl text-stone-900" data-i18n="step2_title">Selecciona tus Productos y Volúmenes</h3>
           </div>
                   </div>
 
         <div id="quote-items-selection" class="grid grid-cols-1 md:grid-cols-2 gap-4">
           {% for product in products %}
-          <div class="quote-product-row border border-stone-200 rounded-xl p-4 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white">
+          <div class="quote-product-row min-w-0 border border-stone-200 rounded-xl p-4 transition-all flex flex-col xl:flex-row xl:items-center justify-between gap-4 bg-white">
             
-            <label class="flex items-center gap-4 cursor-pointer flex-1">
-              <input type="checkbox" value="{{ product.id }}" data-name="{{ product.name }}" {% if product.slug == selected_slug %}checked{% endif %} class="quote-prod-checkbox w-5 h-5 text-xpo-red rounded focus:ring-xpo-red cursor-pointer">
+            <label class="flex items-center gap-4 cursor-pointer flex-1 min-w-0">
+              <input type="checkbox" value="{{ product.id }}" data-name="{{ product.name }}" {% if product.slug == selected_slug %}checked{% endif %} class="quote-prod-checkbox w-5 h-5 text-agro-600 rounded focus:ring-agro-600 cursor-pointer">
               
               <div class="w-16 h-16 rounded-xl overflow-hidden shrink-0 border border-stone-200">
                 <img src="{{ product.get_image }}" alt="{{ product.name }}" class="w-full h-full object-cover" loading="lazy" decoding="async">
               </div>
 
-              <div>
-                <span class="text-[10px] font-bold uppercase tracking-wider text-xpo-red block">{{ product.modality_label_es }}</span>
+              <div class="min-w-0">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-agro-600 block">{{ product.modality_label_es }}</span>
                 <h4 class="font-serif font-semibold text-stone-900 text-base bilingual-name" data-es="{{ product.name }}" data-en="{{ product.name_en|default:product.name }}">
                   {{ product.name }}
                 </h4>
@@ -82,12 +82,12 @@
               </div>
             </label>
 
-            <div class="quote-controls flex items-center gap-2 opacity-40 pointer-events-none transition-opacity shrink-0">
-              <div class="w-20">
+            <div class="quote-controls flex items-center gap-2 w-full xl:w-auto opacity-40 pointer-events-none transition-opacity xl:shrink-0">
+              <div class="w-20 shrink-0">
                 <input type="number" min="1" max="50" step="any" value="1" class="quote-qty-input w-full px-2.5 py-2 rounded-lg border border-stone-300 text-xs font-bold text-stone-900 text-center" aria-label="Cantidad">
               </div>
 
-              <div class="w-40">
+              <div class="flex-1 min-w-0 xl:flex-none xl:w-40">
                 <select class="quote-unit-select w-full px-2.5 py-2 rounded-lg border border-stone-300 text-xs font-semibold text-stone-800 bg-white" aria-label="Unidad">
                   <option value="CONTENEDOR_FCL" data-scope="export" selected>Contenedor FCL (~20 TM)</option>
                   <option value="TONELADAS" data-scope="export">Toneladas (TM)</option>
@@ -108,40 +108,40 @@
         
         <div class="lg:col-span-7 bg-[#fbfaf6] p-7 sm:p-9 rounded-2xl border border-xpo-border space-y-6">
           <div class="flex items-center gap-3 pb-4 border-b border-xpo-border">
-            <div class="w-7 h-7 rounded-full bg-xpo-red text-white font-bold flex items-center justify-center text-xs">2</div>
+            <div class="w-7 h-7 rounded-full bg-agro-600 text-white font-bold flex items-center justify-center text-xs">2</div>
             <h3 class="font-serif font-semibold text-xl text-stone-900" data-i18n="step1_title">Datos Fiscales y Despacho</h3>
           </div>
 
           <!-- Radios Selector -->
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <label class="cursor-pointer p-3 rounded-xl border border-stone-200 bg-white hover:border-xpo-red transition-colors has-[:checked]:border-xpo-red has-[:checked]:bg-red-50/30">
+            <label class="cursor-pointer p-3 rounded-xl border border-stone-200 bg-white hover:border-agro-600 transition-colors has-[:checked]:border-agro-600 has-[:checked]:bg-agro-50/60">
               <div class="flex items-center justify-between mb-1">
-                <i data-lucide="building-2" class="w-4 h-4 text-xpo-red"></i>
-                <input type="radio" name="client_type" value="JURIDICA_RUC" checked class="w-4 h-4 text-xpo-red">
+                <i data-lucide="building-2" class="w-4 h-4 text-agro-600"></i>
+                <input type="radio" name="client_type" value="JURIDICA_RUC" checked class="w-4 h-4 text-agro-600">
               </div>
               <span class="block font-semibold text-xs text-stone-900" data-i18n="opt_juridica">Empresa (RUC 20)</span>
             </label>
 
-            <label class="cursor-pointer p-3 rounded-xl border border-stone-200 bg-white hover:border-xpo-red transition-colors has-[:checked]:border-xpo-red has-[:checked]:bg-red-50/30">
+            <label class="cursor-pointer p-3 rounded-xl border border-stone-200 bg-white hover:border-agro-600 transition-colors has-[:checked]:border-agro-600 has-[:checked]:bg-agro-50/60">
               <div class="flex items-center justify-between mb-1">
-                <i data-lucide="briefcase" class="w-4 h-4 text-xpo-red"></i>
-                <input type="radio" name="client_type" value="NATURAL_RUC" class="w-4 h-4 text-xpo-red">
+                <i data-lucide="briefcase" class="w-4 h-4 text-agro-600"></i>
+                <input type="radio" name="client_type" value="NATURAL_RUC" class="w-4 h-4 text-agro-600">
               </div>
               <span class="block font-semibold text-xs text-stone-900" data-i18n="opt_natural_ruc">Negocio (RUC 10)</span>
             </label>
 
-            <label class="cursor-pointer p-3 rounded-xl border border-stone-200 bg-white hover:border-xpo-red transition-colors has-[:checked]:border-xpo-red has-[:checked]:bg-red-50/30">
+            <label class="cursor-pointer p-3 rounded-xl border border-stone-200 bg-white hover:border-agro-600 transition-colors has-[:checked]:border-agro-600 has-[:checked]:bg-agro-50/60">
               <div class="flex items-center justify-between mb-1">
-                <i data-lucide="user" class="w-4 h-4 text-xpo-red"></i>
-                <input type="radio" name="client_type" value="NATURAL_DNI" class="w-4 h-4 text-xpo-red">
+                <i data-lucide="user" class="w-4 h-4 text-agro-600"></i>
+                <input type="radio" name="client_type" value="NATURAL_DNI" class="w-4 h-4 text-agro-600">
               </div>
               <span class="block font-semibold text-xs text-stone-900" data-i18n="opt_natural_dni">Persona (DNI)</span>
             </label>
 
-            <label class="cursor-pointer p-3 rounded-xl border border-stone-200 bg-white hover:border-xpo-red transition-colors has-[:checked]:border-xpo-red has-[:checked]:bg-red-50/30">
+            <label class="cursor-pointer p-3 rounded-xl border border-stone-200 bg-white hover:border-agro-600 transition-colors has-[:checked]:border-agro-600 has-[:checked]:bg-agro-50/60">
               <div class="flex items-center justify-between mb-1">
-                <i data-lucide="globe" class="w-4 h-4 text-xpo-red"></i>
-                <input type="radio" name="client_type" value="EXTRANJERO" class="w-4 h-4 text-xpo-red">
+                <i data-lucide="globe" class="w-4 h-4 text-agro-600"></i>
+                <input type="radio" name="client_type" value="EXTRANJERO" class="w-4 h-4 text-agro-600">
               </div>
               <span class="block font-semibold text-xs text-stone-900" data-i18n="opt_extranjero">Internacional</span>
             </label>
@@ -150,33 +150,33 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label class="block text-[11px] font-bold uppercase tracking-wider text-stone-700 mb-1" data-i18n="lbl_legal_name">Razón Social / Nombre *</label>
-              <input type="text" id="input-legal-name" required placeholder="Ej: IMPORTADORA ANDINA S.A.C." class="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-sm outline-none focus:border-xpo-red">
+              <input type="text" id="input-legal-name" required placeholder="Ej: IMPORTADORA ANDINA S.A.C." class="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-sm outline-none focus:border-agro-600">
             </div>
 
             <div>
               <label id="lbl-doc-number" class="block text-[11px] font-bold uppercase tracking-wider text-stone-700 mb-1">RUC Empresa (11 dígitos) *</label>
-              <input type="text" id="input-doc-number" required placeholder="20123456789" maxlength="11" class="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-sm font-mono outline-none focus:border-xpo-red">
+              <input type="text" id="input-doc-number" required placeholder="20123456789" maxlength="11" class="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-sm font-mono outline-none focus:border-agro-600">
               <span id="doc-validation-hint" class="text-[10px] text-stone-400 mt-0.5 block">SUNAT: 11 dígitos iniciando con 20</span>
             </div>
 
             <div>
               <label class="block text-[11px] font-bold uppercase tracking-wider text-stone-700 mb-1" data-i18n="lbl_contact_name">Contacto *</label>
-              <input type="text" id="input-contact-name" required placeholder="Nombre de contacto" class="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-sm outline-none focus:border-xpo-red">
+              <input type="text" id="input-contact-name" required placeholder="Nombre de contacto" class="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-sm outline-none focus:border-agro-600">
             </div>
 
             <div id="country-field-container">
               <label class="block text-[11px] font-bold uppercase tracking-wider text-stone-700 mb-1" data-i18n="lbl_country">País *</label>
-              <input type="text" id="input-country" value="Perú" required placeholder="País de destino" class="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-sm outline-none focus:border-xpo-red">
+              <input type="text" id="input-country" value="Perú" required placeholder="País de destino" class="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-sm outline-none focus:border-agro-600">
             </div>
 
             <div>
               <label class="block text-[11px] font-bold uppercase tracking-wider text-stone-700 mb-1" data-i18n="lbl_email">Correo *</label>
-              <input type="email" id="input-email" required placeholder="compras@empresa.com" class="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-sm outline-none focus:border-xpo-red">
+              <input type="email" id="input-email" required placeholder="compras@empresa.com" class="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-sm outline-none focus:border-agro-600">
             </div>
 
             <div>
               <label class="block text-[11px] font-bold uppercase tracking-wider text-stone-700 mb-1" data-i18n="lbl_phone">Teléfono / WhatsApp *</label>
-              <input type="text" id="input-phone" required placeholder="+51 987 654 321" class="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-sm outline-none focus:border-xpo-red">
+              <input type="text" id="input-phone" required placeholder="+51 987 654 321" class="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-sm outline-none focus:border-agro-600">
             </div>
 
             <div id="incoterm-field">
@@ -191,13 +191,13 @@
 
             <div id="port-field">
               <label class="block text-[11px] font-bold uppercase tracking-wider text-stone-700 mb-1" data-i18n="lbl_port">Puerto / Ciudad Destino</label>
-              <input type="text" id="input-destination-port" placeholder="Ej: Rotterdam, Miami, Callao..." class="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-sm outline-none focus:border-xpo-red">
+              <input type="text" id="input-destination-port" placeholder="Ej: Rotterdam, Miami, Callao..." class="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-sm outline-none focus:border-agro-600">
             </div>
           </div>
 
           <div>
             <label class="block text-[11px] font-bold uppercase tracking-wider text-stone-700 mb-1" data-i18n="lbl_notes">Presentación requerida (Orgánico / Convencional / Sacos)</label>
-            <textarea id="input-notes" rows="2" placeholder="Especificar modalidad orgánica o convencional y empaque..." class="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-sm outline-none focus:border-xpo-red"></textarea>
+            <textarea id="input-notes" rows="2" placeholder="Especificar modalidad orgánica o convencional y empaque..." class="w-full px-4 py-3 rounded-xl border border-stone-300 bg-white text-sm outline-none focus:border-agro-600"></textarea>
           </div>
         </div>
 
@@ -205,7 +205,7 @@
         <div class="lg:col-span-5 bg-stone-900 text-white p-7 sm:p-8 rounded-2xl shadow-xl space-y-6">
           <div class="flex items-center justify-between pb-4 border-b border-stone-800">
             <img src="{% static 'images/agrosurlogo-light.png' %}?v=2" alt="Agro Sur Latino" class="h-6 w-auto object-contain">
-            <span class="text-xs px-3 py-1 rounded-full bg-xpo-red text-white font-semibold">
+            <span class="text-xs px-3 py-1 rounded-full bg-agro-600 text-white font-semibold">
               <span id="quote-selected-count">0</span> seleccionados
             </span>
           </div>
@@ -226,7 +226,7 @@
             </div>
           </div>
 
-          <button type="submit" class="w-full py-4 rounded-full bg-xpo-red hover:bg-xpo-redDark text-white font-semibold text-xs uppercase tracking-[0.16em] transition-colors flex items-center justify-center gap-2 shadow-md">
+          <button type="submit" class="w-full py-4 rounded-full bg-agro-600 hover:bg-agro-700 text-white font-semibold text-xs uppercase tracking-[0.16em] transition-colors flex items-center justify-center gap-2 shadow-md">
             <i data-lucide="send" class="w-4 h-4"></i>
             <span data-i18n="btn_submit_quote">Generar Cotización y PDF</span>
           </button>

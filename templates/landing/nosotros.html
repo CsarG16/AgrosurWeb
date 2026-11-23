@@ -18,7 +18,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
       
       <div class="lg:col-span-6 space-y-5">
-        <span class="text-xs uppercase tracking-[0.2em] text-xpo-red font-bold block" data-i18n="about_tag">
+        <span class="text-xs uppercase tracking-[0.2em] text-agro-600 font-bold block" data-i18n="about_tag">
           SOBRE NOSOTROS
         </span>
         <h1 class="font-serif font-semibold text-4xl sm:text-5xl text-stone-900 tracking-tight leading-tight" data-i18n="trace_title">
@@ -56,7 +56,7 @@
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
       {% for stat in stats %}
       <div class="p-6 rounded-2xl bg-[#fbfaf6] border border-xpo-border/80 text-center">
-        <div class="stat-counter font-serif font-semibold text-3xl sm:text-4xl text-xpo-red tracking-tight" data-target="{{ stat.value }}">
+        <div class="stat-counter font-serif font-semibold text-3xl sm:text-4xl text-agro-600 tracking-tight" data-target="{{ stat.value }}">
           {{ stat.value }}
         </div>
         {% if stat.value == company_founded_year|stringformat:"s" %}
@@ -82,7 +82,7 @@
     <!-- Official Embedded YouTube Video from agrosurlatino.com/empresa/ -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center bg-[#fbfaf6] p-8 sm:p-10 rounded-3xl border border-xpo-border">
       <div class="lg:col-span-5 space-y-4">
-        <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-xpo-red block">VIDEO INSTITUCIONAL</span>
+        <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-agro-600 block">VIDEO INSTITUCIONAL</span>
         <h2 class="font-serif font-semibold text-2xl sm:text-3xl text-stone-900 leading-snug">
           Conoce nuestro proceso desde el campo andino hasta la exportación
         </h2>
@@ -100,7 +100,7 @@
     <!-- Misión & Visión Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
       <div class="p-8 sm:p-10 rounded-2xl bg-[#fbfaf6] border border-xpo-border space-y-4">
-        <div class="w-11 h-11 rounded-xl bg-xpo-red text-white flex items-center justify-center">
+        <div class="w-11 h-11 rounded-xl bg-agro-600 text-white flex items-center justify-center">
           <i data-lucide="target" class="w-5 h-5"></i>
         </div>
         <h2 class="font-serif font-semibold text-2xl text-stone-900" data-i18n="mission_title">Nuestra Misión</h2>
@@ -128,7 +128,7 @@
           <img src="{% static 'images/company/campo-quinua.webp' %}" alt="Origen y Campos en Ayacucho" class="w-full h-full object-cover" loading="lazy" decoding="async">
         </div>
         <div class="p-7 space-y-3 flex-1">
-          <span class="text-[11px] font-bold uppercase tracking-widest text-xpo-red">01 • ORIGEN Y ACOPIO</span>
+          <span class="text-[11px] font-bold uppercase tracking-widest text-agro-600">01 • ORIGEN Y ACOPIO</span>
           <h3 class="font-serif font-semibold text-xl text-stone-900">Centros de Acopio en Ayacucho y Andes</h3>
           <p class="text-stone-600 text-xs sm:text-sm leading-relaxed">
             Trabajamos directamente con productores locales en Quinua, Acocro, Tambillo, Acos Vinchos y Morochucos (Ayacucho), impulsando prácticas sostenibles y cultivo orgánico certificado.
@@ -141,7 +141,7 @@
           <img src="{% static 'images/company/proceso.webp' %}" alt="Procesamiento de Granos en Huachipa" class="w-full h-full object-cover" loading="lazy" decoding="async">
         </div>
         <div class="p-7 space-y-3 flex-1">
-          <span class="text-[11px] font-bold uppercase tracking-widest text-xpo-red">02 • SEDE HUACHIPA (LIMA)</span>
+          <span class="text-[11px] font-bold uppercase tracking-widest text-agro-600">02 • SEDE HUACHIPA (LIMA)</span>
           <h3 class="font-serif font-semibold text-xl text-stone-900">Procesamiento y Selección de Granos</h3>
           <p class="text-stone-600 text-xs sm:text-sm leading-relaxed">
             Nuestra sede principal en Huachipa (Lima) asegura procesamiento bajo normas HACCP y BRCGS con trazabilidad de lote completa.
@@ -154,7 +154,7 @@
           <img src="{% static 'images/company/sacos.webp' %}" alt="Almacenes Propios y Sacos de Exportación" class="w-full h-full object-cover" loading="lazy" decoding="async">
         </div>
         <div class="p-7 space-y-3 flex-1">
-          <span class="text-[11px] font-bold uppercase tracking-widest text-xpo-red">03 • ALMACENES Y EXPORTACIÓN</span>
+          <span class="text-[11px] font-bold uppercase tracking-widest text-agro-600">03 • ALMACENES Y EXPORTACIÓN</span>
           <h3 class="font-serif font-semibold text-xl text-stone-900">Stock Permanente los 365 Días</h3>
           <p class="text-stone-600 text-xs sm:text-sm leading-relaxed">
             Almacenes propios con stock todo el año en sacos multipliego de 25 kg y 50 lb, listos para despacho en contenedores FCL desde el Puerto del Callao hacia el mundo.
