@@ -128,9 +128,11 @@ def generate_quotation_pdf(quote):
     logo_path = settings.BASE_DIR / 'static' / 'images' / 'agrosurlogo.png'
     if logo_path.exists():
         try:
-            logo = Image(str(logo_path), width=110, height=110 * 0.35)
+            from PIL import Image as PILImage
+            with PILImage.open(logo_path) as pil_logo:
+                ratio = pil_logo.height / pil_logo.width  # conserva la proporción real del logo
+            logo = Image(str(logo_path), width=130, height=130 * ratio)
             logo.hAlign = 'LEFT'
-            logo._restrictSize(110, 60)
             header_left.insert(0, logo)
         except Exception:
             pass
