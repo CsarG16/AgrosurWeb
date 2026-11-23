@@ -55,7 +55,7 @@ const translations = {
     lbl_notes: "Presentación requerida (Orgánico / Convencional / Sacos)",
     btn_submit_quote: "Generar Cotización y PDF",
     modal_quote_btn: "Cotizar este producto",
-    about_lead: "Fundada en el año <strong>2007</strong>, <strong>AGRO SUR LATINO S.A.C.</strong> (RUC 20517805662) es una empresa peruana con amplia trayectoria en el mercado nacional e internacional, especializada en el acopio, procesamiento, comercialización y exportación de granos andinos, semillas y menestras en presentaciones <strong>Orgánicas y Convencionales</strong>.",
+    about_lead: "Fundada en el año <strong>2007</strong>, <strong>AGRO SUR LATINO S.A.C.</strong> es una empresa peruana con amplia trayectoria en el mercado nacional e internacional, especializada en el acopio, procesamiento, comercialización y exportación de granos andinos, semillas y menestras en presentaciones <strong>Orgánicas y Convencionales</strong>.",
     about_sub: "Contamos con almacenes propios estratégicamente ubicados en las principales regiones productoras del Perú (Ayacucho, Cusco, Puno y Costa) y nuestra planta central en Huachipa (Lima), lo que nos permite garantizar stock permanente y abastecimiento seguro durante todo el año.",
     mission_desc: "Lograr una mejora continua en nuestras actividades de acopio, procesamiento y comercialización para brindar granos andinos, semillas y menestras de óptima calidad, cumpliendo estrictamente con los estándares de inocuidad exigidos por nuestros clientes nacionales e internacionales.",
     vision_desc: "Consolidarnos como la empresa peruana líder en el suministro y agroexportación de granos andinos y productos orgánicos, garantizando trazabilidad integral, sostenibilidad con nuestras comunidades productoras y stock permanente durante todo el año.",
@@ -114,7 +114,7 @@ const translations = {
     lbl_notes: "Required presentation (Organic / Conventional / Bags)",
     btn_submit_quote: "Generate Quote & PDF",
     modal_quote_btn: "Quote this product",
-    about_lead: "Founded in <strong>2007</strong>, <strong>AGRO SUR LATINO S.A.C.</strong> (RUC 20517805662) is a Peruvian company with a long track record in domestic and international markets, specialized in sourcing, processing, trading and exporting Andean grains, seeds and pulses in <strong>Organic and Conventional</strong> presentations.",
+    about_lead: "Founded in <strong>2007</strong>, <strong>AGRO SUR LATINO S.A.C.</strong> is a Peruvian company with a long track record in domestic and international markets, specialized in sourcing, processing, trading and exporting Andean grains, seeds and pulses in <strong>Organic and Conventional</strong> presentations.",
     about_sub: "We operate our own warehouses in the main producing regions of Peru (Ayacucho, Cusco, Puno and the Coast) and our central plant in Huachipa (Lima), which lets us guarantee permanent stock and a reliable supply all year round.",
     mission_desc: "To achieve continuous improvement in our sourcing, processing and trading activities in order to deliver top-quality Andean grains, seeds and pulses, strictly meeting the food-safety standards required by our domestic and international customers.",
     vision_desc: "To become the leading Peruvian company in the supply and export of Andean grains and organic products, ensuring full traceability, sustainability with our producer communities and permanent stock all year round.",
@@ -332,7 +332,7 @@ function updateClientTypeHints() {
 
   if (selectedType === 'JURIDICA_RUC') {
     docLabel.innerText = isEn ? "Company RUC (11 digits, starts with 20) *" : "RUC Empresa (11 dígitos, inicia con 20) *";
-    docInput.placeholder = "20517805662";
+    docInput.placeholder = "20123456789";
     docInput.maxLength = 11;
     docHint.innerText = isEn ? "SUNAT Tax ID: 11 digits starting with 20" : "Ley del RUC (SUNAT): 11 dígitos numéricos que inician con 20";
     if (countryInput) countryInput.value = "Perú";

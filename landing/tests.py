@@ -68,7 +68,7 @@ class QuotationAndDecoupledPagesTests(TestCase):
         res_nos = self.client.get(reverse('landing:nosotros'))
         self.assertEqual(res_nos.status_code, 200)
         self.assertContains(res_nos, "AGRO SUR LATINO S.A.C.")
-        self.assertContains(res_nos, "20517805662")
+        self.assertNotContains(res_nos, "20517805662")  # el RUC de la empresa no se publica en la web
 
         # 4. Página de Calidad / Certificaciones
         res_cal = self.client.get(reverse('landing:calidad'))
