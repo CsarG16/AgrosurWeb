@@ -45,7 +45,7 @@ class QuotationAndDecoupledPagesTests(TestCase):
         self.assertEqual(response_es.status_code, 200)
         self.assertContains(response_es, "AGRO SUR LATINO")
         self.assertContains(response_es, "Quinua Blanca en Grano")
-        self.assertContains(response_es, "Granos andinos del Perú, con calidad de exportación")
+        self.assertRegex(response_es.content.decode(), r'<h1[^>]*>\s*Un futuro sembrado hace miles de años')
         self.assertContains(response_es, "Mejora continua. Stock todo el año.")
         self.assertContains(response_es, "Certificaciones")
 
@@ -459,7 +459,8 @@ class EnglishServerHtmlTests(TestCase):
 
     def test_h1_y_textos_en_ingles_desde_el_servidor(self):
         cases = {
-            '/en/nosotros/': 'A future sown thousands of years ago',
+            '/en/': 'A future sown thousands of years ago',
+            '/en/nosotros/': 'Peruvian Andean grains, export quality',
             '/en/productos/': 'Our Products',
             '/en/calidad/': 'Food Safety &amp; Global Certifications',
             '/en/cotizador/': 'Request a quote online',
@@ -468,8 +469,8 @@ class EnglishServerHtmlTests(TestCase):
         for path, h1 in cases.items():
             html = self.client.get(path).content.decode()
             self.assertRegex(html, r'<h1[^>]*>\s*' + h1)
-        # la versión en español no cambia
-        self.assertContains(self.client.get('/nosotros/'), 'Un futuro sembrado hace miles de años')
+        # la versión en español: el título de portada pasó a Sobre Nosotros
+        self.assertRegex(self.client.get('/nosotros/').content.decode(), r'<h1[^>]*>\s*Granos andinos del Perú, con calidad de exportación')
 
     def test_formulario_de_contacto_en_ingles(self):
         html = self.client.get('/en/').content.decode()
