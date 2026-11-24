@@ -6,6 +6,7 @@ from django.urls import translate_url
 from django.utils import timezone, translation
 
 from .models import Certification
+from . import i18n
 
 
 def _language_links(request):
@@ -44,4 +45,5 @@ def company(request):
         ),
         'cert_names': cert_names,
         'cert_names_text': ', '.join(cert_names),
+        'i18n_data': i18n.load(),
     }

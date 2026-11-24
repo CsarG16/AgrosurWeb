@@ -82,7 +82,7 @@
             <div class="bg-[#f4f8f2] rounded-2xl border border-agro-200 shadow-2xl p-4">
               <div class="grid grid-cols-3 gap-3.5">
                 {% for cat in categories %}
-                <a href="{% url 'landing:productos' %}?cat={{ cat.slug }}" aria-label="{{ cat.name }}" class="group/item block rounded-xl overflow-hidden bg-white border border-agro-200 hover:border-agro-600 transition-all shadow-2xs">
+                <a href="{% url 'landing:productos' %}?cat={{ cat.slug }}" aria-label="{{ cat.name }}" data-label-en="{{ cat.name_en|default:cat.name }}" class="group/item block rounded-xl overflow-hidden bg-white border border-agro-200 hover:border-agro-600 transition-all shadow-2xs">
                   <div class="h-28 overflow-hidden relative bg-agro-900">
                     <img src="{{ cat.get_image }}" alt="" class="w-full h-full object-cover transition-transform duration-500 group-hover/item:scale-110" loading="lazy" decoding="async">
                     <div class="absolute inset-0 bg-gradient-to-t from-agro-950/70 via-transparent to-transparent"></div>
@@ -207,7 +207,8 @@
   </footer>
 
   <!-- Scripts -->
-  <script src="{% static 'js/main.js' %}?v=17"></script>
+  {{ i18n_data|json_script:"i18n-data" }}
+  <script src="{% static 'js/main.js' %}?v=18"></script>
   {% block extra_js %}{% endblock %}
 </body>
 </html>

@@ -390,10 +390,11 @@ class FinalChangesTests(TestCase):
         return QuoteRequest.objects.get(pk=r.json()['quote_id']), r.json()
 
     def test_lema_nuevo_en_web_y_sin_el_anterior(self):
-        for path in ['/', '/nosotros/', '/en/nosotros/']:
+        for path in ['/', '/nosotros/']:
             html = self.client.get(path).content.decode()
             self.assertIn('Un futuro sembrado hace miles de años', html)
             self.assertNotIn('De los productores hacia el mundo', html)
+        self.assertIn('A future sown thousands of years ago', self.client.get('/en/nosotros/').content.decode())
 
     def test_pagina_social_en_menu_y_sitemap(self):
         res = self.client.get('/social/')
@@ -446,3 +447,47 @@ class FinalChangesTests(TestCase):
         CompanyStat.objects.all().update(value='2000')
         with override_settings(COMPANY_FOUNDED_YEAR=2000):
             self.assertIn(f'{timezone.localdate().year - 2000} años de trayectoria', self.client.get('/nosotros/').content.decode())
+
+
+class EnglishServerHtmlTests(TestCase):
+    """v3: las páginas /en/ llegan del servidor ya en inglés (no solo traducidas por JavaScript)."""
+
+    def setUp(self):
+        cache.clear()
+        cat = ProductCategory.objects.create(name="Granos y Semillas Andinas", name_en="Andean Grains & Seeds", slug="granos", order=1)
+        Product.objects.create(category=cat, name="Habas Secas", name_en="Dry Fava Beans", order=1)
+
+    def test_h1_y_textos_en_ingles_desde_el_servidor(self):
+        cases = {
+            '/en/nosotros/': 'A future sown thousands of years ago',
+            '/en/productos/': 'Our Products',
+            '/en/calidad/': 'Food Safety &amp; Global Certifications',
+            '/en/cotizador/': 'Request a quote online',
+            '/en/social/': 'Strengthening human capabilities',
+        }
+        for path, h1 in cases.items():
+            html = self.client.get(path).content.decode()
+            self.assertRegex(html, r'<h1[^>]*>\s*' + h1)
+        # la versión en español no cambia
+        self.assertContains(self.client.get('/nosotros/'), 'Un futuro sembrado hace miles de años')
+
+    def test_formulario_de_contacto_en_ingles(self):
+        html = self.client.get('/en/').content.decode()
+        for text in ['placeholder="Company *"', 'placeholder="Email *"', 'placeholder="Volume or requirements..."', 'placeholder="Name *"']:
+            self.assertIn(text, html)
+        self.assertNotIn('placeholder="Empresa *"', html)
+
+    def test_nombres_y_etiquetas_de_productos_en_ingles(self):
+        html = self.client.get('/en/productos/').content.decode()
+        self.assertIn('aria-label="View details of Dry Fava Beans"', html)
+        self.assertIn('alt="Dry Fava Beans"', html)
+        self.assertRegex(html, r'data-en="Dry Fava Beans">\s*Dry Fava Beans')
+        self.assertIn('aria-label="Andean Grains &amp; Seeds"', html)
+        # el diccionario para main.js no se traduce (sigue llevando las claves en español)
+        self.assertIn('id="i18n-data"', html)
+        self.assertIn('"Calidad:": "Quality:"', html.replace('\u00e9', 'é'))
+
+    def test_imagen_del_modal_con_src_de_respaldo(self):
+        html = self.client.get('/productos/').content.decode()
+        self.assertIn('id="modal-image" src="data:image/gif;base64,', html)
+        self.assertNotIn('src=""', html)

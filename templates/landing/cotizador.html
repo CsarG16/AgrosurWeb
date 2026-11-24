@@ -70,7 +70,7 @@
               <input type="checkbox" value="{{ product.id }}" data-name="{{ product.name }}" {% if product.slug == selected_slug %}checked{% endif %} class="quote-prod-checkbox w-5 h-5 text-agro-600 rounded focus:ring-agro-600 cursor-pointer">
               
               <div class="w-16 h-16 rounded-xl overflow-hidden shrink-0 border border-stone-200">
-                <img src="{{ product.get_image }}" alt="{{ product.name }}" class="w-full h-full object-cover" loading="lazy" decoding="async">
+                <img src="{{ product.get_image }}" alt="{{ product.name }}" data-alt-es="{{ product.name }}" data-alt-en="{{ product.name_en|default:product.name }}" class="w-full h-full object-cover" loading="lazy" decoding="async">
               </div>
 
               <div class="min-w-0">

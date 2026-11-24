@@ -52,10 +52,10 @@
       {% for product in products %}
       <div class="visual-product-card card-hover-effect group relative rounded-2xl overflow-hidden bg-agro-950 cursor-pointer aspect-[4/4.2] flex flex-col justify-end shadow-md border border-agro-100"
            data-category="{{ product.category.slug|default:'granos-andinos' }}"
-           onclick="openProductModal(this)" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Ver detalles de {{ product.name }}"
+           onclick="openProductModal(this)" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Ver detalles de {{ product.name }}" data-label-en="View details of {{ product.name_en|default:product.name }}"
            data-product='{"id": {{ product.id }}, "slug": "{{ product.slug }}", "name": "{{ product.name|escapejs }}", "name_en": "{{ product.name_en|default:product.name|escapejs }}", "scientific_name": "{{ product.scientific_name|escapejs }}", "modality": "{{ product.modality_label_es|escapejs }}", "modality_en": "{{ product.modality_label_en|escapejs }}", "variety": "{{ product.variety|escapejs }}", "origin": "{{ product.origin|escapejs }}", "origin_en": "{{ product.origin_en|escapejs }}", "season": "{{ product.season|escapejs }}", "season_en": "{{ product.season_en|escapejs }}", "packing_specs": "{{ product.packing_specs|escapejs }}", "packing_specs_en": "{{ product.packing_specs_en|escapejs }}", "image": "{{ product.get_image|escapejs }}"}'>
         
-        <img src="{{ product.get_image }}" alt="{{ product.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" loading="lazy" decoding="async">
+        <img src="{{ product.get_image }}" alt="{{ product.name }}" data-alt-es="{{ product.name }}" data-alt-en="{{ product.name_en|default:product.name }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" loading="lazy" decoding="async">
         <div class="absolute inset-0 bg-gradient-to-t from-agro-950/85 via-transparent to-transparent"></div>
 
         <!-- Bottom Minimal Label: ONLY Name + Green Plus Icon -->
@@ -251,14 +251,14 @@
   <div class="relative w-full overflow-hidden py-2">
     <div class="marquee-track flex items-center gap-6 sm:gap-8">
       {% for cert in certifications %}
-      <a href="{% url 'landing:calidad' %}" class="group flex items-center justify-center w-44 h-24 px-5 py-3 rounded-2xl bg-[#f4f8f2] border border-agro-200 hover:border-agro-600 shadow-2xs transition-all shrink-0" title="{{ cert.name }} — {{ cert.code }}">
+      <a href="{% url 'landing:calidad' %}" class="group flex items-center justify-center w-44 h-24 px-5 py-3 rounded-2xl bg-[#f4f8f2] border border-agro-200 hover:border-agro-600 shadow-2xs transition-all shrink-0" title="{{ cert.name }}">
         <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="max-h-16 max-w-full object-contain group-hover:scale-105 transition-transform" loading="lazy" decoding="async">
       </a>
       {% endfor %}
 
       <!-- Copia duplicada para el bucle infinito (oculta a lectores de pantalla y al teclado) -->
       {% for cert in certifications %}
-      <a href="{% url 'landing:calidad' %}" aria-hidden="true" tabindex="-1" class="group flex items-center justify-center w-44 h-24 px-5 py-3 rounded-2xl bg-[#f4f8f2] border border-agro-200 hover:border-agro-600 shadow-2xs transition-all shrink-0" title="{{ cert.name }} — {{ cert.code }}">
+      <a href="{% url 'landing:calidad' %}" aria-hidden="true" tabindex="-1" class="group flex items-center justify-center w-44 h-24 px-5 py-3 rounded-2xl bg-[#f4f8f2] border border-agro-200 hover:border-agro-600 shadow-2xs transition-all shrink-0" title="{{ cert.name }}">
         <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="max-h-16 max-w-full object-contain group-hover:scale-105 transition-transform" loading="lazy" decoding="async">
       </a>
       {% endfor %}
@@ -354,7 +354,7 @@
     </button>
 
     <div class="md:w-1/2 h-72 md:h-auto relative bg-agro-950">
-      <img id="modal-image" alt="" class="w-full h-full object-cover">
+      <img id="modal-image" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="" class="w-full h-full object-cover">
     </div>
 
     <div class="p-7 md:w-1/2 space-y-4 flex flex-col justify-between">
