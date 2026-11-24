@@ -22,11 +22,11 @@
 
       <!-- Category Filter Pills from SQLite3 -->
       <div class="flex flex-wrap items-center gap-2" id="category-filter-pills">
-        <button type="button" onclick="filterProductsByCategory('all', this)" class="product-filter-btn px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider bg-agro-600 text-white transition-all">
+        <button type="button" onclick="filterProductsByCategory('all', this)" data-cat="all" class="product-filter-btn px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider bg-agro-600 text-white transition-all">
           <span data-i18n="filter_all">Todos</span> ({{ products.count }})
         </button>
         {% for cat in categories %}
-        <button type="button" onclick="filterProductsByCategory('{{ cat.slug }}', this)" class="product-filter-btn px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider bg-white hover:bg-agro-50 text-agro-900 border border-agro-200 transition-all bilingual-name"
+        <button type="button" onclick="filterProductsByCategory('{{ cat.slug }}', this)" data-cat="{{ cat.slug }}" class="product-filter-btn px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider bg-white hover:bg-agro-50 text-agro-900 border border-agro-200 transition-all bilingual-name"
                 data-es="{{ cat.name }}" data-en="{{ cat.name_en|default:cat.name }}">
           {{ cat.name }}
         </button>
@@ -142,7 +142,8 @@
     const params = new URLSearchParams(window.location.search);
     const cat = params.get('cat');
     if (cat) {
-      const targetBtn = document.querySelector(`.product-filter-btn[onclick*="${cat}"]`);
+      // coincidencia exacta con el slug (sin construir selectores con texto de la URL)
+      const targetBtn = Array.from(document.querySelectorAll('.product-filter-btn')).find(b => b.dataset.cat === cat);
       if (targetBtn) targetBtn.click();
     }
   });

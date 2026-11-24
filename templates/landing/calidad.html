@@ -29,19 +29,35 @@
 
 <!-- Infinite Carousel of Certification Logos -->
 <div class="py-6 bg-[#fbfaf6] border-b border-stone-200 overflow-hidden">
-  <div class="marquee-track flex items-center gap-10">
-    {% for cert in certifications %}
-    <div class="flex items-center gap-3 px-5 py-2.5 rounded-xl bg-white border border-stone-200/80 shadow-2xs shrink-0">
-      <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="h-10 w-auto object-contain" loading="lazy" decoding="async">
-      <span class="text-xs font-bold text-stone-800 uppercase tracking-wider">{{ cert.name }}</span>
+  <div class="marquee-track flex items-center">
+    <div class="marquee-group">
+      {% for cert in certifications %}
+      <div class="marquee-item flex items-center gap-3 px-5 py-2.5 rounded-xl bg-white border border-stone-200/80 shadow-2xs">
+        <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="h-10 w-auto object-contain" loading="lazy" decoding="async">
+        <span class="text-xs font-bold text-stone-800 uppercase tracking-wider">{{ cert.name }}</span>
+      </div>
+      {% endfor %}
+      {% for cert in certifications %}
+      <div class="marquee-item flex items-center gap-3 px-5 py-2.5 rounded-xl bg-white border border-stone-200/80 shadow-2xs">
+        <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="h-10 w-auto object-contain" loading="lazy" decoding="async">
+        <span class="text-xs font-bold text-stone-800 uppercase tracking-wider">{{ cert.name }}</span>
+      </div>
+      {% endfor %}
     </div>
-    {% endfor %}
-    {% for cert in certifications %}
-    <div aria-hidden="true" class="flex items-center gap-3 px-5 py-2.5 rounded-xl bg-white border border-stone-200/80 shadow-2xs shrink-0">
-      <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="h-10 w-auto object-contain" loading="lazy" decoding="async">
-      <span class="text-xs font-bold text-stone-800 uppercase tracking-wider">{{ cert.name }}</span>
+    <div class="marquee-group" aria-hidden="true">
+      {% for cert in certifications %}
+      <div class="marquee-item flex items-center gap-3 px-5 py-2.5 rounded-xl bg-white border border-stone-200/80 shadow-2xs">
+        <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="h-10 w-auto object-contain" loading="lazy" decoding="async">
+        <span class="text-xs font-bold text-stone-800 uppercase tracking-wider">{{ cert.name }}</span>
+      </div>
+      {% endfor %}
+      {% for cert in certifications %}
+      <div class="marquee-item flex items-center gap-3 px-5 py-2.5 rounded-xl bg-white border border-stone-200/80 shadow-2xs">
+        <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="h-10 w-auto object-contain" loading="lazy" decoding="async">
+        <span class="text-xs font-bold text-stone-800 uppercase tracking-wider">{{ cert.name }}</span>
+      </div>
+      {% endfor %}
     </div>
-    {% endfor %}
   </div>
 </div>
 

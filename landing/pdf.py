@@ -1,4 +1,5 @@
 import io
+from html import escape
 from datetime import datetime
 from decimal import Decimal
 
@@ -6,6 +7,7 @@ from django.conf import settings
 from django.utils import timezone
 
 from . import pricing
+from .models import Certification
 from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, HRFlowable, Image
@@ -14,6 +16,11 @@ from reportlab.lib.enums import TA_CENTER, TA_RIGHT
 
 COMPANY_ADDRESS = settings.COMPANY_ADDRESS
 COMPANY_EMAIL = settings.COMPANY_EMAIL
+
+
+def esc(value):
+    """Texto del usuario o de la base de datos -> seguro para Paragraph (ReportLab interpreta <img>, <a>, &...)."""
+    return escape(str(value or ''), quote=False)
 
 
 def generate_quotation_pdf(quote):
@@ -110,7 +117,7 @@ def generate_quotation_pdf(quote):
         Paragraph("<b>AGRO SUR LATINO S.A.C.</b>", title_style),
         Paragraph(T("RUC 20517805662 • Lima, Perú", "RUC 20517805662 • Lima, Peru"), subtitle_style),
         Paragraph(T("Granos Andinos, Semillas y Menestras (Orgánicos y Convencionales)", "Andean Grains, Seeds & Pulses (Organic & Conventional)"), subtitle_style),
-        Paragraph(f"{COMPANY_ADDRESS} | {COMPANY_EMAIL}", subtitle_style),
+        Paragraph(f"{esc(COMPANY_ADDRESS)} | {esc(COMPANY_EMAIL)}", subtitle_style),
     ]
 
     if peru:
@@ -123,7 +130,7 @@ def generate_quotation_pdf(quote):
         Paragraph(f"<b>{T('Fecha', 'Date')}:</b> {date_str}", right_style),
     ]
     if not peru and quote.incoterm:
-        header_right.append(Paragraph(f"<b>{T('Incoterm Solicitado', 'Requested Incoterm')}:</b> {quote.incoterm}", right_style))
+        header_right.append(Paragraph(f"<b>{T('Incoterm Solicitado', 'Requested Incoterm')}:</b> {esc(quote.incoterm)}", right_style))
 
     logo_path = settings.BASE_DIR / 'static' / 'images' / 'agrosurlogo.png'
     if logo_path.exists():
@@ -167,23 +174,23 @@ def generate_quotation_pdf(quote):
         return Paragraph(f"<b>{T(es, en)}:</b>", body_style)
 
     client_info = [
-        [lbl("Razón Social / Nombre", "Company / Name"), Paragraph(quote.legal_name, body_bold),
-         lbl("Tipo de Cliente", "Client Type"), Paragraph(client_type_text, body_style)],
-        [lbl("N° Documento / Tax ID", "Document / Tax ID"), Paragraph(quote.document_number, body_bold),
-         lbl("País" if peru else "País de Destino", "Country" if peru else "Destination Country"), Paragraph(quote.country, body_style)],
+        [lbl("Razón Social / Nombre", "Company / Name"), Paragraph(esc(quote.legal_name), body_bold),
+         lbl("Tipo de Cliente", "Client Type"), Paragraph(esc(client_type_text), body_style)],
+        [lbl("N° Documento / Tax ID", "Document / Tax ID"), Paragraph(esc(quote.document_number), body_bold),
+         lbl("País" if peru else "País de Destino", "Country" if peru else "Destination Country"), Paragraph(esc(quote.country), body_style)],
     ]
     if peru:
         client_info += [
-            [lbl("Persona de Contacto", "Contact Person"), Paragraph(quote.contact_name, body_style),
-             lbl("Teléfono / WhatsApp", "Phone / WhatsApp"), Paragraph(quote.phone, body_style)],
-            [lbl("Correo", "Email"), Paragraph(quote.email, body_style), "", ""],
+            [lbl("Persona de Contacto", "Contact Person"), Paragraph(esc(quote.contact_name), body_style),
+             lbl("Teléfono / WhatsApp", "Phone / WhatsApp"), Paragraph(esc(quote.phone), body_style)],
+            [lbl("Correo", "Email"), Paragraph(esc(quote.email), body_style), "", ""],
         ]
     else:
         client_info += [
-            [lbl("Persona de Contacto", "Contact Person"), Paragraph(quote.contact_name, body_style),
-             lbl("Puerto / Destino", "Port / Destination"), Paragraph(quote.destination_port or T("Callao / Por confirmar", "Callao / To be confirmed"), body_style)],
-            [lbl("Correo Corporativo", "Corporate Email"), Paragraph(quote.email, body_style),
-             lbl("Teléfono / WhatsApp", "Phone / WhatsApp"), Paragraph(quote.phone, body_style)],
+            [lbl("Persona de Contacto", "Contact Person"), Paragraph(esc(quote.contact_name), body_style),
+             lbl("Puerto / Destino", "Port / Destination"), Paragraph(esc(quote.destination_port) or T("Callao / Por confirmar", "Callao / To be confirmed"), body_style)],
+            [lbl("Correo Corporativo", "Corporate Email"), Paragraph(esc(quote.email), body_style),
+             lbl("Teléfono / WhatsApp", "Phone / WhatsApp"), Paragraph(esc(quote.phone), body_style)],
         ]
 
     client_table = Table(client_info, colWidths=[120, 150, 110, 152])
@@ -233,8 +240,8 @@ def generate_quotation_pdf(quote):
                 type_origin = f"{p.variety} • {p.origin}" if p else "-"
 
             items_data.append([
-                Paragraph(pricing.product_name(p, lang) if p else T("Grano Andino", "Andean Grain"), body_bold),
-                Paragraph(type_origin, body_style),
+                Paragraph(esc(pricing.product_name(p, lang)) if p else T("Grano Andino", "Andean Grain"), body_bold),
+                Paragraph(esc(type_origin), body_style),
                 Paragraph(pricing.format_quantity(it.quantity, it.unit, lang), body_style),
                 Paragraph(unit_price, right_style),
                 Paragraph(subtotal_str, right_bold),
@@ -281,7 +288,7 @@ def generate_quotation_pdf(quote):
     if quote.notes:
         story.append(Paragraph(T("NOTAS Y ESPECIFICACIONES ADICIONALES", "NOTES AND ADDITIONAL SPECIFICATIONS"), heading_style))
         story.append(Spacer(1, 4))
-        notes_p = Paragraph(quote.notes, body_style)
+        notes_p = Paragraph(esc(quote.notes).replace('\n', '<br/>'), body_style)
         notes_table = Table([[notes_p]], colWidths=[532])
         notes_table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (-1, -1), c_bg_light),
@@ -294,15 +301,19 @@ def generate_quotation_pdf(quote):
     # 5. Condiciones Comerciales
     story.append(Paragraph(T("CONDICIONES COMERCIALES Y CERTIFICACIONES DE CALIDAD", "COMMERCIAL TERMS AND QUALITY CERTIFICATIONS"), heading_style))
     story.append(Spacer(1, 4))
+    # Certificaciones: misma fuente que la web (tabla Certification)
+    cert_names = esc(', '.join(Certification.objects.values_list('name', flat=True)))
+    certs_es = f"{cert_names} y Certificado Fitosanitario SENASA Perú" if cert_names else "Certificado Fitosanitario SENASA Perú"
+    certs_en = f"{cert_names} and SENASA Peru Phytosanitary Certificate" if cert_names else "SENASA Peru Phytosanitary Certificate"
     terms_text = T(
         "1. <b>Disponibilidad y Stock:</b> Abastecimiento permanente todo el año desde nuestros almacenes en Huachipa (Lima) y centros de acopio en Ayacucho.<br/>"
         "2. <b>Presentaciones:</b> Disponible en modalidades Orgánica Certificada y Convencional según requerimiento del cliente.<br/>"
-        "3. <b>Certificaciones:</b> HACCP, BRC, USDA Organic, EU Organic, JAS, FDA y Certificado Fitosanitario SENASA Perú.<br/>"
-        f"4. <b>Contacto Comercial:</b> {COMPANY_EMAIL} • {COMPANY_ADDRESS}, Lima, Perú.",
+        f"3. <b>Certificaciones:</b> {certs_es}.<br/>"
+        f"4. <b>Contacto Comercial:</b> {esc(COMPANY_EMAIL)} • {esc(COMPANY_ADDRESS)}, Lima, Perú.",
         "1. <b>Availability and stock:</b> Year-round supply from our warehouses in Huachipa (Lima) and collection centers in Ayacucho.<br/>"
         "2. <b>Presentations:</b> Available as Certified Organic and Conventional, according to the client's requirements.<br/>"
-        "3. <b>Certifications:</b> HACCP, BRC, USDA Organic, EU Organic, JAS, FDA and SENASA Peru Phytosanitary Certificate.<br/>"
-        f"4. <b>Sales contact:</b> {COMPANY_EMAIL} • {COMPANY_ADDRESS}, Lima, Peru.",
+        f"3. <b>Certifications:</b> {certs_en}.<br/>"
+        f"4. <b>Sales contact:</b> {esc(COMPANY_EMAIL)} • {esc(COMPANY_ADDRESS)}, Lima, Peru.",
     )
     terms_p = Paragraph(terms_text, subtitle_style)
     terms_table = Table([[terms_p]], colWidths=[532])

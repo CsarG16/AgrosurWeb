@@ -39,6 +39,9 @@ media/products/*
 Thumbs.db
 desktop.ini
 
+# Caché de Django (límite de envíos)
+.django_cache/
+
 # Archivos estáticos recolectados
 staticfiles/
 

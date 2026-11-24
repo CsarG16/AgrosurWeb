@@ -36,23 +36,20 @@
   <link rel="icon" type="image/png" href="{% static 'images/agrosurlogo.png' %}?v=2">
   <link rel="apple-touch-icon" href="{% static 'images/agrosurlogo.png' %}?v=2">
 
-  <!-- Google Fonts: Playfair Display, Outfit & Plus Jakarta Sans -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Tipografías (Outfit, Playfair Display, Plus Jakarta Sans) servidas desde nuestro servidor: Google Fonts está bloqueado en China -->
+  <link rel="preload" href="{% static 'fonts/plus-jakarta-sans-normal-latin.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="{% static 'css/fonts.css' %}?v=1">
 
-  <!-- Lucide Icons (versión fija) -->
-  <script src="https://unpkg.com/lucide@1.66.0/dist/umd/lucide.min.js"></script>
-
-  <!-- Lenis Smooth Scroll Engine -->
-  <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+  <!-- Iconos Lucide 1.66.0 y scroll suave Lenis 1.1.20, servidos desde nuestro servidor (antes unpkg) -->
+  <script src="{% static 'vendor/lucide.min.js' %}"></script>
+  <script src="{% static 'vendor/lenis.min.js' %}"></script>
 
   <!-- Custom CSS, luego Tailwind compilado (npm run build:css) para conservar el orden de cascada del CDN anterior -->
-  <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=9">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=11">
   <link rel="stylesheet" href="{% static 'css/app.css' %}?v=6">
   {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-[#f4f8f2] text-agro-950 antialiased selection:bg-agro-600/20 selection:text-agro-800" data-lang="es" data-page="{{ active_page|default:'inicio' }}">
+<body class="bg-[#f4f8f2] text-agro-950 antialiased selection:bg-agro-600/20 selection:text-agro-800" data-lang="{{ LANGUAGE_CODE }}" data-page="{{ active_page|default:'inicio' }}">
 
   <!-- Clean Botanical Green Header with Visual Mega-Dropdown on PRODUCTOS -->
   <header id="navbar" class="fixed top-0 left-0 right-0 z-40 transition-all duration-300 bg-[#f4f8f2]/95 backdrop-blur-md border-b border-agro-200 py-3.5">
@@ -115,9 +112,9 @@
       <!-- Right Side: Language Switcher (EN | ES) + Green Pill Button -->
       <div class="hidden nav:flex items-center gap-5">
         <div class="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-agro-700">
-          <a href="{{ lang_links.en }}" hreflang="en" lang="en" title="English" class="lang-btn inline-block px-1.5 py-0.5 transition-colors hover:text-agro-950" data-set-lang="en">EN</a>
+          <a href="{{ lang_links.en }}" hreflang="en" lang="en" title="English" class="lang-btn inline-block px-1.5 py-0.5 transition-colors {% if LANGUAGE_CODE == 'en' %}text-agro-950 font-bold underline decoration-agro-600 underline-offset-4{% else %}text-agro-600 hover:text-agro-950{% endif %}" data-set-lang="en">EN</a>
           <span class="text-agro-300">|</span>
-          <a href="{{ lang_links.es }}" hreflang="es" lang="es" title="Español" class="lang-btn inline-block px-1.5 py-0.5 transition-colors text-agro-950 font-bold underline decoration-agro-600 underline-offset-4" data-set-lang="es">ES</a>
+          <a href="{{ lang_links.es }}" hreflang="es" lang="es" title="Español" class="lang-btn inline-block px-1.5 py-0.5 transition-colors {% if LANGUAGE_CODE != 'en' %}text-agro-950 font-bold underline decoration-agro-600 underline-offset-4{% else %}text-agro-600 hover:text-agro-950{% endif %}" data-set-lang="es">ES</a>
         </div>
 
         <a href="{% url 'landing:cotizador' %}" class="whitespace-nowrap px-5 py-2.5 rounded-full bg-agro-600 hover:bg-agro-700 text-white font-bold text-[11px] uppercase tracking-[0.14em] transition-all duration-300 shadow-sm" data-i18n="nav_cta">
@@ -128,9 +125,9 @@
       <!-- Mobile Hamburger & Lang -->
       <div class="flex nav:hidden items-center gap-3">
         <div class="flex items-center gap-1 text-xs font-semibold text-agro-800">
-          <a href="{{ lang_links.en }}" hreflang="en" lang="en" title="English" class="lang-btn inline-block px-1.5 py-0.5" data-set-lang="en">EN</a>
+          <a href="{{ lang_links.en }}" hreflang="en" lang="en" title="English" class="lang-btn inline-block px-1.5 py-0.5 transition-colors {% if LANGUAGE_CODE == 'en' %}text-agro-950 font-bold underline decoration-agro-600 underline-offset-4{% else %}text-agro-600 hover:text-agro-950{% endif %}" data-set-lang="en">EN</a>
           <span>|</span>
-          <a href="{{ lang_links.es }}" hreflang="es" lang="es" title="Español" class="lang-btn inline-block px-1.5 py-0.5 font-bold text-agro-950" data-set-lang="es">ES</a>
+          <a href="{{ lang_links.es }}" hreflang="es" lang="es" title="Español" class="lang-btn inline-block px-1.5 py-0.5 transition-colors {% if LANGUAGE_CODE != 'en' %}text-agro-950 font-bold underline decoration-agro-600 underline-offset-4{% else %}text-agro-600 hover:text-agro-950{% endif %}" data-set-lang="es">ES</a>
         </div>
         <button id="mobile-menu-toggle" class="text-agro-950 p-2 focus:outline-none" aria-label="Abrir Menú">
           <i data-lucide="menu" class="w-6 h-6"></i>
@@ -208,7 +205,7 @@
 
   <!-- Scripts -->
   {{ i18n_data|json_script:"i18n-data" }}
-  <script src="{% static 'js/main.js' %}?v=18"></script>
+  <script src="{% static 'js/main.js' %}?v=20"></script>
   {% block extra_js %}{% endblock %}
 </body>
 </html>

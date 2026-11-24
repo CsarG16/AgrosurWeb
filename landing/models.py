@@ -5,20 +5,32 @@ import re
 import uuid
 
 
-def validate_peruvian_document(client_type, doc_num):
-    doc_num = doc_num.strip()
+# Prefijos de RUC de persona natural (SUNAT): 10 = con DNI, 15 / 17 = otros documentos
+NATURAL_RUC_PREFIXES = ('10', '15', '17')
+
+
+def validate_peruvian_document(client_type, doc_num, lang='es'):
+    """Valida DNI / RUC / Tax ID. El mensaje de error sale en el idioma de la página ('es' o 'en')."""
+    def err(es, en):
+        return ValidationError(en if lang == 'en' else es)
+
+    doc_num = (doc_num or '').strip()
     if client_type == 'NATURAL_DNI':
         if not re.match(r'^\d{8}$', doc_num):
-            raise ValidationError("El DNI peruano debe contener exactamente 8 dígitos numéricos.")
+            raise err("El DNI peruano debe contener exactamente 8 dígitos numéricos.",
+                      "The Peruvian DNI must contain exactly 8 digits.")
     elif client_type == 'NATURAL_RUC':
-        if not re.match(r'^\d{11}$', doc_num) or not (doc_num.startswith('10') or doc_num.startswith('15') or doc_num.startswith('17')):
-            raise ValidationError("El RUC de Persona Natural (Ley del RUC - SUNAT) debe contener 11 dígitos e iniciar con 10.")
+        if not re.match(r'^\d{11}$', doc_num) or not doc_num.startswith(NATURAL_RUC_PREFIXES):
+            raise err("El RUC de Persona Natural (Ley del RUC - SUNAT) debe contener 11 dígitos e iniciar con 10, 15 o 17.",
+                      "The personal RUC (SUNAT) must have 11 digits and start with 10, 15 or 17.")
     elif client_type == 'JURIDICA_RUC':
         if not re.match(r'^\d{11}$', doc_num) or not doc_num.startswith('20'):
-            raise ValidationError("El RUC de Persona Jurídica / Empresa (Ley del RUC - SUNAT) debe contener 11 dígitos e iniciar con 20.")
+            raise err("El RUC de Persona Jurídica / Empresa (Ley del RUC - SUNAT) debe contener 11 dígitos e iniciar con 20.",
+                      "The company RUC (SUNAT) must have 11 digits and start with 20.")
     elif client_type == 'EXTRANJERO':
         if len(doc_num) < 4:
-            raise ValidationError("Ingrese un Tax ID / VAT / Registro Fiscal internacional válido.")
+            raise err("Ingrese un Tax ID / VAT / Registro Fiscal internacional válido.",
+                      "Please enter a valid international Tax ID / VAT number.")
 
 
 def unique_product_slug(name, exclude_pk=None):
@@ -277,7 +289,8 @@ class QuoteItem(models.Model):
     ]
 
     quote_request = models.ForeignKey(QuoteRequest, related_name="items", on_delete=models.CASCADE, verbose_name="Cotización")
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Producto")
+    # PROTECT: un producto ya cotizado no se borra (se desactiva) para no perder el historial
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, verbose_name="Producto")
     quantity = models.DecimalField(max_digits=10, decimal_places=2, default=1.00, verbose_name="Cantidad")
     unit = models.CharField(max_length=40, choices=UNIT_CHOICES, default='CONTENEDOR_FCL', verbose_name="Unidad de Despacho")
     # Monto calculado en el servidor, en la moneda de la cotización (US$ o S/ con IGV).

@@ -5,8 +5,9 @@
 <!-- ======================================================================= -->
 <!-- 1. PRIMER IMPACTO — FOTO A TODO LO ANCHO + UNA FRASE (estilo Xpodeka)    -->
 <!-- ======================================================================= -->
+{% with hero_slides.0 as hero_slide %}
 <section id="inicio" class="hero-photo relative w-full min-h-[100svh] flex items-center justify-center overflow-hidden text-center">
-  <img src="{% static 'images/company/campo-atardecer.webp' %}" alt="Agricultor revisando su cultivo al atardecer" fetchpriority="high"
+  <img src="{% if hero_slide and hero_slide.image %}{{ hero_slide.image.url }}{% elif hero_slide and hero_slide.image_url %}{{ hero_slide.image_url }}{% else %}{% static 'images/company/campo-atardecer.webp' %}{% endif %}" alt="Agricultor revisando su cultivo al atardecer" fetchpriority="high"
        class="absolute inset-0 w-full h-full object-cover object-[28%_center] md:object-center">
   <div class="absolute inset-0 bg-gradient-to-b from-black/55 via-black/30 to-black/55"></div>
 
@@ -19,6 +20,7 @@
     </a>
   </div>
 </section>
+{% endwith %}
 
 
 <!-- ======================================================================= -->
@@ -248,20 +250,35 @@
   </div>
 
   <!-- Pure Logo Marquee (Zero Clutter) -->
-  <div class="relative w-full overflow-hidden py-2">
-    <div class="marquee-track flex items-center gap-6 sm:gap-8">
-      {% for cert in certifications %}
-      <a href="{% url 'landing:calidad' %}" class="group flex items-center justify-center w-44 h-24 px-5 py-3 rounded-2xl bg-[#f4f8f2] border border-agro-200 hover:border-agro-600 shadow-2xs transition-all shrink-0" title="{{ cert.name }}">
-        <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="max-h-16 max-w-full object-contain group-hover:scale-105 transition-transform" loading="lazy" decoding="async">
-      </a>
-      {% endfor %}
+  <div class="relative w-full overflow-hidden py-4">
+    <div class="marquee-track flex items-center">
+      <!-- Grupo 1 -->
+      <div class="marquee-group">
+        {% for cert in certifications %}
+        <a href="{% url 'landing:calidad' %}" class="marquee-item group flex items-center justify-center h-20 transition-opacity opacity-85 hover:opacity-100" title="{{ cert.name }}">
+          <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="max-h-16 w-auto max-w-[140px] object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async">
+        </a>
+        {% endfor %}
+        {% for cert in certifications %}
+        <a href="{% url 'landing:calidad' %}" class="marquee-item group flex items-center justify-center h-20 transition-opacity opacity-85 hover:opacity-100" title="{{ cert.name }}">
+          <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="max-h-16 w-auto max-w-[140px] object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async">
+        </a>
+        {% endfor %}
+      </div>
 
-      <!-- Copia duplicada para el bucle infinito (oculta a lectores de pantalla y al teclado) -->
-      {% for cert in certifications %}
-      <a href="{% url 'landing:calidad' %}" aria-hidden="true" tabindex="-1" class="group flex items-center justify-center w-44 h-24 px-5 py-3 rounded-2xl bg-[#f4f8f2] border border-agro-200 hover:border-agro-600 shadow-2xs transition-all shrink-0" title="{{ cert.name }}">
-        <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="max-h-16 max-w-full object-contain group-hover:scale-105 transition-transform" loading="lazy" decoding="async">
-      </a>
-      {% endfor %}
+      <!-- Grupo 2 (Copia idéntica para bucle infinito continuo) -->
+      <div class="marquee-group" aria-hidden="true">
+        {% for cert in certifications %}
+        <a href="{% url 'landing:calidad' %}" tabindex="-1" class="marquee-item group flex items-center justify-center h-20 transition-opacity opacity-85 hover:opacity-100" title="{{ cert.name }}">
+          <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="max-h-16 w-auto max-w-[140px] object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async">
+        </a>
+        {% endfor %}
+        {% for cert in certifications %}
+        <a href="{% url 'landing:calidad' %}" tabindex="-1" class="marquee-item group flex items-center justify-center h-20 transition-opacity opacity-85 hover:opacity-100" title="{{ cert.name }}">
+          <img src="{{ cert.get_image }}" alt="{{ cert.name }}" class="max-h-16 w-auto max-w-[140px] object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async">
+        </a>
+        {% endfor %}
+      </div>
     </div>
   </div>
 </section>
@@ -318,23 +335,27 @@
       <div class="lg:col-span-7 p-8">
         <form id="direct-contact-form" class="space-y-3.5">
           {% csrf_token %}
+          <input type="text" name="website" id="contact-website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            <input type="text" name="full_name" required placeholder="Nombre *" class="w-full px-4 py-3 rounded-xl border border-agro-200 text-sm focus:border-agro-600 outline-none">
-            <input type="text" name="company" required placeholder="Empresa *" class="w-full px-4 py-3 rounded-xl border border-agro-200 text-sm focus:border-agro-600 outline-none">
+            <input type="text" name="full_name" required maxlength="150" placeholder="Nombre *" class="w-full px-4 py-3 rounded-xl border border-agro-200 text-sm focus:border-agro-600 outline-none">
+            <input type="text" name="company" required maxlength="150" placeholder="Empresa *" class="w-full px-4 py-3 rounded-xl border border-agro-200 text-sm focus:border-agro-600 outline-none">
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            <input type="email" name="email" required placeholder="Correo *" class="w-full px-4 py-3 rounded-xl border border-agro-200 text-sm focus:border-agro-600 outline-none">
-            <input type="text" name="country" placeholder="País / WhatsApp" class="w-full px-4 py-3 rounded-xl border border-agro-200 text-sm focus:border-agro-600 outline-none">
+            <input type="email" name="email" required maxlength="254" placeholder="Correo *" class="w-full px-4 py-3 rounded-xl border border-agro-200 text-sm focus:border-agro-600 outline-none">
+            <input type="tel" name="phone" maxlength="50" placeholder="Teléfono / WhatsApp" class="w-full px-4 py-3 rounded-xl border border-agro-200 text-sm focus:border-agro-600 outline-none">
           </div>
 
-          <select name="product_interest" class="w-full px-4 py-3 rounded-xl border border-agro-200 text-sm bg-white focus:border-agro-600 outline-none">
-            {% for p in products %}
-            <option value="{{ p.name }}" data-en-text="{{ p.name_en|default:p.name }} ({{ p.modality_label_en }})">{{ p.name }} ({{ p.modality_label_es }})</option>
-            {% endfor %}
-          </select>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <input type="text" name="country" maxlength="100" placeholder="País" class="w-full px-4 py-3 rounded-xl border border-agro-200 text-sm focus:border-agro-600 outline-none">
+            <select name="product_interest" class="w-full px-4 py-3 rounded-xl border border-agro-200 text-sm bg-white focus:border-agro-600 outline-none">
+              {% for p in products %}
+              <option value="{{ p.name }}" data-en-text="{{ p.name_en|default:p.name }} ({{ p.modality_label_en }})">{{ p.name }} ({{ p.modality_label_es }})</option>
+              {% endfor %}
+            </select>
+          </div>
 
-          <textarea name="message" rows="2" placeholder="Volumen o requerimiento..." class="w-full px-4 py-3 rounded-xl border border-agro-200 text-sm focus:border-agro-600 outline-none"></textarea>
+          <textarea name="message" rows="2" maxlength="5000" placeholder="Volumen o requerimiento..." class="w-full px-4 py-3 rounded-xl border border-agro-200 text-sm focus:border-agro-600 outline-none"></textarea>
 
           <button type="submit" class="px-8 py-3.5 rounded-full bg-agro-600 hover:bg-agro-700 text-white font-bold text-xs uppercase tracking-widest transition-colors shadow-sm" data-i18n="c_btn_send">
             Enviar

@@ -52,7 +52,7 @@ function applyStaticTranslations(lang) {
   document.documentElement.lang = lang;
 }
 
-// El idioma lo fija la URL (/ = español, /en/ = inglés): lo lee del <html lang> que renderiza Django
+// El idioma lo fija la URL (/ = inglés, /es/ = español): lo lee del <html lang> que renderiza Django
 let currentLanguage = (document.documentElement.lang || 'es').slice(0, 2) === 'en' ? 'en' : 'es';
 const tr = (es, en) => (currentLanguage === 'en' ? en : es);
 
@@ -98,11 +98,6 @@ function setLanguage(lang) {
 
   document.querySelectorAll('.bilingual-origin').forEach(el => {
     const val = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-es');
-    if (val) el.innerText = val;
-  });
-
-  document.querySelectorAll('.bilingual-hero-title').forEach(el => {
-    const val = lang === 'en' && el.getAttribute('data-en') ? el.getAttribute('data-en') : el.getAttribute('data-es');
     if (val) el.innerText = val;
   });
 
@@ -258,67 +253,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const onScroll = () => navbar.classList.toggle('is-scrolled', window.scrollY > 40);
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
-  }
-
-  // Hero Visual Panels Slider
-  const slides = document.querySelectorAll('.hero-slide');
-  const indicators = document.querySelectorAll('.hero-indicator');
-  const watermarkEl = document.getElementById('hero-watermark');
-  let currentSlide = 0;
-  let slideInterval = null;
-
-  function showSlide(index) {
-    if (slides.length === 0) return;
-    slides.forEach((s, i) => {
-      if (i === index) {
-        s.classList.remove('opacity-0', 'pointer-events-none', 'z-0', 'hidden', 'absolute', 'inset-0');
-        s.classList.add('opacity-100', 'relative', 'z-10', 'hero-slide-active');
-        if (watermarkEl) {
-          const wm = currentLanguage === 'en' ? s.getAttribute('data-watermark-en') : s.getAttribute('data-watermark-es');
-          if (wm) watermarkEl.innerHTML = wm.replace(' ', '<br>');
-        }
-      } else {
-        s.classList.add('opacity-0', 'pointer-events-none', 'z-0', 'hidden', 'absolute', 'inset-0');
-        s.classList.remove('opacity-100', 'relative', 'z-10', 'hero-slide-active');
-      }
-    });
-
-    indicators.forEach((ind, i) => {
-      const bar = ind.querySelector('.indicator-bar');
-      if (i === index) {
-        if (bar) bar.style.width = '100%';
-        ind.classList.add('opacity-100');
-        ind.classList.remove('opacity-40');
-      } else {
-        if (bar) bar.style.width = '0%';
-        ind.classList.remove('opacity-100');
-        ind.classList.add('opacity-40');
-      }
-    });
-    currentSlide = index;
-  }
-
-  function nextSlide() {
-    showSlide((currentSlide + 1) % slides.length);
-  }
-
-  function prevSlide() {
-    showSlide((currentSlide - 1 + slides.length) % slides.length);
-  }
-
-  function startSlideTimer() {
-    if (slideInterval) clearInterval(slideInterval);
-    slideInterval = setInterval(nextSlide, 6500);
-  }
-
-  if (slides.length > 0) {
-    showSlide(0);
-    startSlideTimer();
-    document.getElementById('hero-next')?.addEventListener('click', () => { nextSlide(); startSlideTimer(); });
-    document.getElementById('hero-prev')?.addEventListener('click', () => { prevSlide(); startSlideTimer(); });
-    indicators.forEach((ind, i) => {
-      ind.addEventListener('click', () => { showSlide(i); startSlideTimer(); });
-    });
   }
 
   // Client Type Radio Switcher
@@ -491,8 +425,8 @@ document.addEventListener('DOMContentLoaded', () => {
         showToast(tr('El DNI debe contener exactamente 8 dígitos numéricos.', 'The DNI must contain exactly 8 digits.'), false);
         return;
       }
-      if (clientType === 'NATURAL_RUC' && (!/^\d{11}$/.test(docNum) || !docNum.startsWith('10'))) {
-        showToast(tr('El RUC de Persona Natural debe tener 11 dígitos e iniciar con 10.', 'The personal RUC must have 11 digits and start with 10.'), false);
+      if (clientType === 'NATURAL_RUC' && (!/^\d{11}$/.test(docNum) || !/^1[057]/.test(docNum))) {
+        showToast(tr('El RUC de Persona Natural debe tener 11 dígitos e iniciar con 10, 15 o 17.', 'The personal RUC must have 11 digits and start with 10, 15 or 17.'), false);
         return;
       }
       if (clientType === 'JURIDICA_RUC' && (!/^\d{11}$/.test(docNum) || !docNum.startsWith('20'))) {
@@ -563,6 +497,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (contactForm) {
     contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      const submitBtn = contactForm.querySelector('button[type="submit"]');
+      if (submitBtn) submitBtn.disabled = true;
       const formData = new FormData(contactForm);
       formData.set('lang', currentLanguage);
       try {
@@ -582,6 +518,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       } catch (err) {
         showToast(tr('Error al enviar el mensaje.', 'Error sending the message.'), false);
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
       }
     });
   }

@@ -109,8 +109,8 @@ python scripts/optimize_images.py --convert foto.png static/images/products/mi-p
 ```
 Objetivo: 80–150 KB por foto. Las plantillas ya usan `loading="lazy"` en todo lo que está bajo el banner principal.
 
-### Inglés
-El español vive en la raíz (`/productos/`) y el inglés bajo `/en/` (`/en/productos/`), con `hreflang`, canonical y sitemap por idioma. El texto del cuerpo en inglés lo traduce `static/js/main.js` (diccionario `translations` y `phraseEN`); el `<title>` y la meta descripción los renderiza Django (bloques `title_en`, `meta_description_en` en cada plantilla).
+### Idiomas (EN / ES)
+El inglés vive en la raíz (`/productos/`) y el español bajo `/es/` (`/es/productos/`), con `hreflang`, canonical y sitemap por idioma. El HTML en inglés se traduce en el servidor mediante `EnglishHTMLMiddleware` (diccionario `landing/i18n.json`: `translations` y `phraseEN`, reutilizado en el cliente por `static/js/main.js`); el `<title>` y la meta descripción los renderiza Django (bloques `title_en`, `meta_description_en` en cada plantilla).
 
 ### Datos de contacto
 Teléfono y WhatsApp se leen de variables de entorno y **solo se muestran si existen** (contacto y pie de página):

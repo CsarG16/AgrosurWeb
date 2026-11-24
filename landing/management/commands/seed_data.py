@@ -445,7 +445,7 @@ class Command(BaseCommand):
                 quote_request=sample_quote,
                 product=quinua,
                 quantity=1,
-                unit='CONTENEDOR_40',
+                unit='CONTENEDOR_FCL',
                 estimated_subtotal_usd=59850.00
             )
 

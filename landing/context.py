@@ -29,6 +29,11 @@ def company(request):
     phone_digits = re.sub(r'\D', '', phone)
     whatsapp_digits = re.sub(r'\D', '', settings.COMPANY_WHATSAPP)
     # Una sola fuente de verdad para las certificaciones: la tabla Certification (pie, /calidad/, descripciones)
+    whatsapp_text = (
+        "Hello, I would like a quote for Agro Sur Latino products."
+        if translation.get_language() == 'en' else
+        'Hola, quisiera cotizar productos de Agro Sur Latino.'
+    )
     cert_names = list(Certification.objects.values_list('name', flat=True))
     return {
         **_language_links(request),
@@ -40,7 +45,7 @@ def company(request):
         'company_phone': phone,
         'company_phone_href': f'tel:+{phone_digits}' if phone_digits else '',
         'company_whatsapp_url': (
-            f"https://wa.me/{whatsapp_digits}?text={quote('Hola, quisiera cotizar productos de Agro Sur Latino.')}"
+            f"https://wa.me/{whatsapp_digits}?text={quote(whatsapp_text)}"
             if whatsapp_digits else ''
         ),
         'cert_names': cert_names,

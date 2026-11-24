@@ -5,6 +5,7 @@ from django.http import JsonResponse, HttpResponse
 from django.urls import reverse
 from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from .models import (
     HeroSlide,
     ProductCategory,
@@ -20,35 +21,20 @@ from .pdf import generate_quotation_pdf
 from . import pricing, ratelimit
 
 
+def server_error(request):
+    """Página 500 en el idioma de la URL (/es/... = español, resto = inglés).
+
+    Sin base de datos ni context processors: si el sitio está fallando, esto debe funcionar igual.
+    """
+    from django.template import loader
+    lang = 'es' if request.path.startswith('/es/') or request.path == '/es' else 'en'
+    html = loader.get_template('500.html').render({'lang': lang})
+    return HttpResponse(html, status=500)
+
+
 def request_lang(request):
-    """Idioma de la página: 'en' bajo /en/..., 'es' en el resto (lo fija LocaleMiddleware)."""
+    """Idioma de la página: 'es' bajo /es/..., 'en' en el resto (lo fija LocaleMiddleware)."""
     return 'en' if getattr(request, 'LANGUAGE_CODE', 'es').startswith('en') else 'es'
-
-
-def get_products_data(products):
-    return [
-        {
-            'id': p.id,
-            'name': p.name,
-            'name_en': p.name_en or p.name,
-            'category': p.category.name if p.category else 'Granos y Semillas',
-            'category_en': (p.category.name_en or p.category.name) if p.category else 'Grains & Seeds',
-            'category_slug': p.category.slug if p.category else 'granos',
-            'modality': p.modality_label_es,
-            'modality_en': p.modality_label_en,
-            'variety': p.variety,
-            'origin': p.origin,
-            'origin_en': p.origin_en,
-            'season': p.season,
-            'season_en': p.season_en,
-            'packing_specs': p.packing_specs,
-            'packing_specs_en': p.packing_specs_en,
-            'min_order': p.min_order,
-            'min_order_en': p.min_order_en,
-            'image': p.get_image,
-        }
-        for p in products
-    ]
 
 
 def index(request):
@@ -69,7 +55,6 @@ def index(request):
         'categories': categories,
         'featured_products': featured_products,
         'products': products,
-        'products_json': json.dumps(get_products_data(products)),
         'stats': stats,
         'certifications': certifications,
         'current_lang': lang,
@@ -89,7 +74,6 @@ def productos_view(request):
     context = {
         'categories': categories,
         'products': products,
-        'products_json': json.dumps(get_products_data(products)),
         'certifications': certifications,
         'current_lang': lang,
         'active_page': 'productos',
@@ -117,7 +101,6 @@ def cotizador_view(request):
         'categories': categories,
         'selected_slug': selected_slug,
         'products': products,
-        'products_json': json.dumps(get_products_data(products)),
         'current_lang': lang,
         'active_page': 'cotizador',
     }
@@ -252,6 +235,8 @@ def quote_estimate(request):
     """Estimación en vivo para el cotizador (el precio unitario no se publica en el HTML)."""
     try:
         data = json.loads(request.body or b'{}')
+        if not isinstance(data, dict):
+            raise ValueError('Solicitud inválida.')
         client_type = data.get('client_type', 'JURIDICA_RUC')
         lang = 'en' if data.get('lang') == 'en' else 'es'
         items, currency = _clean_items(data.get('items', []), client_type, lang)
@@ -285,41 +270,37 @@ def submit_quote(request):
     """
     try:
         if request.content_type == 'application/json':
-            data = json.loads(request.body)
+            data = json.loads(request.body or b'{}')
         else:
             data = request.POST
+        if not hasattr(data, 'get'):
+            return JsonResponse({'success': False, 'message': 'Solicitud inválida.'}, status=400)
 
-        client_type = data.get('client_type', 'JURIDICA_RUC')
-        document_number = data.get('document_number', '').strip()
-        legal_name = data.get('legal_name', '').strip()
-        contact_name = data.get('contact_name', '').strip()
-        country = data.get('country', 'Perú').strip()
-        email = data.get('email', '').strip()
-        phone = data.get('phone', '').strip()
-        incoterm = data.get('incoterm', 'FOB')
-        destination_port = data.get('destination_port', '').strip()
-        notes = data.get('notes', '').strip()
+        client_type = _text(data, 'client_type', 20, 'JURIDICA_RUC')
+        document_number = _text(data, 'document_number', 50)
+        legal_name = _text(data, 'legal_name', 160)
+        contact_name = _text(data, 'contact_name', 120)
+        country = _text(data, 'country', 100, 'Perú')
+        email = _text(data, 'email', 254)
+        phone = _text(data, 'phone', 50)
+        incoterm = _text(data, 'incoterm', 10, 'FOB')
+        destination_port = _text(data, 'destination_port', 120)
+        notes = _text(data, 'notes', 2000)
         lang = 'en' if data.get('lang') == 'en' else 'es'
 
         if client_type not in dict(QuoteRequest.CLIENT_TYPE_CHOICES):
-            return JsonResponse({'success': False, 'message': 'Tipo de cliente inválido.'}, status=400)
-        if data.get('website'):  # honeypot: los bots lo rellenan
+            return JsonResponse({'success': False, 'message': _msg(lang, 'Tipo de cliente inválido.', 'Invalid client type.')}, status=400)
+        if _is_honeypot_filled(data):  # honeypot: los bots lo rellenan
             return JsonResponse({'success': True, 'message': 'OK'})
-        if ratelimit.is_limited(request, 'quote', email):
-            return JsonResponse({'success': False, 'message': _msg(
-                lang,
-                'Has enviado demasiadas cotizaciones. Inténtalo de nuevo en una hora o escríbenos por correo.',
-                'Too many quotations sent. Please try again in an hour or email us.')}, status=429)
-
         if not legal_name or not document_number or not email or not contact_name:
             msg = 'Por favor complete todos los datos requeridos (Nombre/Razón Social, N° Documento, Contacto y Correo).' if lang == 'es' else 'Please complete all required fields (Company Name, Document/Tax ID, Contact Person, and Email).'
             return JsonResponse({'success': False, 'message': msg}, status=400)
 
         # Validación estricta según Ley de RUCs de Perú / Internacional
         try:
-            validate_peruvian_document(client_type, document_number)
+            validate_peruvian_document(client_type, document_number, lang)
         except ValidationError as e:
-            return JsonResponse({'success': False, 'message': str(e.message)}, status=400)
+            return JsonResponse({'success': False, 'message': e.messages[0]}, status=400)
 
         if client_type == 'EXTRANJERO' and (not country or country.lower() in ['perú', 'peru']):
             msg = 'Para clientes internacionales, por favor especifique el país de destino/residencia.' if lang == 'es' else 'For international clients, please specify your destination country.'
@@ -328,11 +309,11 @@ def submit_quote(request):
         if pricing.is_peru_client(client_type):
             # Cotización en Perú (RUC 20, RUC 10, DNI): sin Incoterm ni puerto
             incoterm, destination_port = '', ''
+            if not country:
+                country = 'Perú'
         elif incoterm not in dict(QuoteRequest.INCOTERM_CHOICES):
             incoterm = 'FOB'
-        legal_name, contact_name = legal_name[:160], contact_name[:120]
-        email_field_ok = '@' in email and len(email) <= 254
-        if not email_field_ok:
+        if not _valid_email(email):
             return JsonResponse({'success': False, 'message': _msg(lang, 'Ingrese un correo válido.', 'Please enter a valid email.')}, status=400)
 
         try:
@@ -340,18 +321,25 @@ def submit_quote(request):
         except ValueError as e:
             return JsonResponse({'success': False, 'message': str(e)}, status=400)
 
+        # El límite solo cuenta envíos válidos: un cliente que corrige errores no queda bloqueado
+        if ratelimit.is_limited(request, 'quote', email):
+            return JsonResponse({'success': False, 'message': _msg(
+                lang,
+                'Has enviado demasiadas cotizaciones. Inténtalo de nuevo en una hora o escríbenos por correo.',
+                'Too many quotations sent. Please try again in an hour or email us.')}, status=429)
+
         with transaction.atomic():
             quote = QuoteRequest.objects.create(
                 client_type=client_type,
                 document_number=document_number,
                 legal_name=legal_name,
                 contact_name=contact_name,
-                country=country[:100],
+                country=country,
                 email=email,
-                phone=phone[:50],
+                phone=phone,
                 incoterm=incoterm,
-                destination_port=destination_port[:120],
-                notes=notes[:2000],
+                destination_port=destination_port,
+                notes=notes,
                 currency=currency,
                 lang=lang,
             )
@@ -392,35 +380,70 @@ def submit_quote(request):
         }, status=500)
 
 
+def _text(data, key, max_len, default=''):
+    """Campo de texto del formulario: siempre str, sin espacios extremos y con largo máximo."""
+    value = data.get(key, default)
+    if value is None or isinstance(value, bool):
+        value = ''
+    elif not isinstance(value, str):
+        value = str(value) if isinstance(value, (int, float)) else ''
+    return value.strip()[:max_len]
+
+
+def _is_honeypot_filled(data):
+    """Devuelve True si un bot llenó el campo trampa `website`."""
+    val = data.get('website')
+    if isinstance(val, str):
+        return bool(val.strip())
+    return bool(val)
+
+
+def _valid_email(email):
+    """Valida formato y largo máximo estándar de correo electrónico."""
+    if not email or len(email) > 254:
+        return False
+    try:
+        validate_email(email)
+        return True
+    except ValidationError:
+        return False
+
+
 @require_POST
 def submit_contact(request):
     try:
         data = json.loads(request.body) if request.content_type == 'application/json' else request.POST
     except ValueError:
+        data = None
+    if not hasattr(data, 'get'):
         return JsonResponse({'success': False, 'message': 'Solicitud inválida.'}, status=400)
 
     lang = 'en' if data.get('lang') == 'en' else 'es'
-    if data.get('website'):  # honeypot
+    if _is_honeypot_filled(data):  # honeypot
         return JsonResponse({'success': True, 'message': 'OK'})
-    if ratelimit.is_limited(request, 'contact', (data.get('email') or '').strip()):
-        return JsonResponse({'success': False, 'message': _msg(
-            lang,
-            'Demasiados envíos. Inténtalo más tarde o escríbenos por correo.',
-            'Too many submissions. Please try again later or email us.')}, status=429)
 
-    full_name = data.get('full_name', '').strip()
-    company = data.get('company', '').strip()
-    country = data.get('country', '').strip()
-    email = data.get('email', '').strip()
-    phone = data.get('phone', '').strip()
-    product_interest = data.get('product_interest', '').strip()
-    message = data.get('message', '').strip()
+    full_name = _text(data, 'full_name', 150)
+    company = _text(data, 'company', 150)
+    country = _text(data, 'country', 100)
+    email = _text(data, 'email', 254)
+    phone = _text(data, 'phone', 50)
+    product_interest = _text(data, 'product_interest', 100)
+    message = _text(data, 'message', 5000)
 
     if not full_name or not email or not company:
         return JsonResponse({
             'success': False,
             'message': _msg(lang, 'Por favor completa los campos requeridos (Nombre, Empresa y Correo).', 'Please complete the required fields (Name, Company and Email).')
         }, status=400)
+    if not _valid_email(email):
+        return JsonResponse({'success': False, 'message': _msg(lang, 'Ingrese un correo válido.', 'Please enter a valid email.')}, status=400)
+
+    # El límite solo cuenta envíos válidos
+    if ratelimit.is_limited(request, 'contact', email):
+        return JsonResponse({'success': False, 'message': _msg(
+            lang,
+            'Demasiados envíos. Inténtalo más tarde o escríbenos por correo.',
+            'Too many submissions. Please try again later or email us.')}, status=429)
 
     ContactMessage.objects.create(
         full_name=full_name,

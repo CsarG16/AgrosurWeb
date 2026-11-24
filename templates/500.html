@@ -1,7 +1,10 @@
 <!DOCTYPE html>
-<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Error temporal | Agro Sur Latino S.A.C.</title>
+{% if lang == 'es' %}<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Error temporal | Agro Sur Latino S.A.C.</title>{% else %}<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Temporary error | Agro Sur Latino S.A.C.</title>{% endif %}
 <style>body{font-family:Georgia,serif;background:#f6faf4;color:#143d1f;text-align:center;padding:12vh 24px}a{color:#2b7a3d}</style></head>
-<body><h1>Tuvimos un problema temporal</h1>
+<body>{% if lang == 'es' %}<h1>Tuvimos un problema temporal</h1>
 <p>Estamos trabajando para solucionarlo. Inténtalo de nuevo en unos minutos o escríbenos a <a href="mailto:david@agrosurlatino.com">david@agrosurlatino.com</a>.</p>
-<p><a href="/">Volver al inicio</a></p></body></html>
+<p><a href="/es/">Volver al inicio</a></p>{% else %}<h1>We had a temporary problem</h1>
+<p>We are working to fix it. Please try again in a few minutes or email us at <a href="mailto:david@agrosurlatino.com">david@agrosurlatino.com</a>.</p>
+<p><a href="/">Back to home</a></p>{% endif %}</body></html>

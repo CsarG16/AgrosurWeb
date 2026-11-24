@@ -12,7 +12,7 @@ from django.urls import reverse
 class StaticPagesSitemap(Sitemap):
     changefreq = 'monthly'
     priority = 0.8
-    # Una entrada por idioma (/ y /en/) con etiquetas hreflang entre ellas
+    # Una entrada por idioma (/ inglés y /es/ español) con etiquetas hreflang entre ellas
     i18n = True
     alternates = True
     x_default = True
@@ -30,8 +30,8 @@ def robots_txt(request):
         "Disallow: /admin/",
         "Disallow: /api/",
         "Disallow: /cotizacion/",
-        "Disallow: /en/api/",
-        "Disallow: /en/cotizacion/",
+        "Disallow: /es/api/",
+        "Disallow: /es/cotizacion/",
         f"Sitemap: {request.scheme}://{request.get_host()}/sitemap.xml",
         "",
     ])
@@ -44,11 +44,14 @@ urlpatterns = [
     path('sitemap.xml', sitemap, {'sitemaps': {'pages': StaticPagesSitemap}}, name='sitemap'),
 ]
 
-# Páginas del sitio: español sin prefijo (/productos/) e inglés con /en/ (/en/productos/)
+# Páginas del sitio: inglés sin prefijo (/productos/) y español con /es/ (/es/productos/)
 urlpatterns += i18n_patterns(
     path('', include('landing.urls', namespace='landing')),
     prefix_default_language=False,
 )
+
+# Página 500 en el idioma de la URL (la 404 usa templates/404.html y se traduce como el resto)
+handler500 = 'landing.views.server_error'
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

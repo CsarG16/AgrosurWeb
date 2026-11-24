@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.urls import reverse
 from django.utils.html import format_html
 from .models import (
     HeroSlide,
@@ -127,12 +128,23 @@ class QuoteItemInline(admin.TabularInline):
 
 @admin.register(QuoteRequest)
 class QuoteRequestAdmin(admin.ModelAdmin):
-    list_display = ('id', 'legal_name', 'client_type', 'document_number', 'country', 'incoterm', 'status', 'created_at')
+    list_display = ('quote_code', 'legal_name', 'client_type', 'document_number', 'country', 'incoterm', 'status', 'pdf_link', 'created_at')
     list_filter = ('client_type', 'incoterm', 'status', 'created_at')
     list_editable = ('status',)
     search_fields = ('legal_name', 'document_number', 'contact_name', 'email', 'destination_port')
     inlines = [QuoteItemInline]
-    readonly_fields = ('created_at',)
+    readonly_fields = ('public_token', 'pdf_link', 'created_at')
+
+    @admin.display(description="Código", ordering='id')
+    def quote_code(self, obj):
+        return f"COT-{obj.id:04d}"
+
+    @admin.display(description="Proforma PDF")
+    def pdf_link(self, obj):
+        if not obj.pk or not obj.public_token:
+            return "—"
+        url = reverse('landing:quote_pdf', args=[obj.public_token])
+        return format_html('<a href="{}" target="_blank" rel="noopener">Ver / Descargar PDF</a>', url)
 
 
 @admin.register(ContactMessage)

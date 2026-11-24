@@ -24,6 +24,22 @@ CSRF_TRUSTED_ORIGINS = [o for o in os.environ.get('DJANGO_CSRF_TRUSTED_ORIGINS',
 if os.environ.get('DJANGO_BEHIND_PROXY') == '1':
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+# Seguridad en producción (DEBUG apagado): cookies solo por HTTPS y redirección a https.
+# La redirección a https conviene hacerla en PythonAnywhere (Web > Force HTTPS). Si se prefiere en Django,
+# DJANGO_SSL_REDIRECT=1 junto con DJANGO_BEHIND_PROXY=1 (sin este último habría un bucle de redirecciones).
+if not DEBUG:
+    if SECRET_KEY.startswith('django-insecure-') and 'test' not in sys.argv:
+        import warnings
+        warnings.warn('DJANGO_SECRET_KEY no está definida: se usa la clave de ejemplo del repositorio.')
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = (
+        os.environ.get('DJANGO_SSL_REDIRECT') == '1' and os.environ.get('DJANGO_BEHIND_PROXY') == '1'
+        and 'test' not in sys.argv
+    )
+    # HSTS: activar solo cuando todo el dominio funcione con HTTPS (ej. DJANGO_HSTS_SECONDS=31536000)
+    SECURE_HSTS_SECONDS = int(os.environ.get('DJANGO_HSTS_SECONDS', '0'))
+
 # YouTube exige el referrer del sitio (Django envía 'same-origin' por defecto => Error 153)
 SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
 
@@ -65,7 +81,8 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    'landing.middleware.EnglishHTMLMiddleware',  # /en/: HTML ya traducido desde landing/i18n.json
+    'landing.middleware.AdminSpanishMiddleware',  # el admin siempre en español (aunque el sitio sea 'en' por defecto)
+    'landing.middleware.EnglishHTMLMiddleware',  # páginas en inglés: HTML ya traducido desde landing/i18n.json
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -108,8 +125,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# Español en la raíz (/) e inglés bajo /en/ (django.conf.urls.i18n_patterns en config/urls.py)
-LANGUAGE_CODE = 'es'
+# Inglés en la raíz (/) y español bajo /es/ (django.conf.urls.i18n_patterns en config/urls.py).
+# Las plantillas están en español; landing.middleware.EnglishHTMLMiddleware las traduce cuando el idioma es 'en'.
+LANGUAGE_CODE = 'en'
 LANGUAGES = [
     ('es', 'Español'),
     ('en', 'English'),
@@ -124,5 +142,15 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Caché compartido entre los procesos del servidor (el límite de envíos cuenta de forma global).
+# En los tests se usa memoria para no tocar disco.
+CACHES = {
+    'default': (
+        {'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'}
+        if 'test' in sys.argv else
+        {'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache', 'LOCATION': BASE_DIR / '.django_cache'}
+    )
+}
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
