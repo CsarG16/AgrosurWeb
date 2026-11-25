@@ -57,7 +57,7 @@
       {% for stat in stats %}
       <div class="p-6 rounded-2xl bg-[#fbfaf6] border border-xpo-border/80 text-center">
         <div class="stat-counter font-serif font-semibold text-3xl sm:text-4xl text-agro-600 tracking-tight" data-target="{{ stat.value }}">
-          {{ stat.value }}
+          {% if 'ertificaciones' in stat.label %}{{ cert_names|length }}{% else %}{{ stat.value }}{% endif %}
         </div>
         {% if stat.value == company_founded_year|stringformat:"s" %}
         {# Años de trayectoria calculados desde el año de fundación (settings.COMPANY_FOUNDED_YEAR) #}

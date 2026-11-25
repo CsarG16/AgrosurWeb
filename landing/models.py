@@ -225,7 +225,7 @@ class Certification(models.Model):
     def get_image(self):
         if self.image:
             return self.image.url
-        return self.image_url or "/static/images/certifications/usda-organic.png"
+        return self.image_url or "/static/images/certifications/usda-organic.webp"
 
 
 class QuoteRequest(models.Model):
