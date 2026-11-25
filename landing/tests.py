@@ -720,3 +720,40 @@ class MarketsMapTests(TestCase):
             self.assertIn(text, en)
         self.assertNotIn('Dónde vendemos', en)
 
+
+class ContactMapTests(TestCase):
+    """Mapa de la dirección en la sección de contacto de la portada."""
+
+    def test_mapa_embebido_en_el_idioma_de_la_pagina(self):
+        es = self.client.get('/es/').content.decode()
+        self.assertIn('https://www.google.com/maps?q=-12.0194865,-76.9303235&amp;z=16&amp;hl=es&amp;output=embed', es)
+        self.assertRegex(es, r'<iframe src="https://www.google.com/maps[^>]*loading="lazy"')
+        self.assertIn('Cómo llegar', es)
+        en = self.client.get('/').content.decode()
+        self.assertIn('hl=en&amp;output=embed', en)
+        self.assertIn('Get directions', en)
+        self.assertIn('title="Agro Sur Latino location in Huachipa, Lima"', en)
+
+
+
+class SuperfoodCatalogTests(TestCase):
+    """Catálogo actual: quinuas (superalimentos) y frejoles; etiqueta SUPERALIMENTO en las quinuas."""
+
+    def setUp(self):
+        cache.clear()
+        cat = ProductCategory.objects.create(name="Quinuas – Superalimentos", name_en="Quinoa – Superfoods", slug="granos-andinos", order=1)
+        Product.objects.create(category=cat, name="Quinua Roja en Grano", name_en="Red Quinoa Grain", is_superfood=True, order=1)
+        Product.objects.create(category=cat, name="Frejol Canario", name_en="Canary Beans", order=2)
+        Product.objects.create(category=cat, name="Chía en Grano", is_active=False, order=3)
+
+    def test_etiqueta_superalimento_solo_en_quinuas_y_en_ambos_idiomas(self):
+        es = self.client.get('/es/productos/').content.decode()
+        self.assertEqual(es.count('data-i18n="badge_superfood">Superalimento<'), 1)
+        self.assertIn('Quinuas – Superalimentos', es)
+        en = self.client.get('/productos/').content.decode()
+        self.assertIn('data-i18n="badge_superfood">Superfood<', en)
+        self.assertIn('Quinoa – Superfoods', en)
+
+    def test_productos_ocultos_no_aparecen(self):
+        for path in ['/es/', '/es/productos/', '/es/cotizador/']:
+            self.assertNotIn('Chía en Grano', self.client.get(path).content.decode())

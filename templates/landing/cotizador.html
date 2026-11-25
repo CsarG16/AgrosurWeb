@@ -74,7 +74,7 @@
               </div>
 
               <div class="min-w-0">
-                <span class="text-[10px] font-bold uppercase tracking-wider text-agro-600 block">{{ product.modality_label_es }}</span>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-agro-600 block">{{ product.modality_label_es }}{% if product.is_superfood %} · <span class="text-xpo-gold" data-i18n="badge_superfood">Superalimento</span>{% endif %}</span>
                 <h4 class="font-serif font-semibold text-stone-900 text-base bilingual-name" data-es="{{ product.name }}" data-en="{{ product.name_en|default:product.name }}">
                   {{ product.name }}
                 </h4>

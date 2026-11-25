@@ -67,7 +67,9 @@
       "market_usa": "EE. UU.",
       "market_europe": "Europa",
       "market_asia": "Asia",
-      "market_saudi": "Arabia Saudí"
+      "market_saudi": "Arabia Saudí",
+      "map_directions": "Cómo llegar",
+      "badge_superfood": "Superalimento"
     },
     "en": {
       "nav_home": "HOME",
@@ -136,7 +138,9 @@
       "market_usa": "USA",
       "market_europe": "Europe",
       "market_asia": "Asia",
-      "market_saudi": "Saudi Arabia"
+      "market_saudi": "Saudi Arabia",
+      "map_directions": "Get directions",
+      "badge_superfood": "Superfood"
     }
   },
   "phraseEN": {
@@ -222,6 +226,7 @@
     "Planta Central Agro Sur Latino Huachipa": "Agro Sur Latino central plant, Huachipa",
     "Planta Agro Sur Latino Huachipa": "Agro Sur Latino plant, Huachipa",
     "Agricultor andino trabajando con chaquitaclla en un campo de quinua": "Andean farmer working with a chaquitaclla in a quinoa field",
-    "Mapa de exportaciones de Agro Sur Latino desde Perú a EE. UU., Europa, Asia y Arabia Saudí": "Agro Sur Latino export map from Peru to the USA, Europe, Asia and Saudi Arabia"
+    "Mapa de exportaciones de Agro Sur Latino desde Perú a EE. UU., Europa, Asia y Arabia Saudí": "Agro Sur Latino export map from Peru to the USA, Europe, Asia and Saudi Arabia",
+    "Ubicación de Agro Sur Latino en Huachipa, Lima": "Agro Sur Latino location in Huachipa, Lima"
   }
 }

@@ -54,8 +54,8 @@ class Command(BaseCommand):
 
         # 2. Categorías Administrables en SQLite3
         cat_granos = ProductCategory.objects.create(
-            name="Granos y Semillas Andinas",
-            name_en="Andean Grains & Seeds",
+            name="Quinuas – Superalimentos",
+            name_en="Quinoa – Superfoods",
             slug="granos-andinos",
             watermark_text="Granos Andinos",
             watermark_text_en="Andean Grains",
@@ -81,7 +81,7 @@ class Command(BaseCommand):
             watermark_text_en="Peruvian Crops",
             image_url="/static/images/products/maiz-gigante.webp",
             order=3,
-            is_active=True
+            is_active=False  # sin productos activos por ahora
         )
 
         # 3. Los 12 Productos Reales de Agro Sur Latino S.A.C. (agrosurlatino.com) en SQLite3
@@ -105,6 +105,7 @@ class Command(BaseCommand):
                 "min_order_en": "1 FCL Container (20 MT)",
                 "image_url": "/static/images/products/quinua-blanca.webp",
                 "is_featured": True,
+                "is_superfood": True,
                 "is_active": True,
                 "order": 1,
             },
@@ -127,6 +128,7 @@ class Command(BaseCommand):
                 "min_order_en": "1 FCL Container (20 MT)",
                 "image_url": "/static/images/products/quinua-roja.webp",
                 "is_featured": True,
+                "is_superfood": True,
                 "is_active": True,
                 "order": 2,
             },
@@ -149,6 +151,7 @@ class Command(BaseCommand):
                 "min_order_en": "1 FCL Container (20 MT)",
                 "image_url": "/static/images/products/quinua-negra.webp",
                 "is_featured": True,
+                "is_superfood": True,
                 "is_active": True,
                 "order": 3,
             },
@@ -171,6 +174,7 @@ class Command(BaseCommand):
                 "min_order_en": "1 FCL Container (20 MT)",
                 "image_url": "/static/images/products/quinua-tricolor.webp",
                 "is_featured": True,
+                "is_superfood": True,
                 "is_active": True,
                 "order": 4,
             },
@@ -193,7 +197,7 @@ class Command(BaseCommand):
                 "min_order_en": "1 FCL Container (20 MT)",
                 "image_url": "/static/images/products/chia.webp",
                 "is_featured": True,
-                "is_active": True,
+                "is_active": False,
                 "order": 5,
             },
             {
@@ -215,7 +219,7 @@ class Command(BaseCommand):
                 "min_order_en": "1 FCL Container (20 MT)",
                 "image_url": "/static/images/products/kiwicha.webp",
                 "is_featured": True,
-                "is_active": True,
+                "is_active": False,
                 "order": 6,
             },
             {
@@ -281,7 +285,7 @@ class Command(BaseCommand):
                 "min_order_en": "1 FCL Container (21 MT)",
                 "image_url": "/static/images/products/pallar-bebe.webp",
                 "is_featured": True,
-                "is_active": True,
+                "is_active": False,
                 "order": 9,
             },
             {
@@ -303,7 +307,7 @@ class Command(BaseCommand):
                 "min_order_en": "1 FCL Container (21 MT)",
                 "image_url": "/static/images/products/zarandaja.webp",
                 "is_featured": True,
-                "is_active": True,
+                "is_active": False,
                 "order": 10,
             },
             {
@@ -325,7 +329,7 @@ class Command(BaseCommand):
                 "min_order_en": "1 FCL Container (20 MT)",
                 "image_url": "/static/images/products/habas.webp",
                 "is_featured": True,
-                "is_active": True,
+                "is_active": False,
                 "order": 11,
             },
             {
@@ -347,7 +351,7 @@ class Command(BaseCommand):
                 "min_order_en": "1 FCL Container (20 MT)",
                 "image_url": "/static/images/products/maiz-gigante.webp",
                 "is_featured": True,
-                "is_active": True,
+                "is_active": False,
                 "order": 12,
             },
         ]

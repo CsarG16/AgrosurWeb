@@ -54,6 +54,9 @@ COMPANY_MAPS_URL = (
     'https://www.google.com.pe/maps/place/AGROSUR+LATINO/@-12.0194865,-76.9308707,19z/'
     'data=!3m1!4b1!4m5!3m4!1s0x9105c5444f60ad9f:0xfb1f81ab5ae84c59!8m2!3d-12.0194865!4d-76.9303235'
 )
+# Ubicación de la planta (mapa embebido en la sección de contacto); mismas coordenadas que el enlace oficial
+COMPANY_LAT = -12.0194865
+COMPANY_LNG = -76.9303235
 # Teléfono y WhatsApp: se muestran en contacto y pie de página solo si están definidos.
 # Definirlos como variables de entorno (ej. COMPANY_PHONE='+51 1 234 5678', COMPANY_WHATSAPP='51987654321').
 COMPANY_PHONE = os.environ.get('COMPANY_PHONE', '')

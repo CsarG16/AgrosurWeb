@@ -42,6 +42,11 @@ def company(request):
         'company_founded_year': settings.COMPANY_FOUNDED_YEAR,
         'company_years': timezone.localdate().year - settings.COMPANY_FOUNDED_YEAR,
         'company_maps_url': settings.COMPANY_MAPS_URL,
+        # Mapa de Google embebido (sin clave de API), en el idioma de la página
+        'company_map_embed_url': (
+            f'https://www.google.com/maps?q={settings.COMPANY_LAT},{settings.COMPANY_LNG}'
+            f'&z=16&hl={"en" if translation.get_language() == "en" else "es"}&output=embed'
+        ),
         'company_phone': phone,
         'company_phone_href': f'tel:+{phone_digits}' if phone_digits else '',
         'company_whatsapp_url': (

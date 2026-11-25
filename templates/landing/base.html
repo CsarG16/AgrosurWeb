@@ -6,10 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   {% if LANGUAGE_CODE == 'en' %}
   <title>{% block title_en %}Agro Sur Latino S.A.C. | Peruvian Andean Grains, Seeds & Pulses{% endblock %}</title>
-  <meta name="description" content="{% block meta_description_en %}Agro Sur Latino S.A.C.: sourcing, processing and export of Peruvian quinoa, chia, kiwicha (amaranth) and pulses, organic and conventional.{% endblock %}">
+  <meta name="description" content="{% block meta_description_en %}Agro Sur Latino S.A.C.: sourcing, processing and export of Peruvian quinoa (a superfood) and beans, organic and conventional.{% endblock %}">
   {% else %}
   <title>{% block title %}Agro Sur Latino S.A.C. | Granos Andinos, Semillas y Menestras del Perú{% endblock %}</title>
-  <meta name="description" content="{% block meta_description %}Agro Sur Latino S.A.C.: comercialización, procesamiento y exportación de quinua, chía, kiwicha y menestras peruanas (orgánicas y convencionales).{% endblock %}">
+  <meta name="description" content="{% block meta_description %}Agro Sur Latino S.A.C.: comercialización, procesamiento y exportación de quinua (superalimento) y frejoles peruanos, orgánicos y convencionales.{% endblock %}">
   {% endif %}
 
   <!-- URL canónica y versiones por idioma (SEO internacional) -->
@@ -46,7 +46,7 @@
 
   <!-- Custom CSS, luego Tailwind compilado (npm run build:css) para conservar el orden de cascada del CDN anterior -->
   <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=12">
-  <link rel="stylesheet" href="{% static 'css/app.css' %}?v=12">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}?v=14">
   {% block extra_head %}{% endblock %}
 </head>
 <body class="bg-[#f4f8f2] text-agro-950 antialiased selection:bg-agro-600/20 selection:text-agro-800" data-lang="{{ LANGUAGE_CODE }}" data-page="{{ active_page|default:'inicio' }}">

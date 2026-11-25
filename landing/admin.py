@@ -62,6 +62,7 @@ class ProductAdmin(admin.ModelAdmin):
         'modality',
         'origin',
         'ref_price_fob_usd',
+        'is_superfood',
         'is_featured',
         'is_active',
         'order',
@@ -71,11 +72,12 @@ class ProductAdmin(admin.ModelAdmin):
         'category',
         'modality',
         'ref_price_fob_usd',
+        'is_superfood',
         'is_featured',
         'is_active',
         'order',
     )
-    list_filter = ('category', 'modality', 'is_featured', 'is_active')
+    list_filter = ('category', 'modality', 'is_superfood', 'is_featured', 'is_active')
     search_fields = ('name', 'name_en', 'scientific_name', 'variety', 'origin')
     prepopulated_fields = {'slug': ('name',)}
     fieldsets = (
@@ -89,7 +91,7 @@ class ProductAdmin(admin.ModelAdmin):
             'fields': ('origin', 'origin_en', 'season', 'season_en', 'packing_specs', 'packing_specs_en')
         }),
         ("Precios FOB y Visualización en Web", {
-            'fields': ('ref_price_fob_usd', 'price_unit', 'min_order', 'min_order_en', 'is_featured', 'is_active', 'order')
+            'fields': ('ref_price_fob_usd', 'price_unit', 'min_order', 'min_order_en', 'is_superfood', 'is_featured', 'is_active', 'order')
         }),
     )
 

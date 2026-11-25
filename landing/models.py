@@ -153,6 +153,7 @@ class Product(models.Model):
     image = models.ImageField(upload_to="products/", blank=True, null=True, verbose_name="Foto Principal (Subir Archivo)")
     image_url = models.CharField(max_length=255, blank=True, null=True, verbose_name="Ruta o URL Imagen Respaldo")
     is_featured = models.BooleanField(default=True, verbose_name="Destacado en Portada")
+    is_superfood = models.BooleanField(default=False, verbose_name="Superalimento", help_text="Muestra la etiqueta SUPERALIMENTO en la tarjeta del producto.")
     is_active = models.BooleanField(default=True, verbose_name="Producto Activo")
     order = models.PositiveIntegerField(default=0, verbose_name="Orden de Visualización")
 
