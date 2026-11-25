@@ -59,6 +59,7 @@ body {
 
 .spin-slow {
   animation: spin-slow 22s linear infinite;
+  will-change: transform;
 }
 
 /* Floating subtle organic seed animation */
@@ -136,23 +137,6 @@ body {
   box-shadow: 0 20px 38px -10px rgba(20, 54, 29, 0.22);
 }
 
-/* Lenis Smooth Scroll */
-html.lenis, html.lenis body {
-  height: auto;
-}
-
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-
-.lenis.lenis-stopped {
-  overflow: hidden;
-}
-
 /* Custom scrollbar in Agro Green */
 ::-webkit-scrollbar {
   width: 8px;
@@ -201,7 +185,6 @@ body[data-page="inicio"] #navbar:not(.is-scrolled) a[data-i18n="nav_cta"]:hover 
   transform: translateY(32px);
   transition: opacity 0.85s cubic-bezier(0.22, 0.61, 0.36, 1) var(--reveal-delay, 0ms),
               transform 0.85s cubic-bezier(0.22, 0.61, 0.36, 1) var(--reveal-delay, 0ms);
-  will-change: opacity, transform;
 }
 .reveal.reveal-in {
   opacity: 1;
@@ -244,7 +227,7 @@ body[data-page="inicio"] #navbar:not(.is-scrolled) a[data-i18n="nav_cta"]:hover 
 .world-map.wm-ready .wm-pin { opacity: 0; }
 .world-map.wm-play .wm-route { animation: wm-draw 1.4s ease-out forwards; animation-delay: calc(var(--i) * 0.35s); }
 .world-map.wm-play .wm-pin {
-  animation: wm-pop 0.4s ease-out forwards, wm-pulse 2.4s ease-in-out infinite;
+  animation: wm-pop 0.4s ease-out forwards, wm-pulse 2.4s ease-in-out 3;
   animation-delay: calc(var(--i) * 0.35s + 1.2s), calc(var(--i) * 0.35s + 1.6s);
 }
 @keyframes wm-draw { to { stroke-dashoffset: 0; } }

@@ -172,19 +172,7 @@ function updateClientTypeHints() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (typeof Lenis !== 'undefined') {
-    const lenis = new Lenis({
-      duration: 1.1,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-    });
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
-    window.lenis = lenis;
-  }
+  // Desplazamiento nativo del navegador (sin Lenis): más fluido y sin retraso al usar la rueda o el touchpad
 
   if (window.lucide) {
     window.lucide.createIcons();
