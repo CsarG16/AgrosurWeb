@@ -61,7 +61,13 @@
       "err404_title": "No encontramos esta página",
       "err404_text": "Puede que el enlace haya cambiado. Vuelve al inicio o revisa nuestros productos.",
       "err404_home": "Inicio",
-      "err404_products": "Productos"
+      "err404_products": "Productos",
+      "markets_tag": "EXPORTACIÓN",
+      "markets_title": "Dónde vendemos",
+      "market_usa": "EE. UU.",
+      "market_europe": "Europa",
+      "market_asia": "Asia",
+      "market_saudi": "Arabia Saudí"
     },
     "en": {
       "nav_home": "HOME",
@@ -124,7 +130,13 @@
       "err404_title": "We couldn't find this page",
       "err404_text": "The link may have changed. Go back to the home page or browse our products.",
       "err404_home": "Home",
-      "err404_products": "Products"
+      "err404_products": "Products",
+      "markets_tag": "EXPORTS",
+      "markets_title": "Where we sell",
+      "market_usa": "USA",
+      "market_europe": "Europe",
+      "market_asia": "Asia",
+      "market_saudi": "Saudi Arabia"
     }
   },
   "phraseEN": {
@@ -209,6 +221,7 @@
     "Almacenes Propios y Sacos de Exportación": "Own warehouses and export bags",
     "Planta Central Agro Sur Latino Huachipa": "Agro Sur Latino central plant, Huachipa",
     "Planta Agro Sur Latino Huachipa": "Agro Sur Latino plant, Huachipa",
-    "Agricultor revisando su cultivo al atardecer": "Farmer checking his crop at sunset"
+    "Agricultor andino trabajando con chaquitaclla en un campo de quinua": "Andean farmer working with a chaquitaclla in a quinoa field",
+    "Mapa de exportaciones de Agro Sur Latino desde Perú a EE. UU., Europa, Asia y Arabia Saudí": "Agro Sur Latino export map from Peru to the USA, Europe, Asia and Saudi Arabia"
   }
 }

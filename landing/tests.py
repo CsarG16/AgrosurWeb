@@ -672,7 +672,7 @@ class EnglishByDefaultTests(TestCase):
         self.assertNotRegex(es, r'font-bold underline[^"]*" data-set-lang="en">EN</a>')
 
     def test_hero_usa_heroslide_activo_con_respaldo(self):
-        self.assertIn('campo-atardecer.webp', self.client.get('/').content.decode())
+        self.assertIn('hero-quinua.webp', self.client.get('/').content.decode())
         HeroSlide.objects.create(
             title="Custom Hero",
             image_url="/static/images/company/campo-quinua.webp",
@@ -703,4 +703,20 @@ class EnglishByDefaultTests(TestCase):
         robots = self.client.get('/robots.txt').content.decode()
         for path in ['/api/', '/cotizacion/', '/es/api/', '/es/cotizacion/']:
             self.assertIn(f'Disallow: {path}', robots)
+
+
+class MarketsMapTests(TestCase):
+    """Sección «Dónde vendemos»: mapa mundial con los mercados de exportación."""
+
+    def test_portada_muestra_mapa_y_mercados_en_ambos_idiomas(self):
+        es = self.client.get('/es/').content.decode()
+        self.assertIn('id="mercados"', es)
+        self.assertIn('class="world-map', es)
+        self.assertIn('role="img"', es)
+        for text in ['Dónde vendemos', 'EE. UU.', 'Europa', 'Asia', 'Arabia Saudí']:
+            self.assertIn(text, es)
+        en = self.client.get('/').content.decode()
+        for text in ['Where we sell', 'USA', 'Europe', 'Saudi Arabia', 'aria-label="Agro Sur Latino export map from Peru']:
+            self.assertIn(text, en)
+        self.assertNotIn('Dónde vendemos', en)
 

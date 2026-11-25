@@ -224,3 +224,36 @@ body[data-page="inicio"] #navbar:not(.is-scrolled) a[data-i18n="nav_cta"]:hover 
 @media (prefers-reduced-motion: reduce) {
   .reveal, .hero-photo h1, .hero-photo a, .hero-photo > img { animation: none; transition: none; opacity: 1; transform: none; }
 }
+
+/* ===== Mapa «Dónde vendemos» (templates/landing/_world_map.svg) ===== */
+.world-map path.wm-land,
+.world-map path.wm-market,
+.world-map path.wm-peru { fill: none; stroke-linecap: round; stroke-width: 4.2; }
+.world-map .wm-land { stroke: #c4e2be; }
+.world-map .wm-market { stroke: #2b7a3d; }
+.world-map .wm-peru { stroke: #c5a059; }
+.world-map .wm-route {
+  fill: none; stroke: #3f9136; stroke-width: 2; stroke-linecap: round;
+  stroke-dasharray: 1; stroke-dashoffset: 0;
+}
+.world-map .wm-pin { fill: #2b7a3d; stroke: #fff; stroke-width: 2.5; transform-box: fill-box; transform-origin: center; }
+.world-map .wm-origin { fill: #c5a059; stroke: #fff; stroke-width: 3; }
+
+/* Animación: main.js añade .wm-ready al cargar y .wm-play cuando el mapa entra en pantalla */
+.world-map.wm-ready .wm-route { stroke-dashoffset: 1; }
+.world-map.wm-ready .wm-pin { opacity: 0; }
+.world-map.wm-play .wm-route { animation: wm-draw 1.4s ease-out forwards; animation-delay: calc(var(--i) * 0.35s); }
+.world-map.wm-play .wm-pin {
+  animation: wm-pop 0.4s ease-out forwards, wm-pulse 2.4s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.35s + 1.2s), calc(var(--i) * 0.35s + 1.6s);
+}
+@keyframes wm-draw { to { stroke-dashoffset: 0; } }
+@keyframes wm-pop { from { opacity: 0; transform: scale(0.2); } to { opacity: 1; transform: scale(1); } }
+@keyframes wm-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.35); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .world-map.wm-ready .wm-route { stroke-dashoffset: 0; }
+  .world-map.wm-ready .wm-pin { opacity: 1; }
+  .world-map.wm-play .wm-route,
+  .world-map.wm-play .wm-pin { animation: none; }
+}

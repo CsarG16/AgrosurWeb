@@ -7,11 +7,11 @@
 <!-- ======================================================================= -->
 {% with hero_slides.0 as hero_slide %}
 <section id="inicio" class="hero-photo relative w-full min-h-[100svh] flex items-center justify-center overflow-hidden text-center">
-  <img src="{% if hero_slide and hero_slide.image %}{{ hero_slide.image.url }}{% elif hero_slide and hero_slide.image_url %}{{ hero_slide.image_url }}{% else %}{% static 'images/company/campo-atardecer.webp' %}{% endif %}" alt="Agricultor revisando su cultivo al atardecer" fetchpriority="high"
+  <img src="{% if hero_slide and hero_slide.image %}{{ hero_slide.image.url }}{% elif hero_slide and hero_slide.image_url %}{{ hero_slide.image_url }}{% else %}{% static 'images/company/hero-quinua.webp' %}{% endif %}" alt="Agricultor andino trabajando con chaquitaclla en un campo de quinua" fetchpriority="high"
        class="absolute inset-0 w-full h-full object-cover object-[28%_center] md:object-center">
   <div class="absolute inset-0 bg-gradient-to-b from-black/55 via-black/30 to-black/55"></div>
 
-  <div class="relative z-10 max-w-6xl mx-auto px-6 pt-24 pb-16 space-y-9">
+  <div class="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-10 pt-24 pb-16 space-y-9">
     <h1 class="font-display font-extrabold text-white text-5xl sm:text-6xl lg:text-7xl xl:text-8xl leading-[1.05] tracking-tight max-w-5xl mx-auto [text-shadow:0_2px_24px_rgba(0,0,0,.45)]" data-i18n="hero_headline">
       Un futuro sembrado hace miles de años
     </h1>
@@ -232,6 +232,32 @@
       </div>
 
     </div>
+  </div>
+</section>
+
+
+<!-- ======================================================================= -->
+<!-- 4b. DÓNDE VENDEMOS — MAPA MUNDIAL CON RUTAS DESDE PERÚ                  -->
+<!-- ======================================================================= -->
+<section id="mercados" class="py-14 sm:py-16 bg-[#f4f8f2] border-b border-agro-200 overflow-hidden">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="text-center mb-8">
+      <span class="text-xs uppercase tracking-[0.2em] text-agro-600 font-bold block mb-2" data-i18n="markets_tag">EXPORTACIÓN</span>
+      <h2 class="font-serif font-semibold text-3xl sm:text-4xl text-agro-950 tracking-tight" data-i18n="markets_title">Dónde vendemos</h2>
+    </div>
+
+    <div class="max-w-5xl mx-auto">
+      {% include 'landing/_world_map.svg' %}
+    </div>
+
+    <ul class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto">
+      {% for key, label in markets %}
+      <li class="flex items-center justify-center gap-2.5 px-4 py-3.5 rounded-2xl bg-white border border-agro-200 shadow-sm">
+        <span class="w-2.5 h-2.5 rounded-full bg-agro-600 shrink-0" aria-hidden="true"></span>
+        <span class="font-display font-bold text-xs sm:text-base text-agro-950 uppercase tracking-wider whitespace-nowrap" data-i18n="{{ key }}">{{ label }}</span>
+      </li>
+      {% endfor %}
+    </ul>
   </div>
 </section>
 

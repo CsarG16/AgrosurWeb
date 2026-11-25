@@ -37,6 +37,15 @@ def request_lang(request):
     return 'en' if getattr(request, 'LANGUAGE_CODE', 'es').startswith('en') else 'es'
 
 
+# Mercados de exportación (sección «Dónde vendemos» de la portada); textos en landing/i18n.json
+EXPORT_MARKETS = [
+    ('market_usa', 'EE. UU.'),
+    ('market_europe', 'Europa'),
+    ('market_asia', 'Asia'),
+    ('market_saudi', 'Arabia Saudí'),
+]
+
+
 def index(request):
     """Página de Inicio / Home: Impacto Visual estilo Xpodeka + Productos desde SQLite3"""
     lang = request_lang(request)
@@ -57,6 +66,7 @@ def index(request):
         'products': products,
         'stats': stats,
         'certifications': certifications,
+        'markets': EXPORT_MARKETS,
         'current_lang': lang,
         'active_page': 'inicio',
     }

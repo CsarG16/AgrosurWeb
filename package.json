@@ -4,9 +4,13 @@
   "description": "Build de estilos (Tailwind CLI) para Agro Sur Latino",
   "scripts": {
     "build:css": "tailwindcss -c tailwind.config.js -i static/src/input.css -o static/css/app.css --minify",
-    "watch:css": "tailwindcss -c tailwind.config.js -i static/src/input.css -o static/css/app.css --watch"
+    "watch:css": "tailwindcss -c tailwind.config.js -i static/src/input.css -o static/css/app.css --watch",
+    "build:map": "node scripts/build_world_map.mjs"
   },
   "devDependencies": {
-    "tailwindcss": "3.4.18"
+    "d3-geo": "^3.1.1",
+    "tailwindcss": "3.4.18",
+    "topojson-client": "^3.1.0",
+    "world-atlas": "^2.0.2"
   }
 }

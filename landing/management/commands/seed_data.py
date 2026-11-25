@@ -22,7 +22,7 @@ class Command(BaseCommand):
             tagline_en="Andean Grains",
             badge="Un futuro sembrado hace miles de años",
             badge_en="A future sown thousands of years ago",
-            image_url="/static/images/company/campo-atardecer.webp",
+            image_url="/static/images/company/hero-quinua.webp",
             secondary_image_url="/static/images/products/chia.webp",
             order=1,
             is_active=True

@@ -612,6 +612,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Mapa «Dónde vendemos»: las rutas se dibujan cuando el mapa entra en pantalla
+  document.querySelectorAll('.world-map').forEach(map => {
+    if (!('IntersectionObserver' in window)) return;
+    map.classList.add('wm-ready');
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some(e => e.isIntersecting)) { map.classList.add('wm-play'); io.disconnect(); }
+    }, { threshold: 0.25 });
+    io.observe(map);
+  });
+
   // Mobile Menu
   const mobileToggle = document.getElementById('mobile-menu-toggle');
   const mobileMenu = document.getElementById('mobile-menu');
